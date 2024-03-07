@@ -1,0 +1,10 @@
+pandas==1.4.2
+streamlit==1.31.0
+plotly==5.10.0
+matplotlib==3.6.2
+streamlit-camera-input-live
+# ipyleaflet
+spacy
+pytextrank
+google-play-scraper
+app_store_scraper
