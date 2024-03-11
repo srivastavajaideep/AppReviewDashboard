@@ -3,10 +3,12 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 import warnings
+from fpdf import FPDF
+import base64
 import nltk
 import plotly.express as px
-import seaborn as sb
 import re
+import os
 from plotly.subplots import make_subplots
 from google_play_scraper import app
 from google_play_scraper import Sort, reviews_all
@@ -20,13 +22,15 @@ warnings.filterwarnings('ignore')
 
 
 # st.cache_data.clear()
-st.set_page_config(page_title="WU App Review!!!", page_icon=":sparkles:",layout="wide")
+st.set_page_config(page_title="WU App DashBoard!!!", page_icon=":sparkles:",layout="wide")
 st.title(" :sparkles: App Center Review")
 st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</style>',unsafe_allow_html=True)
 
 
 # wu_mask = np.array(Image.open('wul.png'))
-image = Image.open('wu.png')
+dir = os.path.dirname(__file__)
+filename = os.path.join(dir, 'Images/wu.png')
+image = Image.open(filename)
 left_co, cent_co,last_co = st.columns(3)
 with cent_co:
     st.image(image, caption='')
@@ -736,13 +740,14 @@ else:
 
 if not country and not region :
     filtered_df = df
-elif country :
-    filtered_df = df[df["Country"].isin(country) ]
-elif region :
-    filtered_df = df[df["AppName"].isin(region) ]
+# elif country :
+#     # filtered_df = df[df["Country"].isin(country) ]
+#     filtered_df=df2
+# elif region :
+#     filtered_df = df1[df1["AppName"].isin(region) ]
 else:
-    filtered_df = df[df["Country"].isin(country) & df["AppName"].isin(region) ]
-
+    # filtered_df = df[df["Country"].isin(country) & df["AppName"].isin(region) ]
+    filtered_df=df2
 
 # filtered_df=filtered_df.rename(columns = {'Review Rating':'Rating'}, inplace = True) 
 
@@ -803,6 +808,20 @@ sentiment_count = pd.DataFrame({'Sentiment':sentiment_count.index, 'Remarks':sen
 # #     st.plotly_chart(fig,use_container_width=True)
 
 
+def plot_bar(subplot,filtered_df):
+    plt.subplot(1,2,subplot)
+    axNewest=sns.barplot(y='Country',x='rating',hue='AppName',data=filtered_df, color='slateblue')
+    plt.title('Ratings vs country',fontsize=70)
+    # plt.xlabel('Ratings vs Country',fontsize=50)
+    plt.ylabel(None)
+    # plt.xticks(fontsize=40)
+    # plt.yticks(fontsize=40)
+    # sns.despine(left=True)
+    axNewest.grid(False)
+    axNewest.tick_params(bottom=True,left=False)
+    return None
+
+
 
 #move to plotting
 if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
@@ -813,11 +832,35 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
     else:
         fig = px.pie(sentiment_count, values='Remarks', names='Sentiment')
         st.plotly_chart(fig)
-    fig = plt.figure(figsize=(15, 5))    
+    
+    figNew = plt.figure(figsize=(20, 5))    
+    axNew = sns.barplot(x='AppName', y='rating', hue='AppName', data=filtered_df, errwidth=0)
+    for i in axNew.containers:
+        axNew.bar_label(i,)
+    st.pyplot(figNew)   
+    
+    fig = plt.figure(figsize=(15, 5)) 
     ax = sns.countplot(x='rating',hue='rating',data=filtered_df,palette='viridis')
     for label in ax.containers:
        ax.bar_label(label)
     st.pyplot(fig)
+    
+    # rating_more_than_mean=(filtered_df[filtered_df['rating'] > filtered_df['rating'].mean()])
+    # sort_more_than_mean=rating_more_than_mean.sort_values('rating',ascending=False)
+    # figNewest,axNewest = plt.subplots(figsize=(15,15))
+    # figNewest.tight_layout(pad=5)
+    # plot_bar(2,sort_more_than_mean)
+    # plt.show()
+    # st.pyplot(figNewest)
+    # plot_bar(1,rating_more_than_mean)
+    figNewer = plt.figure(figsize=(15, 5)) 
+    axar=sns.barplot(y='rating',hue='Country',data=filtered_df,palette='Pastel1')
+    for label in ax.containers:
+       axar.bar_label(label)
+    st.pyplot(figNewer)  
+ 
+
+
 
 st.sidebar.markdown("### Hierarchical view using TreeMap")
 if not st.sidebar.checkbox("Hide", True , key='100'): #by defualt hide the checkbar
