@@ -3,14 +3,11 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 import warnings
-from fpdf import FPDF
 import base64
 import nltk
 import plotly.express as px
 import re
 import os
-from plotly.subplots import make_subplots
-from google_play_scraper import app
 from google_play_scraper import Sort, reviews_all
 from app_store_scraper import AppStore
 import seaborn as sns
@@ -22,8 +19,8 @@ warnings.filterwarnings('ignore')
 
 
 # st.cache_data.clear()
-st.set_page_config(page_title="WU App DashBoard!!!", page_icon=":sparkles:",layout="wide")
-st.title(" :sparkles: App Center Review")
+st.set_page_config(page_title="WU App Review DashBoard!!!", page_icon=":sparkles:",layout="wide")
+st.title(" :sparkles: WU App Review DashBoard")
 st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</style>',unsafe_allow_html=True)
 
 
@@ -31,6 +28,7 @@ st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</st
 # dir = os.path.dirname(__file__)
 # filename = os.path.join(dir, 'Images/wu.png')
 image = Image.open('wu.png')
+# image = Image.open(filename)
 left_co, cent_co,last_co = st.columns(3)
 with cent_co:
     st.image(image, caption='')
@@ -710,7 +708,7 @@ st.sidebar.header("Choose your filter: ")
 
 # df1=df.copy()
 
-country = st.sidebar.multiselect("Pick the Country", df["Country"].unique())
+country = st.sidebar.multiselect("Select the Country", df["Country"].unique())
 if not country:
     df1 = df.copy()
 else:
@@ -718,7 +716,7 @@ else:
 
 
 # Create for Network
-region = st.sidebar.multiselect("Pick the App Type", df["AppName"].unique())
+region = st.sidebar.multiselect("Select the App Type", df["AppName"].unique())
 if not region:
     df2 = df1.copy()
 else:
@@ -766,8 +764,8 @@ csv = filtered_df.to_csv(index = False).encode('utf-8')
 st.download_button('Download Data', data = csv, file_name = "Data.csv",mime = "text/csv")  
 
 
-st.sidebar.markdown("### Total Number of Remarks")
-select = st.sidebar.selectbox('Type of visualization', ['Bar plot', 'Pie chart'], key='1')
+st.sidebar.markdown("### Data Visualization")
+select = st.sidebar.selectbox('Type of Visualization', ['Bar plot', 'Pie chart'], key='1')
 sentiment_count = filtered_df['Sentiment'].value_counts()
 sentiment_count = pd.DataFrame({'Sentiment':sentiment_count.index, 'Remarks':sentiment_count.values})
 
@@ -825,7 +823,7 @@ def plot_bar(subplot,filtered_df):
 
 #move to plotting
 if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
-    st.markdown("### Remarks")
+    st.markdown("### Customer Sentiment")
     if select == 'Bar plot':
         fig = px.bar(sentiment_count, x='Sentiment', y='Remarks', color='Remarks', height=500)
         st.plotly_chart(fig)
@@ -835,15 +833,27 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
     
     figNew = plt.figure(figsize=(20, 5))    
     axNew = sns.barplot(x='AppName', y='rating', hue='AppName', data=filtered_df, errwidth=0)
+    axNew.set(xlabel='App Type', ylabel='Ratings', title='App Type vs Ratings')
     for i in axNew.containers:
         axNew.bar_label(i,)
     st.pyplot(figNew)   
     
     fig = plt.figure(figsize=(15, 5)) 
-    ax = sns.countplot(x='rating',hue='rating',data=filtered_df,palette='viridis')
+    ax = sns.countplot(x='rating',hue='rating', orient='h',dodge=False,data=filtered_df,palette='turbo')
+    ax.set(xlabel='Rating', ylabel='Ratings Count', title='Ratings vs Count')
     for label in ax.containers:
        ax.bar_label(label)
     st.pyplot(fig)
+
+
+    # figN = plt.figure(figsize=(20, 5))    
+    
+    # axN = sns.barplot(x='TimeStamp', y=filtered_df['rating']==1, data=filtered_df, errwidth=0)
+    # for i in axN.containers:
+    #     # axN.bar_label(i,)
+    #     st.pyplot(figN)   
+    
+  
     
     # rating_more_than_mean=(filtered_df[filtered_df['rating'] > filtered_df['rating'].mean()])
     # sort_more_than_mean=rating_more_than_mean.sort_values('rating',ascending=False)
@@ -854,15 +864,17 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
     # st.pyplot(figNewest)
     # plot_bar(1,rating_more_than_mean)
     figNewer = plt.figure(figsize=(15, 5)) 
-    axar=sns.barplot(y='rating',hue='Country',data=filtered_df,palette='Pastel1')
-    for label in ax.containers:
-       axar.bar_label(label)
+    axar=sns.barplot(x='Country',y='rating',hue='Country',data=filtered_df,palette='Pastel1')
+    axar.set(xlabel='Country', ylabel='Ratings', title='Country vs Ratings')
+    for labelN in ax.containers:
+        axar.bar_label(label)
     st.pyplot(figNewer)  
  
 
 
 
-st.sidebar.markdown("### Hierarchical view using TreeMap")
+
+st.sidebar.markdown("### Hierarchical view of data using TreeMap")
 if not st.sidebar.checkbox("Hide", True , key='100'): #by defualt hide the checkbar
 # st.subheader("Hierarchical view using TreeMap")
     # fig3 = px.treemap(df, path = ["Network","Connected_Profile","Received_From_(Network_Name)"], values = "Review_Rating",hover_data = ["Review_Rating"],
@@ -877,7 +889,7 @@ if not st.sidebar.checkbox("Hide", True , key='100'): #by defualt hide the check
 st.sidebar.markdown("### Scatter Plot")
 if not st.sidebar.checkbox("Hide", True , key='10'): #by defualt hide the checkbar
     st.markdown("### ScatterPlot")
-    fig = plt.figure(figsize=(10, 4))
+    fig = plt.figure(figsize=(15, 4))
     x=pd.to_datetime(filtered_df['TimeStamp'])
     sns.scatterplot(x="TimeStamp", y="rating", data=filtered_df,hue="Country",style="Country")
     plt.xticks(rotation=90)
@@ -927,10 +939,9 @@ def remove_emojis(data):
 #     st.write(filtered_df.iloc[:500,1:20:2].style.background_gradient(cmap="Oranges"))
 
 
-
 words=filtered_df['review'].dropna().apply(nltk.word_tokenize)
 
-st.sidebar.header("Word Cloud")
+st.sidebar.header("Word Cloud (Customer Reviews)")
 word_sentiment = st.sidebar.radio('Display word cloud for what sentiment?', ('positive', 'neutral', 'negative'))
 if not st.sidebar.checkbox("Close", True, key='3'):
     st.subheader('Word cloud for %s sentiment' % (word_sentiment))
@@ -946,8 +957,7 @@ if not st.sidebar.checkbox("Close", True, key='3'):
     st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot()
 
-    
-  
+      
 #     # chachedWords = stopwords.words('english') 
 #     # filtered_words = [word for word in processed_words ]
 #     # counted_words = collections.Counter(filtered_words)
@@ -983,8 +993,6 @@ if not st.sidebar.checkbox("Close", True, key='3'):
 #     # st.plotly_chart(fig2,use_container_width=True)
 
 
-
-
 #     # st.subheader("Hierarchical view using TreeMap")
 #     # fig3 = px.treemap(filtered_df, path = ["Network","Connected_Profile"], values = "Review_Rating",hover_data = ["Review_Rating"],
 #     #               color = "Connected_Profile")
@@ -992,7 +1000,6 @@ if not st.sidebar.checkbox("Close", True, key='3'):
 #     # st.plotly_chart(fig3, use_container_width=True)
 
     
-
 
 # # category_df = filtered_df.groupby(by = ["Category"], as_index = False)["Connected Profile"].sum()
 
