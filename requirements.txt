@@ -1,8 +1,8 @@
 pandas==1.4.2
-streamlit==1.32.0
+streamlit
 plotly==5.10.0
 matplotlib==3.6.2
 pytextrank==3.3.0
 google-play-scraper==1.2.6
-app_store_scraper==0.3.5
+app_store_scraper
 spacy==3.7.4
