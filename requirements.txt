@@ -7,4 +7,5 @@ google-play-scraper==1.2.6
 app_store_scraper
 spacy==3.7.4
 nltk==3.8.1
+seaborn==0.13.2
 
