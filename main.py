@@ -24,11 +24,10 @@ st.title(" :sparkles: WU App Review DashBoard")
 st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</style>',unsafe_allow_html=True)
 
 
-# wu_mask = np.array(Image.open('wul.png'))
+# # wu_mask = np.array(Image.open('wul.png'))
 # dir = os.path.dirname(__file__)
 # filename = os.path.join(dir, 'Images/wu.png')
-image = Image.open('wu.png')
-# image = Image.open(filename)
+image = Image.open('Images/wu.png')
 left_co, cent_co,last_co = st.columns(3)
 with cent_co:
     st.image(image, caption='')
@@ -50,7 +49,7 @@ def loadAndroiddata_AU():
     dfAndroidAU=dfAndroidAU.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
     dfAndroidAU=dfAndroidAU.drop(['repliedAt'], axis=1)
-    dfAndroidAU=dfAndroidAU.drop(['appVersion'], axis=1)
+    # dfAndroidAU=dfAndroidAU.drop(['appVersion'], axis=1)
     dfAndroidAU['AppName']='Android'
     dfAndroidAU['Country']='Australia'
     dfAndroidAU.rename(columns = {'content':'review'}, inplace = True)
@@ -70,11 +69,12 @@ def loadiOSdata_AU():
     wu_au.review(how_many=2000)
     dfiOS = pd.DataFrame(np.array(wu_au.reviews),columns=['review'])
     dfNew = dfiOS.join(pd.DataFrame(dfiOS.pop('review').tolist()))
-    # dfNew=dfNew.drop(['developerResponse'], axis=1)
+    dfNew=dfNew.drop(['developerResponse'], axis=1)
     dfNew=dfNew.drop(['isEdited'], axis=1)
     dfNew=dfNew.drop(['title'], axis=1)
     dfNew['AppName']='iOS'
     dfNew['Country']='Australia'
+    dfNew['appVersion'] = dfNew.apply(lambda _: '', axis=1)
     dfNew.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfNew.rename(columns = {'userName':'UserName'}, inplace = True)
     dfNew.rename(columns = {'content':'Review'}, inplace = True)
@@ -84,6 +84,7 @@ def loadiOSdata_AU():
     return dfNew
 
 iOSAU=loadiOSdata_AU()
+
 
 
 
@@ -103,7 +104,7 @@ def loadAndroiddata_BH():
     dfAndroidBH=dfAndroidBH.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
     dfAndroidBH=dfAndroidBH.drop(['repliedAt'], axis=1)
-    dfAndroidBH=dfAndroidBH.drop(['appVersion'], axis=1)
+    # dfAndroidBH=dfAndroidBH.drop(['appVersion'], axis=1)
     dfAndroidBH['AppName']='Android'
     dfAndroidBH['Country']='Bahrain'
     dfAndroidBH.rename(columns = {'content':'review'}, inplace = True)
@@ -128,6 +129,8 @@ def loadiOSdata_BH():
     dfBH=dfBH.drop(['title'], axis=1)
     dfBH['AppName']='iOS'
     dfBH['Country']='Bahrain'
+    dfBH['appVersion'] = dfBH.apply(lambda _: '', axis=1)
+    dfBH['appVersion'] = dfBH.apply(lambda _: '', axis=1) 
     dfBH.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfBH.rename(columns = {'userName':'UserName'}, inplace = True)
     dfBH.rename(columns = {'content':'Review'}, inplace = True)
@@ -156,7 +159,7 @@ def loadAndroiddata_CA():
     dfAndroidCA=dfAndroidCA.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroidCA=dfAndroidCA.drop(['replyContent'], axis=1)
     dfAndroidCA=dfAndroidCA.drop(['repliedAt'], axis=1)
-    dfAndroidCA=dfAndroidCA.drop(['appVersion'], axis=1)
+    # dfAndroidCA=dfAndroidCA.drop(['appVersion'], axis=1)
     dfAndroidCA['AppName']='Android'
     dfAndroidCA['Country']='Canada'
     dfAndroidCA.rename(columns = {'content':'review'}, inplace = True)
@@ -182,6 +185,7 @@ def loadiOSdata_CA():
     dfCA=dfCA.drop(['title'], axis=1)
     dfCA['AppName']='iOS'
     dfCA['Country']='Canada'
+    dfCA['appVersion'] = dfCA.apply(lambda _: '', axis=1) 
     dfCA.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfCA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfCA.rename(columns = {'content':'Review'}, inplace = True)
@@ -205,6 +209,7 @@ def loadiOSdata_CL():
     dfNewCL=dfNewCL.drop(['title'], axis=1)
     dfNewCL['AppName']='iOS'
     dfNewCL['Country']='Chile'
+    dfNewCL['appVersion'] = dfNewCL.apply(lambda _: '', axis=1)
     dfNewCL.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfNewCL.rename(columns = {'userName':'UserName'}, inplace = True)
     dfNewCL.rename(columns = {'content':'Review'}, inplace = True)
@@ -234,7 +239,7 @@ def loadAndroiddata_KW():
     dfAndroidKW=dfAndroidKW.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
     dfAndroidKW=dfAndroidKW.drop(['repliedAt'], axis=1)
-    dfAndroidKW=dfAndroidKW.drop(['appVersion'], axis=1)
+    # dfAndroidKW=dfAndroidKW.drop(['appVersion'], axis=1)
     dfAndroidKW['AppName']='Android'
     dfAndroidKW['Country']='Kuwait'
     dfAndroidKW.rename(columns = {'content':'review'}, inplace = True)
@@ -260,6 +265,7 @@ def loadiOSdata_KW():
     dfKW=dfKW.drop(['title'], axis=1)
     dfKW['AppName']='iOS'
     dfKW['Country']='Kuwait'
+    dfKW['appVersion'] = dfKW.apply(lambda _: '', axis=1) 
     dfKW.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfKW.rename(columns = {'userName':'UserName'}, inplace = True)
     dfKW.rename(columns = {'content':'Review'}, inplace = True)
@@ -283,6 +289,7 @@ def loadiOSdata_MX():
     dfNewMX=dfNewMX.drop(['title'], axis=1)
     dfNewMX['AppName']='iOS'
     dfNewMX['Country']='Mexico'
+    dfNewMX['appVersion'] = dfNewMX.apply(lambda _: '', axis=1)
     dfNewMX.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfNewMX.rename(columns = {'userName':'UserName'}, inplace = True)
     dfNewMX.rename(columns = {'content':'Review'}, inplace = True)
@@ -312,7 +319,7 @@ def loadAndroiddata_NZ():
     dfAndroidNZ=dfAndroidNZ.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroidNZ=dfAndroidNZ.drop(['replyContent'], axis=1)
     dfAndroidNZ=dfAndroidNZ.drop(['repliedAt'], axis=1)
-    dfAndroidNZ=dfAndroidNZ.drop(['appVersion'], axis=1)
+    # dfAndroidNZ=dfAndroidNZ.drop(['appVersion'], axis=1)
     dfAndroidNZ['AppName']='Android'
     dfAndroidNZ['Country']='New Zealand'
     dfAndroidNZ.rename(columns = {'content':'review'}, inplace = True)
@@ -338,6 +345,7 @@ def loadiOSdata_NZ():
     dfNZ=dfNZ.drop(['title'], axis=1)
     dfNZ['AppName']='iOS'
     dfNZ['Country']='New Zealand'
+    dfNZ['appVersion'] = dfNZ.apply(lambda _: '', axis=1)
     dfNZ.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfNZ.rename(columns = {'userName':'UserName'}, inplace = True)
     dfNZ.rename(columns = {'content':'Review'}, inplace = True)
@@ -347,7 +355,6 @@ def loadiOSdata_NZ():
     return dfNZ
 
 iOSNZ=loadiOSdata_NZ()
-
 
 
 
@@ -368,7 +375,7 @@ def loadAndroiddata_QA():
     dfAndroidQA=dfAndroidQA.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
     dfAndroidQA=dfAndroidQA.drop(['repliedAt'], axis=1)
-    dfAndroidQA=dfAndroidQA.drop(['appVersion'], axis=1)
+    # dfAndroidQA=dfAndroidQA.drop(['appVersion'], axis=1)
     dfAndroidQA['AppName']='Android'
     dfAndroidQA['Country']='Qatar'
     dfAndroidQA.rename(columns = {'content':'review'}, inplace = True)
@@ -393,6 +400,7 @@ def loadiOSdata_QA():
     dfQA=dfQA.drop(['title'], axis=1)
     dfQA['AppName']='iOS'
     dfQA['Country']='Qatar'
+    dfQA['appVersion'] = dfQA.apply(lambda _: '', axis=1) 
     dfQA.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfQA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfQA.rename(columns = {'content':'Review'}, inplace = True)
@@ -422,7 +430,7 @@ def loadAndroiddata_SA():
     dfAndroidSA=dfAndroidSA.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
     dfAndroidSA=dfAndroidSA.drop(['repliedAt'], axis=1)
-    dfAndroidSA=dfAndroidSA.drop(['appVersion'], axis=1)
+    # dfAndroidSA=dfAndroidSA.drop(['appVersion'], axis=1)
     dfAndroidSA['AppName']='Android'
     dfAndroidSA['Country']='Saudi Arabia'
     dfAndroidSA.rename(columns = {'content':'review'}, inplace = True)
@@ -448,6 +456,7 @@ def loadiOSdata_SA():
     dfSA=dfSA.drop(['title'], axis=1)
     dfSA['AppName']='iOS'
     dfSA['Country']='Saudi Arabia'
+    dfSA['appVersion'] = dfSA.apply(lambda _: '', axis=1)
     dfSA.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfSA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfSA.rename(columns = {'content':'Review'}, inplace = True)
@@ -476,7 +485,7 @@ def loadAndroiddata_TH():
     dfAndroidTH=dfAndroidTH.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
     dfAndroidTH=dfAndroidTH.drop(['repliedAt'], axis=1)
-    dfAndroidTH=dfAndroidTH.drop(['appVersion'], axis=1)
+    # dfAndroidTH=dfAndroidTH.drop(['appVersion'], axis=1)
     dfAndroidTH['AppName']='Android'
     dfAndroidTH['Country']='Thailand'
     dfAndroidTH.rename(columns = {'content':'review'}, inplace = True)
@@ -501,6 +510,7 @@ def loadiOSdata_TH():
     dfTH=dfTH.drop(['title'], axis=1)
     dfTH['AppName']='iOS'
     dfTH['Country']='Thailand'
+    dfTH['appVersion'] = dfTH.apply(lambda _: '', axis=1)
     dfTH.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfTH.rename(columns = {'userName':'UserName'}, inplace = True)
     dfTH.rename(columns = {'content':'Review'}, inplace = True)
@@ -530,7 +540,7 @@ def loadAndroiddata_AE():
     dfAndroidAE=dfAndroidAE.drop(['reviewCreatedVersion'], axis=1)
     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
     dfAndroidAE=dfAndroidAE.drop(['repliedAt'], axis=1)
-    dfAndroidAE=dfAndroidAE.drop(['appVersion'], axis=1)
+    # dfAndroidAE=dfAndroidAE.drop(['appVersion'], axis=1)
     dfAndroidAE['AppName']='Android'
     dfAndroidAE['Country']='UAE'
     dfAndroidAE.rename(columns = {'content':'review'}, inplace = True)
@@ -555,6 +565,7 @@ def loadiOSdata_AE():
     dfAE=dfAE.drop(['title'], axis=1)
     dfAE['AppName']='iOS'
     dfAE['Country']='UAE'
+    dfAE['appVersion'] = dfAE.apply(lambda _: '', axis=1)
     dfAE.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfAE.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAE.rename(columns = {'content':'Review'}, inplace = True)
@@ -609,6 +620,7 @@ def loadiOSdata_MV():
     dfMV=dfMV.drop(['title'], axis=1)
     dfMV['AppName']='iOS'
     dfMV['Country']='Maldives'
+    dfMV['appVersion'] = dfMV.apply(lambda _: '', axis=1)
     dfMV.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfMV.rename(columns = {'userName':'UserName'}, inplace = True)
     dfMV.rename(columns = {'content':'Review'}, inplace = True)
@@ -636,7 +648,7 @@ iOSMV=loadiOSdata_MV()
 #     dfAndroidJO=dfAndroidJO.drop(['reviewCreatedVersion'], axis=1)
 #     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
 #     dfAndroidJO=dfAndroidJO.drop(['repliedAt'], axis=1)
-#     dfAndroidJO=dfAndroidJO.drop(['appVersion'], axis=1)
+#     # dfAndroidJO=dfAndroidJO.drop(['appVersion'], axis=1)
 #     dfAndroidJO['AppName']='Android'
 #     dfAndroidJO['Country']='Jordan'
 #     dfAndroidJO.rename(columns = {'content':'review'}, inplace = True)
@@ -661,6 +673,7 @@ def loadiOSdata_JO():
     dfJO=dfJO.drop(['title'], axis=1)
     dfJO['AppName']='iOS'
     dfJO['Country']='Jordan'
+    dfJO['appVersion'] = dfJO.apply(lambda _: '', axis=1)
     dfJO.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfJO.rename(columns = {'userName':'UserName'}, inplace = True)
     dfJO.rename(columns = {'content':'Review'}, inplace = True)
@@ -673,15 +686,10 @@ iOSJO=loadiOSdata_JO()
 
 
 
+# AndroidBH,iOSBH
+# frames = [AndroidAU,iOSAU]
 
-
-
-
-
-
-
-# AndroidAU,AndroidNZ,AndroidCA, iOSAU,iOSNZ,iOSCA,iOSCL,iOSMX,iOSCA,AndroidTH,AndroidSA,AndroidKW,AndroidBH,AndroidQA,AndroidAE,AndroidJO,iOSSA,iOSTH,iOSKW,iOSBH,iOSQA,iOSAE,iOSMV,iOSJO
-frames = [AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidBH,iOSBH,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL,iOSMX]
+frames = [AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL,iOSMX]
 finaldf = pd.concat(frames)
 # st.write(finaldf)
 
@@ -869,9 +877,65 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
     for labelN in ax.containers:
         axar.bar_label(label)
     st.pyplot(figNewer)  
- 
 
 
+    # figo = plt.figure(figsize=(15, 5)) 
+    # axo=sns.barplot(x='Country',y='rating',hue='Country',data=filtered_df,palette='Pastel1')
+    # axo.set(xlabel='Country', ylabel='Ratings', title='Country vs Ratings')
+    # for labelo in axo.containers:
+    #     # axo.bar_label(labelo)
+    #     df['TimeStamp'] = pd.to_datetime(df['TimeStamp'], dayfirst=True)
+    #     df.groupby([df['TimeStamp'].dt.month_name()], sort=False).plot(kind='bar')
+    # st.pyplot(figo)  
+
+    filtered_df["TimeStamp"] = pd.to_datetime(filtered_df["TimeStamp"])
+    # Sort the DF from oldest to most recent recordings
+    filtered_df.sort_values(by="TimeStamp", inplace=True)
+    # Use the column of dates as the DF's index
+    filtered_df.set_index(["TimeStamp"], inplace=True)
+
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    # Create a column that has the year of each date recording
+    filtered_df["year"] = filtered_df.index.year
+    # Create a column that has the month (1-12) of each date recording
+    filtered_df["month"] = filtered_df.index.month
+    # Map the month integers to their proper names
+    filtered_df["month"] = filtered_df["month"].apply(
+        lambda data: months[data-1]
+    )
+    # Make this a categorical column so it can be sorted by the order of values\
+    # in the `months` list, i.e., the proper month order
+    filtered_df["month"] = pd.Categorical(filtered_df["month"], categories=months)
+
+    # Pivot the DF so that there's a column for each month, each row\
+    # represents a year, and the cells have the mean page views for the\
+    # respective year and month
+    df_pivot = pd.pivot_table(
+        filtered_df,
+        values="rating",
+        index="year",
+        columns="month",
+        aggfunc=np.mean
+    )
+
+    # Plot a bar chart using the DF
+    axo = df_pivot.plot(kind="bar")
+    # Get a Matplotlib figure from the axes object for formatting purposes
+    figo = axo.get_figure()
+    # Change the plot dimensions (width, height)
+    figo.set_size_inches(25, 10)
+    # Change the axes labels
+    axo.set_xlabel("Years")
+    axo.set_ylabel("Average App Ratings")
+
+    # Use this to show the plot in a new window
+    # plt.show()
+    # Export the plot as a PNG file
+    # figo.savefig("page_views_barplot.png")
+    
+    # axo=sns.barplot(x='Country',y='rating',hue='Country',data=filtered_df,palette='Pastel1')
+    axo.set(xlabel='Year', ylabel='Ratings', title='Year on Year Ratings')
+    st.pyplot(figo)
 
 
 st.sidebar.markdown("### Hierarchical view of data using TreeMap")
