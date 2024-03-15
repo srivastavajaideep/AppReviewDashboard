@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import nltk
 from PIL import Image
 warnings.filterwarnings('ignore')
+nltk.download('punkt')
 
 
 # st.cache_data.clear()
