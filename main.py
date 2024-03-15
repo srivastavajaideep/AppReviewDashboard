@@ -70,7 +70,6 @@ AndroidAU=loadAndroiddata_AU()
 def loadiOSdata_AU():
     wu_au = AppStore(country='au', app_name='western-union-money-transfers', app_id = '1122288720')
     wu_au.review(how_many=2000)
-    wu_au._request_headers(verify=False)
     dfiOS = pd.DataFrame(np.array(wu_au.reviews),columns=['review'])
     dfNew = dfiOS.join(pd.DataFrame(dfiOS.pop('review').tolist()))
     dfNew=dfNew.drop(['developerResponse'], axis=1)
