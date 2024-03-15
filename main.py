@@ -2,6 +2,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 import numpy as np
+from io import BytesIO
 import warnings
 import base64
 import nltk
@@ -16,24 +17,21 @@ import matplotlib.pyplot as plt
 import nltk
 from PIL import Image
 warnings.filterwarnings('ignore')
-nltk.download('punkt')
-# os.environ['CURL_CA_BUNDLE'] = ''
-# session = requests.Session()
-# session.verify = False
+
 
 # st.cache_data.clear()
 st.set_page_config(page_title="WU App Review DashBoard!!!", page_icon=":sparkles:",layout="wide")
-st.title(" :sparkles: WU App Review DashBoard")
+st.title(" :sparkles: WU App Review DashBoard",)
 st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</style>',unsafe_allow_html=True)
 
 
-# # wu_mask = np.array(Image.open('wul.png'))
+# wu_mask = np.array(Image.open('wul.png'))
 # dir = os.path.dirname(__file__)
 # filename = os.path.join(dir, 'Images/wu.png')
 image = Image.open('wu.png')
 left_co, cent_co,last_co = st.columns(3)
 with cent_co:
-    st.image(image, caption='')
+    st.image(image, caption='',use_column_width=True)
 
 
 au_reviews = reviews_all(
@@ -856,6 +854,15 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
        ax.bar_label(label)
     st.pyplot(fig)
 
+    # Save the plot to a PDF buffer
+    # pdf_buffer = BytesIO()
+    # plt.savefig(pdf_buffer, format='pdf')
+    # pdf_buffer.seek(0)
+
+# ReportLab
+    with open('output.pdf', 'wb') as f:
+        pdf_buffer.seek(0)
+        f.write(pdf_buffer.read())
 
     # figN = plt.figure(figsize=(20, 5))    
     
@@ -947,9 +954,9 @@ if not st.sidebar.checkbox("Hide", True , key='100'): #by defualt hide the check
     # fig3 = px.treemap(df, path = ["Network","Connected_Profile","Received_From_(Network_Name)"], values = "Review_Rating",hover_data = ["Review_Rating"],
     #                 color = "Received_From_(Network_Name)")
     fig3 = px.treemap(filtered_df, path = ["Country","AppName","review"], values = "rating",hover_data = ["rating"],
-                    color = "review")
+               color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),      color = "review")
     # ,"Connected_Profile"
-    fig3.update_layout(width = 800, height = 650)
+    # fig3.update_layout(width = 800, height = 650)
     st.plotly_chart(fig3, use_container_width=True)
 
 
@@ -1009,7 +1016,7 @@ def remove_emojis(data):
 words=filtered_df['review'].dropna().apply(nltk.word_tokenize)
 
 st.sidebar.header("Word Cloud (Customer Reviews)")
-word_sentiment = st.sidebar.radio('Display word cloud for what sentiment?', ('positive', 'neutral', 'negative'))
+word_sentiment = st.sidebar.radio('Display word cloud for which sentiment?', ('positive', 'neutral', 'negative'))
 if not st.sidebar.checkbox("Close", True, key='3'):
     st.subheader('Word cloud for %s sentiment' % (word_sentiment))
     df = filtered_df[filtered_df['Sentiment']==word_sentiment]
