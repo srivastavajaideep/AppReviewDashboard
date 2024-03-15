@@ -17,6 +17,9 @@ import nltk
 from PIL import Image
 warnings.filterwarnings('ignore')
 nltk.download('punkt')
+os.environ['CURL_CA_BUNDLE'] = ''
+session = requests.Session()
+session.verify = False
 
 # st.cache_data.clear()
 st.set_page_config(page_title="WU App Review DashBoard!!!", page_icon=":sparkles:",layout="wide")
