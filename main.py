@@ -861,9 +861,9 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
     # pdf_buffer.seek(0)
 
 # ReportLab
-    with open('output.pdf', 'wb') as f:
-        pdf_buffer.seek(0)
-        f.write(pdf_buffer.read())
+    # with open('output.pdf', 'wb') as f:
+    #     pdf_buffer.seek(0)
+    #     f.write(pdf_buffer.read())
 
     # figN = plt.figure(figsize=(20, 5))    
     
