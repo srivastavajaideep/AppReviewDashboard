@@ -278,39 +278,34 @@ def loadiOSdata_KW():
 iOSKW=loadiOSdata_KW()
 
 
-mx_reviews = reviews_all(
-    'com.westernunion.moneytransferr3app.mcc2',
-    sleep_milliseconds=0, # defaults to 0
-    lang='en', # defaults to 'en'
-    country='mx', # defaults to 'us'
-    sort=Sort.NEWEST, # defaults to Sort.MOST_RELEVANT
-)
-@st.cache_data(persist=True)
-def loadAndroiddata_MX(): 
-    dfAndroidMX = pd.DataFrame(np.array(mx_reviews),columns=['review'])
-    dfAndroidMX = dfAndroidMX.join(pd.DataFrame(dfAndroidMX.pop('review').tolist()))
-    dfAndroidMX=dfAndroidMX.drop(['reviewId'], axis=1)
-    dfAndroidMX=dfAndroidMX.drop(['thumbsUpCount'], axis=1)
-    dfAndroidMX=dfAndroidMX.drop(['reviewCreatedVersion'], axis=1)
-    # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
-    dfAndroidMX=dfAndroidMX.drop(['repliedAt'], axis=1)
-    # dfAndroidKW=dfAndroidKW.drop(['appVersion'], axis=1)
-    dfAndroidMX['AppName']='Android'
-    dfAndroidMX['Country']='Mexico'
-    dfAndroidMX.rename(columns = {'content':'review'}, inplace = True)
-    dfAndroidMX.rename(columns = {'userName':'UserName'}, inplace = True)
-    dfAndroidMX.rename(columns = {'score':'rating'}, inplace = True)
-    dfAndroidMX.rename(columns = {'at':'TimeStamp'}, inplace = True)
-    dfAndroidMX.rename(columns = {'replyContent':'WU_Response'}, inplace = True) 
-    dfAndroidMX=dfAndroidMX.drop(['userImage'], axis=1)
-    return dfAndroidMX
+# mx_reviews = reviews_all(
+#     'com.westernunion.moneytransferr3app.mcc2',
+#     sleep_milliseconds=0, # defaults to 0
+#     lang='en', # defaults to 'en'
+#     country='mx', # defaults to 'us'
+#     sort=Sort.NEWEST, # defaults to Sort.MOST_RELEVANT
+# )
+# @st.cache_data(persist=True)
+# def loadAndroiddata_MX(): 
+#     dfAndroidMX = pd.DataFrame(np.array(mx_reviews),columns=['review'])
+#     dfAndroidMX = dfAndroidMX.join(pd.DataFrame(dfAndroidMX.pop('review').tolist()))
+#     dfAndroidMX=dfAndroidMX.drop(['reviewId'], axis=1)
+#     dfAndroidMX=dfAndroidMX.drop(['thumbsUpCount'], axis=1)
+#     dfAndroidMX=dfAndroidMX.drop(['reviewCreatedVersion'], axis=1)
+#     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
+#     dfAndroidMX=dfAndroidMX.drop(['repliedAt'], axis=1)
+#     # dfAndroidKW=dfAndroidKW.drop(['appVersion'], axis=1)
+#     dfAndroidMX['AppName']='Android'
+#     dfAndroidMX['Country']='Mexico'
+#     dfAndroidMX.rename(columns = {'content':'review'}, inplace = True)
+#     dfAndroidMX.rename(columns = {'userName':'UserName'}, inplace = True)
+#     dfAndroidMX.rename(columns = {'score':'rating'}, inplace = True)
+#     dfAndroidMX.rename(columns = {'at':'TimeStamp'}, inplace = True)
+#     dfAndroidMX.rename(columns = {'replyContent':'WU_Response'}, inplace = True) 
+#     dfAndroidMX=dfAndroidMX.drop(['userImage'], axis=1)
+#     return dfAndroidMX
 
-AndroidMX=loadAndroiddata_MX() 
-
-
-
-
-
+# AndroidMX=loadAndroiddata_MX() 
 
 
 
@@ -777,7 +772,7 @@ iOSUS=loadiOSdata_US()
 
 # AndroidBH,iOSBH
 # frames = [AndroidAU,iOSAU]
-frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,AndroidMX,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
+frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
 
 finaldf = pd.concat(frames)
 # st.write(finaldf)
