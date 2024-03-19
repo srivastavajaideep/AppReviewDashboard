@@ -777,7 +777,7 @@ iOSUS=loadiOSdata_US()
 
 # AndroidBH,iOSBH
 # frames = [AndroidAU,iOSAU]
-frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,AndroidMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL,iOSMX]
+frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,AndroidMX,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
 
 finaldf = pd.concat(frames)
 # st.write(finaldf)
