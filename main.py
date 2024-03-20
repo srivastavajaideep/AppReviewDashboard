@@ -34,7 +34,6 @@ left_co, cent_co,last_co = st.columns(3)
 with cent_co:
     st.image(image, caption='',use_column_width=True)
 
-
 au_reviews = reviews_all(
     'com.westernunion.moneytransferr3app.au',
     sleep_milliseconds=0, # defaults to 0
@@ -68,7 +67,7 @@ AndroidAU=loadAndroiddata_AU()
 @st.cache_data(persist=True)
 def loadiOSdata_AU():
     wu_au = AppStore(country='au', app_name='western-union-money-transfers', app_id = '1122288720')
-    wu_au.review(how_many=100)
+    wu_au.review(how_many=20,sleep=2)
     dfiOS = pd.DataFrame(np.array(wu_au.reviews),columns=['review'])
     dfNew = dfiOS.join(pd.DataFrame(dfiOS.pop('review').tolist()))
     dfNew=dfNew.drop(['developerResponse'], axis=1)
@@ -122,7 +121,7 @@ AndroidBH=loadAndroiddata_BH()
 @st.cache_data(persist=True)
 def loadiOSdata_BH():
     wu_bh = AppStore(country='bh', app_name='western-union-send-money', app_id = '1314010624')
-    wu_bh.review(how_many=100)
+    wu_bh.review(how_many=20,sleep=2)
     dfiOSBH = pd.DataFrame(np.array(wu_bh.reviews),columns=['review'])
     dfBH = dfiOSBH.join(pd.DataFrame(dfiOSBH.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -178,7 +177,7 @@ AndroidCA=loadAndroiddata_CA()
 @st.cache_data(persist=True)
 def loadiOSdata_CA():
     wu_ca = AppStore(country='ca', app_name='western-union-send-money', app_id = '1110191056')
-    wu_ca.review(how_many=100)
+    wu_ca.review(how_many=20,sleep=2)
     dfiOSCA = pd.DataFrame(np.array(wu_ca.reviews),columns=['review'])
     dfCA = dfiOSCA.join(pd.DataFrame(dfiOSCA.pop('review').tolist()))
     dfCA=dfCA.drop(['developerResponse'], axis=1)
@@ -202,7 +201,7 @@ iOSCA=loadiOSdata_CA()
 @st.cache_data(persist=True)
 def loadiOSdata_CL():
     wu_cl = AppStore(country='cl', app_name='western-union-envío-de-dinero', app_id = '1304223498')
-    wu_cl.review(how_many=100)
+    wu_cl.review(how_many=20,sleep=2)
     dfiOSCL = pd.DataFrame(np.array(wu_cl.reviews),columns=['review'])
     dfNewCL = dfiOSCL.join(pd.DataFrame(dfiOSCL.pop('review').tolist()))
     # dfNewCL=dfNewCL.drop(['developerResponse'], axis=1)
@@ -258,7 +257,7 @@ AndroidKW=loadAndroiddata_KW()
 @st.cache_data(persist=True)
 def loadiOSdata_KW():
     wu_kw = AppStore(country='kw', app_name='western-union-send-money', app_id = '1173794098')
-    wu_kw.review(how_many=100)
+    wu_kw.review(how_many=20,sleep=2)
     dfiOSKW = pd.DataFrame(np.array(wu_kw.reviews),columns=['review'])
     dfKW = dfiOSKW.join(pd.DataFrame(dfiOSKW.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -278,41 +277,42 @@ def loadiOSdata_KW():
 iOSKW=loadiOSdata_KW()
 
 
-# mx_reviews = reviews_all(
-#     'com.westernunion.moneytransferr3app.mcc2',
-#     sleep_milliseconds=0, # defaults to 0
-#     lang='en', # defaults to 'en'
-#     country='mx', # defaults to 'us'
-#     sort=Sort.NEWEST, # defaults to Sort.MOST_RELEVANT
-# )
-# @st.cache_data(persist=True)
-# def loadAndroiddata_MX(): 
-#     dfAndroidMX = pd.DataFrame(np.array(mx_reviews),columns=['review'])
-#     dfAndroidMX = dfAndroidMX.join(pd.DataFrame(dfAndroidMX.pop('review').tolist()))
-#     dfAndroidMX=dfAndroidMX.drop(['reviewId'], axis=1)
-#     dfAndroidMX=dfAndroidMX.drop(['thumbsUpCount'], axis=1)
-#     dfAndroidMX=dfAndroidMX.drop(['reviewCreatedVersion'], axis=1)
-#     # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
-#     dfAndroidMX=dfAndroidMX.drop(['repliedAt'], axis=1)
-#     # dfAndroidKW=dfAndroidKW.drop(['appVersion'], axis=1)
-#     dfAndroidMX['AppName']='Android'
-#     dfAndroidMX['Country']='Mexico'
-#     dfAndroidMX.rename(columns = {'content':'review'}, inplace = True)
-#     dfAndroidMX.rename(columns = {'userName':'UserName'}, inplace = True)
-#     dfAndroidMX.rename(columns = {'score':'rating'}, inplace = True)
-#     dfAndroidMX.rename(columns = {'at':'TimeStamp'}, inplace = True)
-#     dfAndroidMX.rename(columns = {'replyContent':'WU_Response'}, inplace = True) 
-#     dfAndroidMX=dfAndroidMX.drop(['userImage'], axis=1)
-#     return dfAndroidMX
+mx_reviews = reviews_all(
+    'com.westernunion.moneytransferr3app.mcc2',
+    sleep_milliseconds=0, # defaults to 0
+    lang='mx', # defaults to 'en'
+    country='mx', # defaults to 'us'
+    sort=Sort.NEWEST, # defaults to Sort.MOST_RELEVANT
+)
+@st.cache_data(persist=True)
+def loadAndroiddata_MX(): 
+    dfAndroidMX = pd.DataFrame(np.array(mx_reviews),columns=['review'])
+    dfAndroidMX = dfAndroidMX.join(pd.DataFrame(dfAndroidMX.pop('review').tolist()))
+    dfAndroidMX=dfAndroidMX.drop(['reviewId'], axis=1)
+    dfAndroidMX=dfAndroidMX.drop(['thumbsUpCount'], axis=1)
+    dfAndroidMX=dfAndroidMX.drop(['reviewCreatedVersion'], axis=1)
+    # dfAndroid=dfAndroid.drop(['replyContent'], axis=1)
+    dfAndroidMX=dfAndroidMX.drop(['repliedAt'], axis=1)
+    # dfAndroidKW=dfAndroidKW.drop(['appVersion'], axis=1)
+    dfAndroidMX['AppName']='Android'
+    dfAndroidMX['Country']='Mexico'
+    dfAndroidMX.rename(columns = {'content':'review'}, inplace = True)
+    dfAndroidMX.rename(columns = {'userName':'UserName'}, inplace = True)
+    dfAndroidMX.rename(columns = {'score':'rating'}, inplace = True)
+    dfAndroidMX.rename(columns = {'at':'TimeStamp'}, inplace = True)
+    dfAndroidMX.rename(columns = {'replyContent':'WU_Response'}, inplace = True) 
+    dfAndroidMX=dfAndroidMX.drop(['userImage'], axis=1)
+    return dfAndroidMX
 
-# AndroidMX=loadAndroiddata_MX() 
+AndroidMX=loadAndroiddata_MX() 
+
 
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_MX():
     wu_mx = AppStore(country='mx', app_name='western-union-send-money', app_id = '1146349983')
-    wu_mx.review(how_many=100)
+    wu_mx.review(how_many=20,sleep=2)
     dfiOSMX = pd.DataFrame(np.array(wu_mx.reviews),columns=['review'])
     dfNewMX = dfiOSMX.join(pd.DataFrame(dfiOSMX.pop('review').tolist()))
     # dfNewMX=dfNewMX.drop(['developerResponse'], axis=1)
@@ -368,7 +368,7 @@ AndroidNZ=loadAndroiddata_NZ()
 @st.cache_data(persist=True)
 def loadiOSdata_NZ():
     wu_nz = AppStore(country='nz', app_name='western-union-remit-money', app_id = '1226778839')
-    wu_nz.review(how_many=100)
+    wu_nz.review(how_many=20,sleep=2)
     dfiOSNZ = pd.DataFrame(np.array(wu_nz.reviews),columns=['review'])
     dfNZ = dfiOSNZ.join(pd.DataFrame(dfiOSNZ.pop('review').tolist()))
     # dfNZ=dfNZ.drop(['developerResponse'], axis=1)
@@ -423,7 +423,7 @@ AndroidQA=loadAndroiddata_QA()
 @st.cache_data(persist=True)
 def loadiOSdata_QA():
     wu_qa = AppStore(country='qa', app_name='western-union-send-money', app_id = '1173792939')
-    wu_qa.review(how_many=100)
+    wu_qa.review(how_many=20,sleep=2)
     dfiOSQA = pd.DataFrame(np.array(wu_qa.reviews),columns=['review'])
     dfQA = dfiOSQA.join(pd.DataFrame(dfiOSQA.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -479,7 +479,7 @@ AndroidSA=loadAndroiddata_SA()
 @st.cache_data(persist=True)
 def loadiOSdata_SA():
     wu_sa = AppStore(country='sa', app_name='western-union-send-money', app_id = '1459024696')
-    wu_sa.review(how_many=100)
+    wu_sa.review(how_many=20,sleep=2)
     dfiOSSA = pd.DataFrame(np.array(wu_sa.reviews),columns=['review'])
     dfSA = dfiOSSA.join(pd.DataFrame(dfiOSSA.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -533,7 +533,7 @@ AndroidTH=loadAndroiddata_TH()
 @st.cache_data(persist=True)
 def loadiOSdata_TH():
     wu_th = AppStore(country='th', app_name='western-union-send-money', app_id = '1459226729')
-    wu_th.review(how_many=100)
+    wu_th.review(how_many=20,sleep=2)
     dfiOSTH = pd.DataFrame(np.array(wu_th.reviews),columns=['review'])
     dfTH = dfiOSTH.join(pd.DataFrame(dfiOSTH.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -588,7 +588,7 @@ AndroidAE=loadAndroiddata_AE()
 @st.cache_data(persist=True)
 def loadiOSdata_AE():
     wu_ae = AppStore(country='ae', app_name='western-union-send-money', app_id = '1171330611')
-    wu_ae.review(how_many=100)
+    wu_ae.review(how_many=20,sleep=2)
     dfiOSAE = pd.DataFrame(np.array(wu_ae.reviews),columns=['review'])
     dfAE = dfiOSAE.join(pd.DataFrame(dfiOSAE.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -643,7 +643,7 @@ iOSAE=loadiOSdata_AE()
 @st.cache_data(persist=True)
 def loadiOSdata_MV():
     wu_mv = AppStore(country='mv', app_name='western-union-send-money', app_id = '1483742169')
-    wu_mv.review(how_many=100)
+    wu_mv.review(how_many=20,sleep=2)
     dfiOSMV = pd.DataFrame(np.array(wu_mv.reviews),columns=['review'])
     dfMV = dfiOSMV.join(pd.DataFrame(dfiOSMV.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -696,7 +696,7 @@ iOSMV=loadiOSdata_MV()
 @st.cache_data(persist=True)
 def loadiOSdata_JO():
     wu_jo = AppStore(country='jo', app_name='western-union-send-money', app_id = '1459023219')
-    wu_jo.review(how_many=100)
+    wu_jo.review(how_many=20,sleep=2)
     dfiOSJO = pd.DataFrame(np.array(wu_jo.reviews),columns=['review'])
     dfJO = dfiOSJO.join(pd.DataFrame(dfiOSJO.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -750,7 +750,7 @@ AndroidUS=loadAndroiddata_US()
 @st.cache_data(persist=True)
 def loadiOSdata_US():
     wu_us = AppStore(country='us', app_name='western-union-send-money-now', app_id = '424716908')
-    wu_us.review(how_many=100)
+    wu_us.review(how_many=20,sleep=2)
     dfiOSUS = pd.DataFrame(np.array(wu_us.reviews),columns=['review'])
     dfUS = dfiOSUS.join(pd.DataFrame(dfiOSUS.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -772,7 +772,7 @@ iOSUS=loadiOSdata_US()
 
 # AndroidBH,iOSBH
 # frames = [AndroidAU,iOSAU]
-frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
+frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,AndroidMX,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
 
 finaldf = pd.concat(frames)
 # st.write(finaldf)
@@ -943,9 +943,7 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
     # pdf_buffer.seek(0)
 
 # ReportLab
-    # with open('output.pdf', 'wb') as f:
-    #     pdf_buffer.seek(0)
-    #     f.write(pdf_buffer.read())
+   
 
     # figN = plt.figure(figsize=(20, 5))    
     
