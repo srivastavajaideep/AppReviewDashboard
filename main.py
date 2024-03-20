@@ -34,6 +34,7 @@ left_co, cent_co,last_co = st.columns(3)
 with cent_co:
     st.image(image, caption='',use_column_width=True)
 
+
 au_reviews = reviews_all(
     'com.westernunion.moneytransferr3app.au',
     sleep_milliseconds=0, # defaults to 0
