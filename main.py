@@ -5,7 +5,11 @@ import numpy as np
 from io import BytesIO
 import warnings
 import base64
+# from fpdf import FPDF
+# import tempfile
+# from tempfile import NamedTemporaryFile
 import nltk
+import random
 import plotly.express as px
 import re
 import os
@@ -16,6 +20,8 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 import nltk
 from PIL import Image
+import plotly.express as px
+import plotly.graph_objects as go
 warnings.filterwarnings('ignore')
 nltk.download('punkt')
 
@@ -24,6 +30,7 @@ nltk.download('punkt')
 st.set_page_config(page_title="WU App Review DashBoard!!!", page_icon=":sparkles:",layout="wide")
 st.title(" :sparkles: WU App Review DashBoard",)
 st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</style>',unsafe_allow_html=True)
+
 
 
 # wu_mask = np.array(Image.open('wul.png'))
@@ -62,13 +69,15 @@ def loadAndroiddata_AU():
     dfAndroidAU=dfAndroidAU.drop(['userImage'], axis=1)
     return dfAndroidAU
 
-AndroidAU=loadAndroiddata_AU() 
-
+try:
+ AndroidAU=loadAndroiddata_AU() 
+except KeyError:
+ AndroidAU = pd.DataFrame()
 
 @st.cache_data(persist=True)
 def loadiOSdata_AU():
     wu_au = AppStore(country='au', app_name='western-union-money-transfers', app_id = '1122288720')
-    wu_au.review(how_many=20,sleep=2)
+    wu_au.review(how_many=200)
     dfiOS = pd.DataFrame(np.array(wu_au.reviews),columns=['review'])
     dfNew = dfiOS.join(pd.DataFrame(dfiOS.pop('review').tolist()))
     dfNew=dfNew.drop(['developerResponse'], axis=1)
@@ -85,8 +94,10 @@ def loadiOSdata_AU():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfNew
 
-iOSAU=loadiOSdata_AU()
-
+try:
+ iOSAU=loadiOSdata_AU()
+except KeyError:
+ iOSAU = pd.DataFrame()
 
 
 bh_reviews = reviews_all(
@@ -116,13 +127,15 @@ def loadAndroiddata_BH():
     dfAndroidBH=dfAndroidBH.drop(['userImage'], axis=1)
     return dfAndroidBH
 
-AndroidBH=loadAndroiddata_BH() 
-
+try:
+ AndroidBH=loadAndroiddata_BH() 
+except KeyError:
+ AndroidBH = pd.DataFrame()
 
 @st.cache_data(persist=True)
 def loadiOSdata_BH():
     wu_bh = AppStore(country='bh', app_name='western-union-send-money', app_id = '1314010624')
-    wu_bh.review(how_many=20,sleep=2)
+    wu_bh.review(how_many=200)
     dfiOSBH = pd.DataFrame(np.array(wu_bh.reviews),columns=['review'])
     dfBH = dfiOSBH.join(pd.DataFrame(dfiOSBH.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -140,8 +153,11 @@ def loadiOSdata_BH():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfBH
 
-iOSBH=loadiOSdata_BH()
 
+try:
+ iOSBH=loadiOSdata_BH()
+except KeyError:
+ iOSBH = pd.DataFrame()
 
 
 ca_reviews = reviews_all(
@@ -171,14 +187,16 @@ def loadAndroiddata_CA():
     dfAndroidCA.rename(columns = {'replyContent':'WU_Response'}, inplace = True) 
     return dfAndroidCA
 
-AndroidCA=loadAndroiddata_CA() 
-
+try: 
+ AndroidCA=loadAndroiddata_CA() 
+except KeyError:
+ AndroidCA = pd.DataFrame()
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_CA():
     wu_ca = AppStore(country='ca', app_name='western-union-send-money', app_id = '1110191056')
-    wu_ca.review(how_many=20,sleep=2)
+    wu_ca.review(how_many=200)
     dfiOSCA = pd.DataFrame(np.array(wu_ca.reviews),columns=['review'])
     dfCA = dfiOSCA.join(pd.DataFrame(dfiOSCA.pop('review').tolist()))
     dfCA=dfCA.drop(['developerResponse'], axis=1)
@@ -195,14 +213,16 @@ def loadiOSdata_CA():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfCA
 
-iOSCA=loadiOSdata_CA()
-
+try: 
+ iOSCA=loadiOSdata_CA()
+except KeyError:
+ iOSCA = pd.DataFrame()
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_CL():
     wu_cl = AppStore(country='cl', app_name='western-union-envío-de-dinero', app_id = '1304223498')
-    wu_cl.review(how_many=20,sleep=2)
+    wu_cl.review(how_many=200)
     dfiOSCL = pd.DataFrame(np.array(wu_cl.reviews),columns=['review'])
     dfNewCL = dfiOSCL.join(pd.DataFrame(dfiOSCL.pop('review').tolist()))
     # dfNewCL=dfNewCL.drop(['developerResponse'], axis=1)
@@ -219,8 +239,10 @@ def loadiOSdata_CL():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfNewCL
 
-iOSCL=loadiOSdata_CL()
-
+try:
+ iOSCL=loadiOSdata_CL()
+except KeyError:
+ iOSCL = pd.DataFrame()
 
 
 
@@ -251,14 +273,16 @@ def loadAndroiddata_KW():
     dfAndroidKW=dfAndroidKW.drop(['userImage'], axis=1)
     return dfAndroidKW
 
-AndroidKW=loadAndroiddata_KW() 
-
+try:
+ AndroidKW=loadAndroiddata_KW() 
+except KeyError:
+ AndroidKW = pd.DataFrame()
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_KW():
     wu_kw = AppStore(country='kw', app_name='western-union-send-money', app_id = '1173794098')
-    wu_kw.review(how_many=20,sleep=2)
+    wu_kw.review(how_many=200)
     dfiOSKW = pd.DataFrame(np.array(wu_kw.reviews),columns=['review'])
     dfKW = dfiOSKW.join(pd.DataFrame(dfiOSKW.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -275,8 +299,10 @@ def loadiOSdata_KW():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfKW
 
-iOSKW=loadiOSdata_KW()
-
+try: 
+ iOSKW=loadiOSdata_KW()
+except KeyError:
+ iOSKW = pd.DataFrame()
 
 # mx_reviews = reviews_all(
 #     'com.westernunion.moneytransferr3app.mcc2',
@@ -313,7 +339,7 @@ iOSKW=loadiOSdata_KW()
 @st.cache_data(persist=True)
 def loadiOSdata_MX():
     wu_mx = AppStore(country='mx', app_name='western-union-send-money', app_id = '1146349983')
-    wu_mx.review(how_many=20,sleep=2)
+    wu_mx.review(how_many=200)
     dfiOSMX = pd.DataFrame(np.array(wu_mx.reviews),columns=['review'])
     dfNewMX = dfiOSMX.join(pd.DataFrame(dfiOSMX.pop('review').tolist()))
     # dfNewMX=dfNewMX.drop(['developerResponse'], axis=1)
@@ -330,7 +356,11 @@ def loadiOSdata_MX():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfNewMX
 
-iOSMX=loadiOSdata_MX()
+try: 
+ iOSMX=loadiOSdata_MX()
+except KeyError:
+ iOSMX = pd.DataFrame()
+
 
 
 nz_reviews = reviews_all(
@@ -362,14 +392,16 @@ def loadAndroiddata_NZ():
     dfAndroidNZ=dfAndroidNZ.drop(['userImage'], axis=1)
     return dfAndroidNZ
 
-AndroidNZ=loadAndroiddata_NZ()
-
+try:
+ AndroidNZ=loadAndroiddata_NZ()
+except KeyError:
+ AndroidNZ = pd.DataFrame()
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_NZ():
     wu_nz = AppStore(country='nz', app_name='western-union-remit-money', app_id = '1226778839')
-    wu_nz.review(how_many=20,sleep=2)
+    wu_nz.review(how_many=200)
     dfiOSNZ = pd.DataFrame(np.array(wu_nz.reviews),columns=['review'])
     dfNZ = dfiOSNZ.join(pd.DataFrame(dfiOSNZ.pop('review').tolist()))
     # dfNZ=dfNZ.drop(['developerResponse'], axis=1)
@@ -386,7 +418,11 @@ def loadiOSdata_NZ():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfNZ
 
-iOSNZ=loadiOSdata_NZ()
+try:
+ iOSNZ=loadiOSdata_NZ()
+except KeyError:
+ iOSNZ = pd.DataFrame()
+
 
 
 
@@ -418,13 +454,17 @@ def loadAndroiddata_QA():
     dfAndroidQA=dfAndroidQA.drop(['userImage'], axis=1)
     return dfAndroidQA
 
-AndroidQA=loadAndroiddata_QA() 
+try:
+ AndroidQA=loadAndroiddata_QA() 
+except KeyError:
+ AndroidQA = pd.DataFrame()
+
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_QA():
     wu_qa = AppStore(country='qa', app_name='western-union-send-money', app_id = '1173792939')
-    wu_qa.review(how_many=20,sleep=2)
+    wu_qa.review(how_many=100)
     dfiOSQA = pd.DataFrame(np.array(wu_qa.reviews),columns=['review'])
     dfQA = dfiOSQA.join(pd.DataFrame(dfiOSQA.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -441,8 +481,10 @@ def loadiOSdata_QA():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfQA
 
-iOSQA=loadiOSdata_QA()
-
+try: 
+ iOSQA=loadiOSdata_QA()
+except KeyError:
+ iOSQA = pd.DataFrame()
 
 
 
@@ -473,14 +515,16 @@ def loadAndroiddata_SA():
     dfAndroidSA=dfAndroidSA.drop(['userImage'], axis=1)
     return dfAndroidSA
 
-AndroidSA=loadAndroiddata_SA() 
-
+try:
+ AndroidSA=loadAndroiddata_SA() 
+except KeyError:
+ AndroidSA = pd.DataFrame()
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_SA():
     wu_sa = AppStore(country='sa', app_name='western-union-send-money', app_id = '1459024696')
-    wu_sa.review(how_many=20,sleep=2)
+    wu_sa.review(how_many=200)
     dfiOSSA = pd.DataFrame(np.array(wu_sa.reviews),columns=['review'])
     dfSA = dfiOSSA.join(pd.DataFrame(dfiOSSA.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -497,7 +541,11 @@ def loadiOSdata_SA():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfSA
 
-iOSSA=loadiOSdata_SA()
+try:
+ iOSSA=loadiOSdata_SA()
+except KeyError:
+ iOSSA = pd.DataFrame()
+
 
 
 
@@ -528,13 +576,18 @@ def loadAndroiddata_TH():
     dfAndroidTH=dfAndroidTH.drop(['userImage'], axis=1)
     return dfAndroidTH
 
-AndroidTH=loadAndroiddata_TH() 
+try:
+ AndroidTH=loadAndroiddata_TH() 
+except KeyError:
+ AndroidTH = pd.DataFrame()
+
+
 
 
 @st.cache_data(persist=True)
 def loadiOSdata_TH():
     wu_th = AppStore(country='th', app_name='western-union-send-money', app_id = '1459226729')
-    wu_th.review(how_many=20,sleep=2)
+    wu_th.review(how_many=200)
     dfiOSTH = pd.DataFrame(np.array(wu_th.reviews),columns=['review'])
     dfTH = dfiOSTH.join(pd.DataFrame(dfiOSTH.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -551,9 +604,10 @@ def loadiOSdata_TH():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfTH
 
-iOSTH=loadiOSdata_TH()
-
-
+try:
+ iOSTH=loadiOSdata_TH()
+except KeyError:
+ iOSTH = pd.DataFrame()
 
 
 ae_reviews = reviews_all(
@@ -583,13 +637,15 @@ def loadAndroiddata_AE():
     dfAndroidAE=dfAndroidAE.drop(['userImage'], axis=1)
     return dfAndroidAE
 
-AndroidAE=loadAndroiddata_AE() 
-
+try:
+ AndroidAE=loadAndroiddata_AE() 
+except KeyError:
+ AndroidAE = pd.DataFrame()
 
 @st.cache_data(persist=True)
 def loadiOSdata_AE():
     wu_ae = AppStore(country='ae', app_name='western-union-send-money', app_id = '1171330611')
-    wu_ae.review(how_many=20,sleep=2)
+    wu_ae.review(how_many=200)
     dfiOSAE = pd.DataFrame(np.array(wu_ae.reviews),columns=['review'])
     dfAE = dfiOSAE.join(pd.DataFrame(dfiOSAE.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -606,8 +662,10 @@ def loadiOSdata_AE():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfAE
 
-iOSAE=loadiOSdata_AE()
-
+try:
+ iOSAE=loadiOSdata_AE()
+except KeyError:
+ iOSAE = pd.DataFrame()
 
 
 # mv_reviews = reviews_all(
@@ -644,7 +702,7 @@ iOSAE=loadiOSdata_AE()
 @st.cache_data(persist=True)
 def loadiOSdata_MV():
     wu_mv = AppStore(country='mv', app_name='western-union-send-money', app_id = '1483742169')
-    wu_mv.review(how_many=20,sleep=2)
+    wu_mv.review(how_many=200)
     dfiOSMV = pd.DataFrame(np.array(wu_mv.reviews),columns=['review'])
     dfMV = dfiOSMV.join(pd.DataFrame(dfiOSMV.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -661,8 +719,10 @@ def loadiOSdata_MV():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfMV
 
-iOSMV=loadiOSdata_MV()
-
+try: 
+ iOSMV=loadiOSdata_MV()
+except KeyError:
+ iOSMV = pd.DataFrame()
 
 # jo_reviews = reviews_all(
 #     'com.westernunion.moneytransferr3app.jo',
@@ -697,7 +757,7 @@ iOSMV=loadiOSdata_MV()
 @st.cache_data(persist=True)
 def loadiOSdata_JO():
     wu_jo = AppStore(country='jo', app_name='western-union-send-money', app_id = '1459023219')
-    wu_jo.review(how_many=20,sleep=2)
+    wu_jo.review(how_many=200)
     dfiOSJO = pd.DataFrame(np.array(wu_jo.reviews),columns=['review'])
     dfJO = dfiOSJO.join(pd.DataFrame(dfiOSJO.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -714,8 +774,10 @@ def loadiOSdata_JO():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfJO
 
-iOSJO=loadiOSdata_JO()
-
+try:
+ iOSJO=loadiOSdata_JO()
+except KeyError:
+ iOSJO = pd.DataFrame()
 
 
 us_reviews = reviews_all(
@@ -745,13 +807,15 @@ def loadAndroiddata_US():
     dfAndroidUS=dfAndroidUS.drop(['userImage'], axis=1)
     return dfAndroidUS
 
-AndroidUS=loadAndroiddata_US() 
-
+try:
+ AndroidUS=loadAndroiddata_US() 
+except KeyError:
+ AndroidUS = pd.DataFrame()
 
 @st.cache_data(persist=True)
 def loadiOSdata_US():
     wu_us = AppStore(country='us', app_name='western-union-send-money-now', app_id = '424716908')
-    wu_us.review(how_many=20,sleep=2)
+    wu_us.review(how_many=200)
     dfiOSUS = pd.DataFrame(np.array(wu_us.reviews),columns=['review'])
     dfUS = dfiOSUS.join(pd.DataFrame(dfiOSUS.pop('review').tolist()))
     # dfSA=dfSA.drop(['developerResponse'], axis=1)
@@ -768,11 +832,13 @@ def loadiOSdata_US():
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfUS
 
-iOSUS=loadiOSdata_US()
-
+try: 
+ iOSUS=loadiOSdata_US()
+except KeyError:
+ iOSUS = pd.DataFrame()
 
 # AndroidBH,iOSBH
-# frames = [AndroidAU,iOSAU]AndroidMX
+# frames = [AndroidAU,iOSAU,AndroidMX]
 frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
 
 finaldf = pd.concat(frames)
@@ -808,39 +874,18 @@ else:
     df1 = df[df["Country"].isin(country)]
 
 
-# Create for Network
 region = st.sidebar.multiselect("Select the App Type", df["AppName"].unique())
 if not region:
     df2 = df1.copy()
 else:
     df2 = df1[df1["AppName"].isin(region)]
 
-# # Create for State
-# state = st.sidebar.multiselect("Pick the Connected Profile", df2["Connected_Profile"].unique())
-# if not state:
-#     df3 = df2.copy()
-# else:
-#     df3 = df2[df2["Connected_Profile"].isin(state)]
-
-
-# # Create for City
-# city = st.sidebar.multiselect("Pick the City",df3["City"].unique())
-
-# # Filter the data based on Region, State and City
-
 
 if not country and not region :
     filtered_df = df
-# elif country :
-#     # filtered_df = df[df["Country"].isin(country) ]
-#     filtered_df=df2
-# elif region :
-#     filtered_df = df1[df1["AppName"].isin(region) ]
 else:
-    # filtered_df = df[df["Country"].isin(country) & df["AppName"].isin(region) ]
     filtered_df=df2
 
-# filtered_df=filtered_df.rename(columns = {'Review Rating':'Rating'}, inplace = True) 
 
 
 def getsentiment(Rating):
@@ -862,41 +907,6 @@ select = st.sidebar.selectbox('Type of Visualization', ['Bar plot', 'Pie chart']
 sentiment_count = filtered_df['Sentiment'].value_counts()
 sentiment_count = pd.DataFrame({'Sentiment':sentiment_count.index, 'Remarks':sentiment_count.values})
 
-# itemcol = filtered_df['review']
-# ratingcol = filtered_df['rating']
-# itemcrosstab = pd.crosstab(itemcol, ratingcol).value_counts()
-# fig = px.bar(itemcrosstab,barmode='group', title="Long-Form Input",text_auto=True)
-# fig.show()
-# filtered_df['rating'].value_counts()[:20].plot(kind='barh')
-# my_plot = sns.scatterplot(x="TimeStamp", y="rating", data=filtered_df,)
-# my_plot.set_xticklabels(my_plot.get_xticklabels(), rotation=90)
-# plt.figure(figsize=(9,6))
-# plt.bar(x=filtered_df['rating'],
-# height=filtered_df['Cars Listings'],
- 
-#         color='rgbwymc')
- 
-# plt.xticks(rotation=45)
-# plt.show()
-
-
-# # data1 = px.scatter(filtered_df, x = "Sales", y = "Profit", size = "Quantity")
-# # data1['layout'].update(title="Relationship between Sales and Profits using Scatter Plot.",
-# #                        titlefont = dict(size=20),xaxis = dict(title="Sales",titlefont=dict(size=19)),
-# #                        yaxis = dict(title = "Profit", titlefont = dict(size=19)))
-# # st.plotly_chart(data1,use_container_width=True)
-
-# # with col1:
-# #     st.subheader("")
-# #     fig = px.bar(filtered_df, x = "Received_From_(Network_Name)", y = "Rating", text = ['${:,.2f}'.format(x) for x in filtered_df["Rating"]],
-# #                  template = "seaborn")
-# #     st.plotly_chart(fig,use_container_width=True, height = 200)
-
-# # with col2:
-# #     st.subheader("")
-# #     fig = px.pie(filtered_df, values = "Message", names = "Network", hole = 0.5)
-# #     fig.update_traces(text = filtered_df["Network"], textposition = "outside")
-# #     st.plotly_chart(fig,use_container_width=True)
 
 
 def plot_bar(subplot,filtered_df):
@@ -915,7 +925,7 @@ def plot_bar(subplot,filtered_df):
 
 
 #move to plotting
-if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
+if not st.sidebar.checkbox("Uncheck to see Visualization", True): #by defualt hide the checkbar
     st.markdown("### Customer Sentiment")
     if select == 'Bar plot':
         fig = px.bar(sentiment_count, x='Sentiment', y='Remarks', color='Remarks', height=500)
@@ -970,7 +980,16 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
         axar.bar_label(label)
     st.pyplot(figNewer)  
 
+    # chart_data = pd.DataFrame(
+    # {
+    #     "col1": filtered_df["TimeStamp"],Data Visualization
+    #     "col2": filtered_df["rating"]==5,
+       
+    # }
+    # )
 
+    # st.line_chart(chart_data, x="col1", y="col2")
+    
     # figo = plt.figure(figsize=(15, 5)) 
     # axo=sns.barplot(x='Country',y='rating',hue='Country',data=filtered_df,palette='Pastel1')
     # axo.set(xlabel='Country', ylabel='Ratings', title='Country vs Ratings')
@@ -1030,8 +1049,36 @@ if not st.sidebar.checkbox("Hide", True): #by defualt hide the checkbar
     st.pyplot(figo)
 
 
-st.sidebar.markdown("### Hierarchical view of data using TreeMap")
-if not st.sidebar.checkbox("Hide", True , key='100'): #by defualt hide the checkbar
+    # def create_download_link(val, filename):
+    #  b64 = base64.b64encode(val)  # val looks like b'...'
+    #  return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.pdf">Download file</a>'
+    
+    # figs = []
+
+    # for col in df.columns:
+    #     # fig, ax = plt.subplots()
+    #     # ax.plot(filtered_df[col])
+    #     # st.pyplot(fig)
+    #     figs.append(figNew)
+    #     figs.append(figNewer)
+    #     figs.append(figo)
+
+    # export_as_pdf = st.button("Export Report")
+
+    # if export_as_pdf:
+    #     pdf = FPDF()
+    #     for fig in figs:
+    #         pdf.add_page()
+    #         with NamedTemporaryFile(delete=False, suffix=".png") as tmpfile:
+    #                 fig.savefig(tmpfile.name)
+    #                 pdf.image(tmpfile.name, 10, 10, 200, 100)
+    #     html = create_download_link(pdf.output(dest="S").encode("latin-1"), "testfile")
+    #     st.markdown(html, unsafe_allow_html=True)
+
+
+
+st.sidebar.markdown("### Hierarchical view - TreeMap")
+if not st.sidebar.checkbox("Uncheck to see TreeMap", True , key='100'): #by defualt hide the checkbar
 # st.subheader("Hierarchical view using TreeMap")
     # fig3 = px.treemap(df, path = ["Network","Connected_Profile","Received_From_(Network_Name)"], values = "Review_Rating",hover_data = ["Review_Rating"],
     #                 color = "Received_From_(Network_Name)")
@@ -1043,7 +1090,7 @@ if not st.sidebar.checkbox("Hide", True , key='100'): #by defualt hide the check
 
 
 st.sidebar.markdown("### Scatter Plot")
-if not st.sidebar.checkbox("Hide", True , key='10'): #by defualt hide the checkbar
+if not st.sidebar.checkbox("Uncheck to see Scatter Plot", True , key='10'): #by defualt hide the checkbar
     st.markdown("### ScatterPlot")
     fig = plt.figure(figsize=(15, 4))
     x=pd.to_datetime(filtered_df['TimeStamp'])
@@ -1052,6 +1099,7 @@ if not st.sidebar.checkbox("Hide", True , key='10'): #by defualt hide the checkb
     # plt.yticks(rotation=90)
     st.pyplot(fig)
     
+
 
 
 def remove_emojis(data):
@@ -1077,29 +1125,12 @@ def remove_emojis(data):
     return re.sub(emoj, '', data)
 
 
-# # Create a treem based on Region, category, sub-Category
-# # st.subheader("Hierarchical view using TreeMap")
-# # fig3 = px.treemap(filtered_df, path = ["Network","Connected_Profile"], values = "Review_Rating",hover_data = ["Review_Rating"],
-# #                   color = "Connected_Profile")
-# # fig3.update_layout(width = 800, height = 650)
-# # st.plotly_chart(fig3, use_container_width=True)
-
-# Create a scatter plot
-# data1 = px.scatter(filtered_df, x = "rating", y = "AppName")
-# data1['layout'].update(title="Relationship between Ratings and AppType using Scatter Plot.",
-#                        titlefont = dict(size=20),xaxis = dict(title="AppName",titlefont=dict(size=19)),
-#                        yaxis = dict(title = "rating", titlefont = dict(size=19)))
-# st.plotly_chart(data1,use_container_width=True)
-
-# with st.expander("View Data"):
-#     st.write(filtered_df.iloc[:500,1:20:2].style.background_gradient(cmap="Oranges"))
-
 
 words=filtered_df['review'].dropna().apply(nltk.word_tokenize)
 
-st.sidebar.header("Word Cloud (Customer Reviews)")
-word_sentiment = st.sidebar.radio('Display word cloud for which sentiment?', ('positive', 'neutral', 'negative'))
-if not st.sidebar.checkbox("Close", True, key='3'):
+st.sidebar.header("Customer Reviews Word Cloud")
+word_sentiment = st.sidebar.radio('Display Word Cloud for which sentiment?', ('positive', 'neutral', 'negative'))
+if not st.sidebar.checkbox("Uncheck to see Word Cloud", True, key='3'):
     st.subheader('Word cloud for %s sentiment' % (word_sentiment))
     df = filtered_df[filtered_df['Sentiment']==word_sentiment]
     words = ' '.join(df['review'])
@@ -1112,134 +1143,8 @@ if not st.sidebar.checkbox("Close", True, key='3'):
     plt.yticks([])
     st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot()
+    # st.write(filtered_df[filtered_df['Sentiment']==word_sentiment])
 
-      
-#     # chachedWords = stopwords.words('english') 
-#     # filtered_words = [word for word in processed_words ]
-#     # counted_words = collections.Counter(filtered_words)
-#     # words = []
-#     # counts = []
-#     # for letter, count in counted_words.most_common(10):
-#     #     words.append(letter)
-#     #     counts.append(count)
-#     # colors = cm.rainbow(np.linspace(0, 1, 10))
-#     # rcParams['figure.figsize'] = 20, 10
-#     # plt.title('Top words in the headlines vs their count')
-#     # plt.xlabel('Count')
-#     # plt.ylabel('Words')
-#     # plt.barh(words, counts, color=colors)
-#     # plt.show()
-#     # st.pyplot()
-
-#     # text = "Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types systems and systems of mixed types."
-#     # # load a spaCy model, depending on language, scale, etc.
-#     # nlp = spacy.load("en_core_web_sm")
-#     # # add PyTextRank to the spaCy pipeline
-#     # nlp.add_pipe("textrank")
-#     # doc = nlp(text)
-#     # # examine the top-ranked phrases in the document
-#     # for phrase in doc._.phrases[:10]:
-#     #     print(phrase.text)
-   
- 
-#     # filtered_df["month_year"] = filtered_df["Timestamp"].dt.to_period("M")
-#     # st.subheader('Time Series Analysis')
-#     # linechart = pd.DataFrame(filtered_df.groupby(filtered_df["Network"].dt.strftime("%Y : %b"))["Review_Rating"].sum()).reset_index()
-#     # fig2 = px.line(linechart, x = "month_year", y="Review_Rating", labels = {"Review_Rating": "Amount"},height=500, width = 1000,template="gridon")
-#     # st.plotly_chart(fig2,use_container_width=True)
-
-
-#     # st.subheader("Hierarchical view using TreeMap")
-#     # fig3 = px.treemap(filtered_df, path = ["Network","Connected_Profile"], values = "Review_Rating",hover_data = ["Review_Rating"],
-#     #               color = "Connected_Profile")
-#     # fig3.update_layout(width = 800, height = 650)
-#     # st.plotly_chart(fig3, use_container_width=True)
 
     
 
-# # category_df = filtered_df.groupby(by = ["Category"], as_index = False)["Connected Profile"].sum()
-
-# # with col1:
-# #     st.subheader("Category wise Sales")
-# #     fig = px.bar(category_df, x = "Category", y = "Sales", text = ['${:,.2f}'.format(x) for x in category_df["Sales"]],
-# #                  template = "seaborn")
-# #     st.plotly_chart(fig,use_container_width=True, height = 200)
-
-# # with col2:
-# #     st.subheader("Region wise Sales")
-# #     fig = px.pie(filtered_df, values = "Sales", names = "Region", hole = 0.5)
-# #     fig.update_traces(text = filtered_df["Region"], textposition = "outside")
-# #     st.plotly_chart(fig,use_container_width=True)
-
-# # cl1, cl2 = st.columns((2))
-# # with cl1:
-# #     with st.expander("Category_ViewData"):
-# #         st.write(category_df.style.background_gradient(cmap="Blues"))
-# #         csv = category_df.to_csv(index = False).encode('utf-8')
-# #         st.download_button("Download Data", data = csv, file_name = "Category.csv", mime = "text/csv",
-# #                             help = 'Click here to download the data as a CSV file')
-
-# # with cl2:
-# #     with st.expander("Region_ViewData"):
-# #         region = filtered_df.groupby(by = "Region", as_index = False)["Sales"].sum()
-# #         st.write(region.style.background_gradient(cmap="Oranges"))
-# #         csv = region.to_csv(index = False).encode('utf-8')
-# #         st.download_button("Download Data", data = csv, file_name = "Region.csv", mime = "text/csv",
-# #                         help = 'Click here to download the data as a CSV file')
-
-
-
-
-# # filtered_df["month_year"] = filtered_df["Order Date"].dt.to_period("M")
-# # st.subheader('Time Series Analysis')
-
-# # linechart = pd.DataFrame(filtered_df.groupby(filtered_df["month_year"].dt.strftime("%Y : %b"))["Sales"].sum()).reset_index()
-# # fig2 = px.line(linechart, x = "month_year", y="Sales", labels = {"Sales": "Amount"},height=500, width = 1000,template="gridon")
-# # st.plotly_chart(fig2,use_container_width=True)
-
-# # with st.expander("View Data of TimeSeries:"):
-# #     st.write(linechart.T.style.background_gradient(cmap="Blues"))
-# #     csv = linechart.to_csv(index=False).encode("utf-8")
-# #     st.download_button('Download Data', data = csv, file_name = "TimeSeries.csv", mime ='text/csv')
-
-# # Create a treem based on Region, category, sub-Category
-
-
-# # chart1, chart2 = st.columns((2))
-# # with chart1:
-# #     st.subheader('Segment wise Sales')
-# #     fig = px.pie(filtered_df, values = "Sales", names = "Segment", template = "plotly_dark")
-# #     fig.update_traces(text = filtered_df["Segment"], textposition = "inside")
-# #     st.plotly_chart(fig,use_container_width=True)
-
-# # with chart2:
-# #     st.subheader('Category wise Sales')
-# #     fig = px.pie(filtered_df, values = "Sales", names = "Category", template = "gridon")
-# #     fig.update_traces(text = filtered_df["Category"], textposition = "inside")
-# #     st.plotly_chart(fig,use_container_width=True)
-
-# # import plotly.figure_factory as ff
-# # st.subheader(":point_right: Month wise Sub-Category Sales Summary")
-# # with st.expander("Summary_Table"):
-# #     df_sample = df[0:5][["Region","State","City","Category","Sales","Profit","Quantity"]]
-# #     fig = ff.create_table(df_sample, colorscale = "Cividis")
-# #     st.plotly_chart(fig, use_container_width=True)
-
-# #     st.markdown("Month wise sub-Category Table")
-# #     filtered_df["month"] = filtered_df["Order Date"].dt.month_name()
-# #     sub_category_Year = pd.pivot_table(data = filtered_df, values = "Sales", index = ["Sub-Category"],columns = "month")
-# #     st.write(sub_category_Year.style.background_gradient(cmap="Blues"))
-
-# # # Create a scatter plot
-# # data1 = px.scatter(filtered_df, x = "Sales", y = "Profit", size = "Quantity")
-# # data1['layout'].update(title="Relationship between Sales and Profits using Scatter Plot.",
-# #                        titlefont = dict(size=20),xaxis = dict(title="Sales",titlefont=dict(size=19)),
-# #                        yaxis = dict(title = "Profit", titlefont = dict(size=19)))
-# # st.plotly_chart(data1,use_container_width=True)
-
-# # with st.expander("View Data"):
-# #     st.write(filtered_df.iloc[:500,1:20:2].style.background_gradient(cmap="Oranges"))
-
-# # # Download orginal DataSet
-# # csv = df.to_csv(index = False).encode('utf-8')
-# # st.download_button('Download Data', data = csv, file_name = "Data.csv",mime = "text/csv")
