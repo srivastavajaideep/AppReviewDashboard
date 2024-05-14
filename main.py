@@ -579,6 +579,13 @@ th_reviews = reviews_all(
     country='th', # defaults to 'us'
     sort=Sort.NEWEST, # defaults to Sort.MOST_RELEVANT
 )
+th_reviews = reviews_all(
+    'com.westernunion.moneytransferr3app.th',
+    sleep_milliseconds=0, # defaults to 0
+    lang='en', # defaults to 'en'
+    country='th', # defaults to 'us'
+    sort=Sort.NEWEST, # defaults to Sort.MOST_RELEVANT
+)
 @st.cache_data(persist=True)
 def loadAndroiddata_TH(): 
     dfAndroidTH = pd.DataFrame(np.array(th_reviews),columns=['review'])
@@ -604,7 +611,6 @@ try:
  AndroidTH=loadAndroiddata_TH() 
 except KeyError:
  AndroidTH = pd.DataFrame()
-
 
 
 
