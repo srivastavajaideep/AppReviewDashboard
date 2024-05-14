@@ -13,6 +13,8 @@ import random
 import plotly.express as px
 import re
 import os
+from googletrans import Translator
+from languages import *
 from google_play_scraper import Sort, reviews_all
 from app_store_scraper import AppStore
 import seaborn as sns
@@ -120,6 +122,7 @@ def loadAndroiddata_BH():
     dfAndroidBH['AppName']='Android'
     dfAndroidBH['Country']='Bahrain'
     dfAndroidBH.rename(columns = {'content':'review'}, inplace = True)
+    dfAndroidBH['translated_text'] = dfAndroidBH['review'].apply(lambda x: translator.translate(x, dest='English').text)
     dfAndroidBH.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidBH.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidBH.rename(columns = {'at':'TimeStamp'}, inplace = True)
@@ -148,6 +151,7 @@ def loadiOSdata_BH():
     dfBH.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfBH.rename(columns = {'userName':'UserName'}, inplace = True)
     dfBH.rename(columns = {'content':'Review'}, inplace = True)
+    dfBH['translated_text'] = dfBH['review'].apply(lambda x: translator.translate(x, dest='English').text) 
     dfBH.rename(columns = {'score':'Rating'}, inplace = True)  
     dfBH.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -180,6 +184,7 @@ def loadAndroiddata_CA():
     dfAndroidCA['AppName']='Android'
     dfAndroidCA['Country']='Canada'
     dfAndroidCA.rename(columns = {'content':'review'}, inplace = True)
+    # dfAndroidCA['translated_text'] = dfAndroidCA['review'].apply(lambda x: translator.translate(x, dest='English').text) 
     dfAndroidCA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidCA.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidCA.rename(columns = {'at':'TimeStamp'}, inplace = True) 
@@ -208,6 +213,7 @@ def loadiOSdata_CA():
     dfCA.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfCA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfCA.rename(columns = {'content':'Review'}, inplace = True)
+    #dfCA['translated_text'] = dfCA['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfCA.rename(columns = {'score':'Rating'}, inplace = True)  
     dfCA.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -234,8 +240,18 @@ def loadiOSdata_CL():
     dfNewCL.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfNewCL.rename(columns = {'userName':'UserName'}, inplace = True)
     dfNewCL.rename(columns = {'content':'Review'}, inplace = True)
+    dfNewCL['translated_text'] = dfNewCL['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfNewCL.rename(columns = {'score':'Rating'}, inplace = True)  
     dfNewCL.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
+    # dfNew.iloc[:,[3,1,2,0,4]]
+    return dfNewCL
+
+    
+    try:
+        dfNewCL['developerResponse'].apply(lambda x: x['body'])
+    except KeyError:
+        dfNewCL = pd.DataFrame()
+    dfNewCL.rename(columns = {'developerResponse':'WU_Response'}, inplace = True) 
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfNewCL
 
@@ -266,6 +282,7 @@ def loadAndroiddata_KW():
     dfAndroidKW['AppName']='Android'
     dfAndroidKW['Country']='Kuwait'
     dfAndroidKW.rename(columns = {'content':'review'}, inplace = True)
+    dfAndroidKW['translated_text'] = dfAndroidKW['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfAndroidKW.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidKW.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidKW.rename(columns = {'at':'TimeStamp'}, inplace = True)
@@ -294,6 +311,7 @@ def loadiOSdata_KW():
     dfKW.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfKW.rename(columns = {'userName':'UserName'}, inplace = True)
     dfKW.rename(columns = {'content':'Review'}, inplace = True)
+    dfKW['translated_text'] = dfKW['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfKW.rename(columns = {'score':'Rating'}, inplace = True)  
     dfKW.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -351,6 +369,7 @@ def loadiOSdata_MX():
     dfNewMX.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfNewMX.rename(columns = {'userName':'UserName'}, inplace = True)
     dfNewMX.rename(columns = {'content':'Review'}, inplace = True)
+    dfNewMX['translated_text'] = dfNewMX['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfNewMX.rename(columns = {'score':'Rating'}, inplace = True) 
     dfNewMX.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)   
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -385,6 +404,7 @@ def loadAndroiddata_NZ():
     dfAndroidNZ['AppName']='Android'
     dfAndroidNZ['Country']='New Zealand'
     dfAndroidNZ.rename(columns = {'content':'review'}, inplace = True)
+    #dfAndroidNZ['translated_text'] = dfAndroidNZ['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfAndroidNZ.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidNZ.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidNZ.rename(columns = {'at':'TimeStamp'}, inplace = True) 
@@ -412,6 +432,7 @@ def loadiOSdata_NZ():
     dfNZ['appVersion'] = dfNZ.apply(lambda _: '', axis=1)
     dfNZ.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfNZ.rename(columns = {'userName':'UserName'}, inplace = True)
+    #dfNZ['translated_text'] = dfNZ['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfNZ.rename(columns = {'content':'Review'}, inplace = True)
     dfNZ.rename(columns = {'score':'Rating'}, inplace = True)  
     dfNZ.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
@@ -447,6 +468,7 @@ def loadAndroiddata_QA():
     dfAndroidQA['AppName']='Android'
     dfAndroidQA['Country']='Qatar'
     dfAndroidQA.rename(columns = {'content':'review'}, inplace = True)
+    dfAndroidQA['translated_text'] = dfAndroidQA['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfAndroidQA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidQA.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidQA.rename(columns = {'at':'TimeStamp'}, inplace = True)
@@ -476,6 +498,7 @@ def loadiOSdata_QA():
     dfQA.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfQA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfQA.rename(columns = {'content':'Review'}, inplace = True)
+    dfQA['translated_text'] = dfQA['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfQA.rename(columns = {'score':'Rating'}, inplace = True)  
     dfQA.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -508,6 +531,7 @@ def loadAndroiddata_SA():
     dfAndroidSA['AppName']='Android'
     dfAndroidSA['Country']='Saudi Arabia'
     dfAndroidSA.rename(columns = {'content':'review'}, inplace = True)
+    dfAndroidSA['translated_text'] = dfAndroidSA['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfAndroidSA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidSA.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidSA.rename(columns = {'at':'TimeStamp'}, inplace = True)
@@ -536,6 +560,7 @@ def loadiOSdata_SA():
     dfSA.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfSA.rename(columns = {'userName':'UserName'}, inplace = True)
     dfSA.rename(columns = {'content':'Review'}, inplace = True)
+    dfSA['translated_text'] = dfSA['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfSA.rename(columns = {'score':'Rating'}, inplace = True)  
     dfSA.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -545,8 +570,6 @@ try:
  iOSSA=loadiOSdata_SA()
 except KeyError:
  iOSSA = pd.DataFrame()
-
-
 
 
 th_reviews = reviews_all(
@@ -569,6 +592,7 @@ def loadAndroiddata_TH():
     dfAndroidTH['AppName']='Android'
     dfAndroidTH['Country']='Thailand'
     dfAndroidTH.rename(columns = {'content':'review'}, inplace = True)
+    #dfAndroidTH['translated_text'] = dfAndroidTH['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfAndroidTH.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidTH.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidTH.rename(columns = {'at':'TimeStamp'}, inplace = True)
@@ -599,6 +623,7 @@ def loadiOSdata_TH():
     dfTH.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfTH.rename(columns = {'userName':'UserName'}, inplace = True)
     dfTH.rename(columns = {'content':'Review'}, inplace = True)
+    #dfTH['translated_text'] = dfTH['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfTH.rename(columns = {'score':'Rating'}, inplace = True)  
     dfTH.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -630,6 +655,7 @@ def loadAndroiddata_AE():
     dfAndroidAE['AppName']='Android'
     dfAndroidAE['Country']='UAE'
     dfAndroidAE.rename(columns = {'content':'review'}, inplace = True)
+    #dfAndroidAE['translated_text'] = dfAndroidAE['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfAndroidAE.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidAE.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidAE.rename(columns = {'at':'TimeStamp'}, inplace = True)
@@ -657,6 +683,7 @@ def loadiOSdata_AE():
     dfAE.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfAE.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAE.rename(columns = {'content':'Review'}, inplace = True)
+    #dfAE['translated_text'] = dfAE['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfAE.rename(columns = {'score':'Rating'}, inplace = True)  
     dfAE.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -714,6 +741,7 @@ def loadiOSdata_MV():
     dfMV.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfMV.rename(columns = {'userName':'UserName'}, inplace = True)
     dfMV.rename(columns = {'content':'Review'}, inplace = True)
+    #dfMV['translated_text'] = dfMV['review'].apply(lambda x: translator.translate(x, dest='English').text)   
     dfMV.rename(columns = {'score':'Rating'}, inplace = True)  
     dfMV.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -769,6 +797,7 @@ def loadiOSdata_JO():
     dfJO.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfJO.rename(columns = {'userName':'UserName'}, inplace = True)
     dfJO.rename(columns = {'content':'Review'}, inplace = True)
+    dfJO['translated_text'] = dfJO['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfJO.rename(columns = {'score':'Rating'}, inplace = True)  
     dfJO.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
     # dfNew.iloc[:,[3,1,2,0,4]]
@@ -800,6 +829,7 @@ def loadAndroiddata_US():
     dfAndroidUS['AppName']='Android'
     dfAndroidUS['Country']='USA'
     dfAndroidUS.rename(columns = {'content':'review'}, inplace = True)
+    #dfAndroidUS['translated_text'] = dfAndroidUS['review'].apply(lambda x: translator.translate(x, dest='English').text)
     dfAndroidUS.rename(columns = {'userName':'UserName'}, inplace = True)
     dfAndroidUS.rename(columns = {'score':'rating'}, inplace = True)
     dfAndroidUS.rename(columns = {'at':'TimeStamp'}, inplace = True)
@@ -827,8 +857,12 @@ def loadiOSdata_US():
     dfUS.rename(columns = {'date':'TimeStamp'}, inplace = True) 
     dfUS.rename(columns = {'userName':'UserName'}, inplace = True)
     dfUS.rename(columns = {'content':'Review'}, inplace = True)
+    #dfUS['translated_text'] = dfUS['review'].apply(lambda x: translator.translate(x, dest='English').text)    
     dfUS.rename(columns = {'score':'Rating'}, inplace = True)  
     dfUS.rename(columns = {'developerResponse':'WU_Response'}, inplace = True)  
+    # json_column = dfUS['WU_Response']
+    # extracted_data = json_column.apply(lambda x: x['body'])
+    # dfUS['New_Response'] = dfUS.apply(lambda x: json.dumps(x['WU_Response'])['body'], axis = 1)
     # dfNew.iloc[:,[3,1,2,0,4]]
     return dfUS
 
@@ -837,9 +871,12 @@ try:
 except KeyError:
  iOSUS = pd.DataFrame()
 
-# AndroidBH,iOSBH
+
 # frames = [AndroidAU,iOSAU,AndroidMX]
-frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidNZ,iOSNZ,AndroidCA,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
+
+frames = [AndroidUS,iOSUS,AndroidAU,iOSAU,AndroidBH,iOSBH,AndroidNZ,iOSNZ,AndroidCA,iOSMX,iOSCA,AndroidTH,iOSTH,AndroidSA,iOSSA,AndroidKW,iOSKW,AndroidQA,iOSQA,AndroidAE,iOSAE,iOSMV,iOSJO,iOSCL]
+
+finaldf = pd.concat(frames)
 
 finaldf = pd.concat(frames)
 # st.write(finaldf)
