@@ -11,5 +11,5 @@ seaborn==0.13.2
 wordcloud==1.9.3
 pyOpenSSL==24.1.0
 fpdf
-googletrans==3.1.0a0
+googletrans==3.0.0
 
