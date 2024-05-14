@@ -14,7 +14,6 @@ import plotly.express as px
 import re
 import os
 from googletrans import Translator
-from languages import *
 from google_play_scraper import Sort, reviews_all
 from app_store_scraper import AppStore
 import seaborn as sns
