@@ -32,7 +32,7 @@ st.set_page_config(page_title="WU App Review DashBoard!!!", page_icon=":sparkles
 st.title(" :sparkles: WU App Review DashBoard",)
 st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</style>',unsafe_allow_html=True)
 
-
+translator = Translator()
 
 # wu_mask = np.array(Image.open('wul.png'))
 # dir = os.path.dirname(__file__)
