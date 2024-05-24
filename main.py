@@ -132,6 +132,7 @@ def fetch_and_process_ios_reviews(country, app_name, app_id, how_many=200):
         df['AppName'] = 'iOS'
         df['Country'] = country
         df['appVersion'] = ''
+        df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
         
         # Rename columns
         df.rename(columns={'date': 'TimeStamp', 'userName': 'UserName', 'content': 'Review', 'score': 'Rating', 'developerResponse': 'WU_Response'}, inplace=True)
