@@ -10,6 +10,7 @@ import random
 import plotly.express as px
 import re
 import os
+from languages import *
 from googletrans import Translator
 from google_play_scraper import Sort, reviews_all
 from app_store_scraper import AppStore
