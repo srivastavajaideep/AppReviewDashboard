@@ -252,7 +252,7 @@ finaldf = pd.concat(frames)
 # st.write(finaldf)
 
 # st.write(finaldf.loc[finaldf['WU_Response'].notnull()] )
-
+st.write(finaldf.head())
 finaldf.columns = finaldf.columns.str.strip("'")
 finaldf.columns = [c.replace(' ', '_') for c in finaldf.columns]
 col1, col2 = st.columns((2))
