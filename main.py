@@ -62,8 +62,10 @@ def fetch_and_process_reviews(app_id, country, app_name, sleep_milliseconds=0, l
     df['AppName'] = app_name
     df['Country'] = country
     #df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
-    # df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)   
-
+    try:
+    df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)   
+    except KeyError:
+            continue
     # Rename columns
     df = df.rename(columns={'content': 'review', 'userName': 'UserName', 'score': 'rating', 'at': 'TimeStamp', 'replyContent': 'WU_Response'})
     
@@ -132,8 +134,10 @@ def fetch_and_process_ios_reviews(country, app_name, app_id, how_many=200):
         df['AppName'] = 'iOS'
         df['Country'] = country
         df['appVersion'] = ''
-        #df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
-        
+        try:
+        df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
+        except KeyError:
+            continue
         # Rename columns
         df.rename(columns={'date': 'TimeStamp', 'userName': 'UserName', 'content': 'Review', 'score': 'Rating', 'developerResponse': 'WU_Response'}, inplace=True)
         
@@ -252,8 +256,8 @@ finaldf = pd.concat(frames)
 # st.write(finaldf)
 
 # st.write(finaldf.loc[finaldf['WU_Response'].notnull()] )
-st.write(finaldf.head())
-st.write("Columns in finaldf:", finaldf.columns)
+#st.write(finaldf.head())
+#st.write("Columns in finaldf:", finaldf.columns)
 finaldf.columns = finaldf.columns.str.strip("'")
 finaldf.columns = [c.replace(' ', '_') for c in finaldf.columns]
 col1, col2 = st.columns((2))
