@@ -63,9 +63,9 @@ def fetch_and_process_reviews(app_id, country, app_name, sleep_milliseconds=0, l
     df['Country'] = country
     #df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
     try:
-     df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)   
-    except KeyError:
-            continue
+            df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)     
+        except KeyError:
+            continue    
     # Rename columns
     df = df.rename(columns={'content': 'review', 'userName': 'UserName', 'score': 'rating', 'at': 'TimeStamp', 'replyContent': 'WU_Response'})
     
@@ -135,9 +135,9 @@ def fetch_and_process_ios_reviews(country, app_name, app_id, how_many=200):
         df['Country'] = country
         df['appVersion'] = ''
         try:
-         df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
+            df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)     
         except KeyError:
-            continue
+            continue  
         # Rename columns
         df.rename(columns={'date': 'TimeStamp', 'userName': 'UserName', 'content': 'Review', 'score': 'Rating', 'developerResponse': 'WU_Response'}, inplace=True)
         
