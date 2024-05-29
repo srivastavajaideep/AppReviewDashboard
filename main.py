@@ -63,9 +63,9 @@ def fetch_and_process_reviews(app_id, country, app_name, sleep_milliseconds=0, l
     df['Country'] = country
     #df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
     try:
-            df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)     
-        except KeyError:
-            continue    
+        df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)     
+    except KeyError:
+        continue    
     # Rename columns
     df = df.rename(columns={'content': 'review', 'userName': 'UserName', 'score': 'rating', 'at': 'TimeStamp', 'replyContent': 'WU_Response'})
     
