@@ -61,9 +61,10 @@ def fetch_and_process_reviews(app_id, country, app_name, sleep_milliseconds=0, l
     # Add app name and country
     df['AppName'] = app_name
     df['Country'] = country
-    #df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
+    df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text) 
+    
     try:
-        df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)     
+        df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])        
     except KeyError:
         st.warning("Exception occured while transalation")     
     # Rename columns
@@ -134,8 +135,9 @@ def fetch_and_process_ios_reviews(country, app_name, app_id, how_many=200):
         df['AppName'] = 'iOS'
         df['Country'] = country
         df['appVersion'] = ''
+        df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text) 
         try:
-            df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)     
+            df['WU_Response']=df['WU_Response'].apply(lambda x: x['body'])
         except KeyError:
             st.warning("Exception occured while transalation") 
         # Rename columns
