@@ -330,6 +330,7 @@ filtered_df['Sentiment'] = filtered_df['rating'].apply(getsentiment)
 
 if filtered_df.empty:
  st.warning("No records found within the specified date range")
+ filtered_df = filtered_df.reindex(['TimeStamp', 'review', 'WU_Response','rating','Sentiment','translated_text','UserName','AppName','Country','appVersion'], axis=1)   
 else:
  st.write(filtered_df)
  csv = filtered_df.to_csv(index = False).encode('utf-8')
