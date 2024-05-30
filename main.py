@@ -284,6 +284,19 @@ except KeyError:
 st.sidebar.header("Choose your filter: ")
 
 # df1=df.copy()
+df["Country"] = df["Country"].apply(lambda x: x.replace("au", "Australia"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("bh", "Bahrain"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("ca", "Canada"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("kw", "Kuwait"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("nz", "New Zealand"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("qa", "Qatar"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("sa", "SA"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("th", "Thailand"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("us", "USA"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("ae", "UAE"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("be", "France"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("de", "Germany"))
+df["Country"] = df["Country"].apply(lambda x: x.replace("gb", "UK"))
 
 country = st.sidebar.multiselect("Select the Country", df["Country"].unique())
 if not country:
