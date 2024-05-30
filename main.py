@@ -93,18 +93,18 @@ def load_reviews_data(app_ids_countries, sleep_milliseconds=0, lang='en', sort=S
 app_ids_countries = [
     ('com.westernunion.moneytransferr3app.au', 'au', 'Android'),
     ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android'),
-    ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android'),
-    ('com.westernunion.moneytransferr3app.kw','kw','Android'),
-    ('com.westernunion.moneytransferr3app.mcc2','mx','Android'),
-    ('com.westernunion.moneytransferr3app.nz','nz','Android'),
-    ('com.westernunion.moneytransferr3app.qa','qa','Android'),
-    ('com.westernunion.moneytransferr3app.sa','sa','Android'),
-    ('com.westernunion.moneytransferr3app.th','th','Android'),
-    ('com.westernunion.moneytransferr3app.ae','ae','Android'),
-    ('com.westernunion.android.mtapp','us','Android'),
-    ('com.westernunion.moneytransferr3app.eu2','be','Android'),
-    ('com.westernunion.moneytransferr3app.eu','de','Android'),
-    ('com.westernunion.moneytransferr3app.eu','gb','Android'),
+    # ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android'),
+    # ('com.westernunion.moneytransferr3app.kw','kw','Android'),
+    # ('com.westernunion.moneytransferr3app.mcc2','mx','Android'),
+    # ('com.westernunion.moneytransferr3app.nz','nz','Android'),
+    # ('com.westernunion.moneytransferr3app.qa','qa','Android'),
+    # ('com.westernunion.moneytransferr3app.sa','sa','Android'),
+    # ('com.westernunion.moneytransferr3app.th','th','Android'),
+    # ('com.westernunion.moneytransferr3app.ae','ae','Android'),
+    # ('com.westernunion.android.mtapp','us','Android'),
+    # ('com.westernunion.moneytransferr3app.eu2','be','Android'),
+    # ('com.westernunion.moneytransferr3app.eu','de','Android'),
+    # ('com.westernunion.moneytransferr3app.eu','gb','Android'),
 
 ]
 
@@ -160,11 +160,11 @@ def load_reviews_for_countries_ios(app_data):
     return pd.concat(all_dfs, ignore_index=True)
 
 # Define app data for different countries
-app_data = [
-    ('us', 'western-union-send-money-now', '424716908'),  # USA
-    ('ae', 'western-union-send-money', '1171330611'),      # UAE
+app_data = [ 
     ('au', 'western-union-money-transfers', '1122288720'), #AU
     ('bh', 'western-union-send-money', '1314010624'),  # Bahrain
+    ('us', 'western-union-send-money-now', '424716908'),  # USA
+    ('ae', 'western-union-send-money', '1171330611'),      # UAE
     ('ca', 'western-union-send-money', '1110191056'),  #canada
     ('cl', 'western-union-envío-de-dinero', '1304223498'), #chile
     ('be','western-union-send-cash-abroad',  '1110240507'), #France
@@ -174,7 +174,7 @@ app_data = [
     ('th', 'western-union-send-money', '1459226729'), #thailand
     ('mv', 'western-union-send-money', '1483742169'), #Maldives
     ('jo', 'western-union-send-money', '1459023219'),   #Jordan
-     ('de', 'western-union-money-transfer', '1045347175'),   #Germany
+    ('de', 'western-union-money-transfer', '1045347175'),   #Germany
     ('gb', 'western-union-money-transfer', '1045347175'),   #UK
        
 ]
