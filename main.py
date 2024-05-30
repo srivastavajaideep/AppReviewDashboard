@@ -264,6 +264,7 @@ finaldf.columns = finaldf.columns.str.strip("'")
 finaldf.columns = [c.replace(' ', '_') for c in finaldf.columns]
 col1, col2 = st.columns((2))
 finaldf["TimeStamp"] = pd.to_datetime(finaldf["TimeStamp"])
+finaldf['Date'] = finaldf['TimeStamp'].dt.date
 
 # Getting the min and max date 
 startDate = pd.to_datetime(finaldf["TimeStamp"]).min()
