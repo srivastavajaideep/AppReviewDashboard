@@ -341,7 +341,7 @@ select = st.sidebar.selectbox('Type of Visualization', ['Bar plot', 'Pie chart']
 sentiment_count = filtered_df['Sentiment'].value_counts()
 sentiment_count = pd.DataFrame({'Sentiment':sentiment_count.index, 'Remarks':sentiment_count.values})
 
-source_text = st.text_area("Enter text to translate:")
+source_text = st.text("Enter text to translate:")
 target_language = st.selectbox("Select target language:", languages)
 translate = st.button('Translate')
 if translate:
