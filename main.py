@@ -34,7 +34,7 @@ translator = Translator()
 
 # wu_mask = np.array(Image.open('wul.png'))
 dir = os.path.dirname(__file__)
-filename = os.path.join(dir, 'Images/wu.png')
+filename = os.path.join(dir, 'wu.png')
 image = Image.open(filename)
 left_co, cent_co,last_co = st.columns(3)
 with cent_co:
