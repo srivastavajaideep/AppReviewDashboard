@@ -42,7 +42,7 @@ with cent_co:
 
 
 @st.cache_data(persist=True)
-def load_android_data(app_id, country, app_name,countryname):
+def load_android_data(app_id, country, app_name):
     reviews = reviews_all(
         app_id,
         sleep_milliseconds=0,
@@ -56,7 +56,7 @@ def load_android_data(app_id, country, app_name,countryname):
     columns_to_drop = ['reviewId', 'thumbsUpCount', 'reviewCreatedVersion', 'repliedAt', 'userImage']
     df = df.drop(columns=columns_to_drop)
     df['AppName'] = app_name
-    df['Country'] = countryname
+    df['Country'] = country
     df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text) 
     df.rename(columns={
         'content': 'review',
@@ -68,22 +68,22 @@ def load_android_data(app_id, country, app_name,countryname):
     return df
 
 app_details = [
-    ('com.westernunion.moneytransferr3app.au', 'au', 'Android','AU'),
-    ('com.westernunion.android.mtapp', 'us', 'Android','USA'),
-    ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android','UAE'),
-    ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android','Bahrain'),
-    ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android','Canada'),
-    ('com.westernunion.moneytransferr3app.kw', 'kw', 'Android','Kuwait'),
-    ('com.westernunion.moneytransferr3app.nz', 'nz', 'Android','New Zealand'),
-    ('com.westernunion.moneytransferr3app.qa', 'qa', 'Android','Qatar'),
-    ('com.westernunion.moneytransferr3app.sa', 'sa', 'Android','Saudi Arabia'),
-    ('com.westernunion.moneytransferr3app.th', 'th', 'Android','Thailand')
+    ('com.westernunion.moneytransferr3app.au', 'au', 'Android'),
+    ('com.westernunion.android.mtapp', 'us', 'Android'),
+    ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android'),
+    ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android'),
+    ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android'),
+    ('com.westernunion.moneytransferr3app.kw', 'kw', 'Android'),
+    ('com.westernunion.moneytransferr3app.nz', 'nz', 'Android'),
+    ('com.westernunion.moneytransferr3app.qa', 'qa', 'Android'),
+    ('com.westernunion.moneytransferr3app.sa', 'sa', 'Android'),
+    ('com.westernunion.moneytransferr3app.th', 'th', 'Android')
 ]
 
 frames = []
-for app_id, country, app_name, countryname in app_details:
+for app_id, country, app_name in app_details:
     try:
-        frames.append(load_android_data(app_id, country, app_name, countryname))
+        frames.append(load_android_data(app_id, country, app_name))
     except KeyError:
         frames.append(pd.DataFrame())
 
