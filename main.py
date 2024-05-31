@@ -68,7 +68,7 @@ def load_android_data(app_id, country, app_name,countryname):
     return df
 
 app_details = [
-    ('com.westernunion.moneytransferr3app.au', 'au', 'Android','AU'),
+    ('com.westernunion.moneytransferr3app.au', 'au', 'Android','Australia'),
     ('com.westernunion.android.mtapp', 'us', 'Android','USA'),
     ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android','UAE'),
     ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android','Bahrain'),
@@ -90,11 +90,9 @@ for app_id, country, app_name, countryname in app_details:
 finaldfandroid = pd.concat(frames)
 
 
-
-
 #ios reviews section
 @st.cache_data(persist=True)
-def fetch_and_process_ios_reviews(country, app_name, app_id, how_many=200):
+def fetch_and_process_ios_reviews(country, app_name, app_id, countryname, how_many=200):
     """Fetch and process iOS reviews for a given country, app name, and app ID."""
     try:
         app_store = AppStore(country=country, app_name=app_name, app_id=app_id)
@@ -108,7 +106,7 @@ def fetch_and_process_ios_reviews(country, app_name, app_id, how_many=200):
         
         # Add columns
         df['AppName'] = 'iOS'
-        df['Country'] = country
+        df['Country'] = countryname
         # df['appVersion'] = ''
         df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text) 
         # try:
@@ -128,29 +126,29 @@ def load_reviews_for_countries_ios(app_data):
     """Load iOS reviews data for multiple countries."""
     all_dfs = []
     
-    for country, app_name, app_id in app_data:
-        df = fetch_and_process_ios_reviews(country, app_name, app_id)
+    for country, app_name, app_id,countryname in app_data:
+        df = fetch_and_process_ios_reviews(country, app_name, app_id,countryname)
         all_dfs.append(df)
     
     return pd.concat(all_dfs, ignore_index=True)
 
 # Define app data for different countries
 app_data = [
-    ('us', 'western-union-send-money-now', '424716908'),  # USA
-    ('ae', 'western-union-send-money', '1171330611'),      # UAE
-    ('au', 'western-union-money-transfers', '1122288720'), #AU
-    ('bh', 'western-union-send-money', '1314010624'),  # Bahrain
-    ('ca', 'western-union-send-money', '1110191056'),  #canada
-    ('cl', 'western-union-envío-de-dinero', '1304223498'), #chile
-    ('be','western-union-send-cash-abroad',  '1110240507'), #France
-    ('kw', 'western-union-send-money', '1173794098'), #kuwait
-    ('qa', 'western-union-send-money', '1173792939'), #qatar
-    ('sa', 'western-union-send-money', '1459024696'), #saudi arabia
-    ('th', 'western-union-send-money', '1459226729'), #thailand
-    ('mv', 'western-union-send-money', '1483742169'), #Maldives
-    ('jo', 'western-union-send-money', '1459023219'),   #Jordan
-     ('de', 'western-union-money-transfer', '1045347175'),   #Germany
-    ('gb', 'western-union-money-transfer', '1045347175'),   #UK
+    ('us', 'western-union-send-money-now', '424716908','USA'),  # USA
+    ('ae', 'western-union-send-money', '1171330611','UAE'),      # UAE
+    ('au', 'western-union-money-transfers', '1122288720','Australia'), #AU
+    ('bh', 'western-union-send-money', '1314010624','Bahrain'),  # Bahrain
+    ('ca', 'western-union-send-money', '1110191056','Canada'),  #canada
+    ('cl', 'western-union-envío-de-dinero', '1304223498','Chile'), #chile
+    ('be','western-union-send-cash-abroad',  '1110240507','France'), #France
+    ('kw', 'western-union-send-money', '1173794098','Kuwait'), #kuwait
+    ('qa', 'western-union-send-money', '1173792939','Qatar'), #qatar
+    ('sa', 'western-union-send-money', '1459024696','Saudi Arabia'), #saudi arabia
+    ('th', 'western-union-send-money', '1459226729','Thailand'), #thailand
+    ('mv', 'western-union-send-money', '1483742169','Maldives'), #Maldives
+    ('jo', 'western-union-send-money', '1459023219','Jordan'),   #Jordan
+     ('de', 'western-union-money-transfer', '1045347175','Germany'),   #Germany
+    ('gb', 'western-union-money-transfer', '1045347175','United Kingdom'),   #UK
        
 ]
 
@@ -260,22 +258,22 @@ except KeyError:
 
 st.sidebar.header("Choose your filter: ")
 
-df["Country"] = df["Country"].apply(lambda x: x.replace("au", "AU"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("bh", "Bahrain"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("ca", "Canada"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("kw", "Kuwait"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("nz", "New Zealand"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("qa", "Qatar"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("sa", "Saudi Arabia"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("th", "Thailand"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("us", "USA"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("ae", "UAE"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("be", "France"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("de", "Germany"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("gb", "United Kingdom"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("cl", "Chile"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("mv", "Maldives"))
-df["Country"] = df["Country"].apply(lambda x: x.replace("jo", "Jordan"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("au", "AU"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("bh", "Bahrain"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("ca", "Canada"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("kw", "Kuwait"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("nz", "New Zealand"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("qa", "Qatar"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("sa", "Saudi Arabia"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("th", "Thailand"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("us", "USA"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("ae", "UAE"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("be", "France"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("de", "Germany"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("gb", "United Kingdom"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("cl", "Chile"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("mv", "Maldives"))
+# df["Country"] = df["Country"].apply(lambda x: x.replace("jo", "Jordan"))
 
 # df1=df.copy()
 
