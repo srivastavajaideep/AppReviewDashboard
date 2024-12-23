@@ -1,1 +1,1 @@
-
+Row[[{dms_ref_id:'AURRO1RR58EEC3D1C1',file_type:'ZIP',part_number:1,transaction_count:1,,file_info_list:[{file_name:'IFTI-DRA2024112826.xlsx',file_type:'XLSX'},{file_name:'IFTI-DRA2024112826.xml',file_type:'XML'}],category:'OutputFile',created_by:'System',sub_category:'Original',description:'System Generated',created_timestamp:1734940559410,comment:NULL}]]
