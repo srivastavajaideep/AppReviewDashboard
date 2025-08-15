@@ -18,7 +18,7 @@ import asyncio
 
 import pandas as pd
 
-import aiohttp
+# import aiohttp
 
 import qrcode
 
@@ -2737,5 +2737,6 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
