@@ -205,7 +205,7 @@ translator = Translator()
 
 dir = os.path.dirname(__file__)
 
-filename = os.path.join(dir, 'WU.png')
+filename = os.path.join(dir, 'WUNEW.png')
 
 image = Image.open(filename)
 
@@ -2732,6 +2732,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
 
