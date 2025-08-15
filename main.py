@@ -4,8 +4,9 @@
 
 import streamlit as st
 import nltk
-nltk.download('punkt')         # Already recommended for tokenization
-nltk.download('vader_lexicon') # For VADER sentiment
+nltk.download('punkt')        # standard sentence and word tokenizers
+nltk.download('punkt_tab')    # ensures related resources are also downloaded
+nltk.download('vader_lexicon')
 nltk.download('stopwords')
 
 
@@ -2732,6 +2733,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
 
