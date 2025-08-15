@@ -2603,11 +2603,10 @@ if not st.sidebar.checkbox("World Map", True, key='23'):
 
         while True:
 
-            for fig in figures:
-
-                map_placeholder.plotly_chart(fig, use_container_width=True)
-
+            for idx, fig in enumerate(figures):
+                map_placeholder.plotly_chart(fig, use_container_width=True, key=f"map_{idx}")
                 time.sleep(3)
+
 
 
 
@@ -2625,6 +2624,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
