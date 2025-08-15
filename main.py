@@ -2539,74 +2539,50 @@ def generate_figures(grouped):
 
 
 
-# --- Main logic
-
+# --- Main logic ---
 if not st.sidebar.checkbox("World Map", True, key='23'):
-
-       # Display the selected date range with smaller font size above the map
-
- 
-
     st.markdown(
-
         """
-
         <style>
-
         .date-range-text {
-
             font-size: 14px;
-
             font-weight: bold;
-
             text-align: center;
-
             margin-bottom: 10px;
-
             z-index: 9999;
-
         }
-
         </style>
-
         """,
-
         unsafe_allow_html=True,
-
     )
-
- 
-
     # Create and display the date range HTML with the styled class
-
     date_html = f"<p class='date-range-text'>Ratings from <strong>{date1.strftime('%Y-%m-%d')}</strong> to <strong>{date2.strftime('%Y-%m-%d')}</strong></p>"
-
     st.markdown(date_html, unsafe_allow_html=True)
 
- 
-
     with st.spinner("⏳ Loading Country-wise ratings on world map..."):
-
         grouped = compute_grouped_data(filtered_df)
 
- 
-
     if grouped.empty:
-
         st.warning("No records found within the specified date range")
-
     else:
+        figures = generate_figures(grouped)
+        N = len(figures)
+
+        # Refresh the app every 5 seconds
+        st_autorefresh(interval=5000, key="map_auto_refresh")
+
+        # Use session_state to cycle through figures
+        if "world_map_idx" not in st.session_state or N == 0:
+            st.session_state.world_map_idx = 0
+        else:
+            st.session_state.world_map_idx = (st.session_state.world_map_idx + 1) % N
+
+        current_idx = st.session_state["world_map_idx"]
 
         map_placeholder = st.empty()
+        map_placeholder.plotly_chart(figures[current_idx], use_container_width=True, key="map_world")
 
-        figures = generate_figures(grouped)
-
-        while True:
-
-            for idx, fig in enumerate(figures):
-                map_placeholder.plotly_chart(fig, use_container_width=True, key=f"map_{idx}")
-                time.sleep(3)
-
+        st.caption(f"Country {current_idx + 1} of {N}")
 
 
 
@@ -2624,6 +2600,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
