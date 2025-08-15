@@ -64,7 +64,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 from sklearn.decomposition import LatentDirichletAllocation
 
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
+# from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 from sentence_transformers import SentenceTransformer
 
@@ -2737,6 +2737,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
 
