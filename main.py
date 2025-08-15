@@ -3,7 +3,7 @@
 # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import streamlit as st
-
+import nltk
 nltk.download('punkt')         # Already recommended for tokenization
 nltk.download('vader_lexicon') # For VADER sentiment
 nltk.download('stopwords')
@@ -2732,6 +2732,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
 
