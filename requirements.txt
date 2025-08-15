@@ -6,6 +6,8 @@ pytextrank==3.3.0
 
 google-play-scraper==1.2.7
 streamlit>=1.32.0
+pillow>=10.0.0
+
 app_store_scraper
 
 googletrans==3.1.0a0
@@ -52,6 +54,7 @@ nest-asyncio==1.6.0
 qrcode==8.2
 
 aiohttp===3.12.15
+
 
 
 
