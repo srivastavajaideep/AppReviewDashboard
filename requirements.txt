@@ -1,7 +1,5 @@
+pillow>=10.0.0
 pandas==2.3.0
-
-streamlit
-
 matplotlib==3.10.3
 
 pytextrank==3.3.0
@@ -54,6 +52,7 @@ nest-asyncio==1.6.0
 qrcode==8.2
 
 aiohttp===3.12.15
+
 
 
 
