@@ -36,7 +36,6 @@ pyLDAvis==3.2.2
 
 bertopic==0.17.0
 
-summarizer
 
 langdetect==1.0.9
 
@@ -55,4 +54,5 @@ nest-asyncio==1.6.0
 qrcode==8.2
 
 aiohttp===3.12.15
+
 
