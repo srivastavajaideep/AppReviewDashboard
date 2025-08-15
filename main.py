@@ -80,7 +80,7 @@ import os
 
 from google_play_scraper import Sort, reviews_all
 
-from app_store_scraper import AppStore
+# from app_store_scraper import AppStore
 
 import seaborn as sns
 
@@ -2737,4 +2737,5 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
