@@ -64,7 +64,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 from sklearn.decomposition import LatentDirichletAllocation
 
-# from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 from sentence_transformers import SentenceTransformer
 
@@ -107,6 +107,13 @@ from languages import *
 warnings.filterwarnings('ignore')
 
 nltk.download('punkt')
+try:
+
+    nltk.data.find('sentiment/vader_lexicon.zip')
+
+except LookupError:
+
+    nltk.download('vader_lexicon')
 
 import ssl
 
@@ -148,13 +155,7 @@ from streamlit_autorefresh import st_autorefresh
 
  
 
-# try:
 
-#     nltk.data.find('sentiment/vader_lexicon.zip')
-
-# except LookupError:
-
-#     nltk.download('vader_lexicon')
 
  
 
@@ -2737,6 +2738,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
 
