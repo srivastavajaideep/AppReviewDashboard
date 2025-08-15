@@ -4,6 +4,11 @@
 
 import streamlit as st
 
+nltk.download('punkt')         # Already recommended for tokenization
+nltk.download('vader_lexicon') # For VADER sentiment
+nltk.download('stopwords')
+
+
 import plotly.graph_objects as go
 
 import asyncio
@@ -68,7 +73,6 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 from sentence_transformers import SentenceTransformer
 
-import nltk
 
 from deep_translator import GoogleTranslator
 
@@ -92,8 +96,6 @@ from langdetect import detect
 
 import matplotlib.pyplot as plt
 
-import nltk
-
 from nltk.util import ngrams
 
 from PIL import Image
@@ -106,14 +108,6 @@ from languages import *
 
 warnings.filterwarnings('ignore')
 
-nltk.download('punkt')
-try:
-
-    nltk.data.find('sentiment/vader_lexicon.zip')
-
-except LookupError:
-
-    nltk.download('vader_lexicon')
 
 import ssl
 
@@ -2738,6 +2732,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
 
