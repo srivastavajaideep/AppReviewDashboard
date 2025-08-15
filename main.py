@@ -52,7 +52,7 @@ from sklearn.cluster import KMeans
 
 import warnings
 
-from bertopic import BERTopic
+# from bertopic import BERTopic
 
 import requests
 
@@ -2737,3 +2737,4 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
