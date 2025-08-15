@@ -16,7 +16,7 @@ vaderSentiment
 # transformers==4.53.1
 scikit-learn==1.7.0
 pyLDAvis==3.2.2
-bertopic==0.17.0
+
 langdetect==1.0.9
 streamlit-autorefresh==1.0.1
 pycountry==24.6.1
@@ -26,4 +26,5 @@ fpdf==1.7.2
 nest-asyncio==1.6.0
 qrcode==8.2
 aiohttp==3.12.15
+
 
