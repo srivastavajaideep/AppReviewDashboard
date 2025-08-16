@@ -308,13 +308,13 @@ app_details = [
 
     ('com.westernunion.moneytransferr3app.eu','it','Android'),
 
-    ('com.westernunion.moneytransferr3app.eu3','se','Android'),
+    # ('com.westernunion.moneytransferr3app.eu3','se','Android'),
 
     #   ('com.westernunion.moneytransferr3app.eu3','se','Android'),
 
     ('com.westernunion.moneytransferr3app.nz', 'nz', 'Android'),
 
-    ('com.westernunion.android.mtapp', 'co', 'Android'),
+    # ('com.westernunion.android.mtapp', 'co', 'Android'),
 
     ('com.westernunion.moneytransferr3app.nl','nl','Android'),
 
@@ -480,7 +480,7 @@ app_country_list = [
 
     ("1045347175","it"),   #Italy  
 
-    ("1152860407","se"),   #Sweden  
+    # ("1152860407","se"),   #Sweden  
 
     ("1268771757","es"), #Spain
 
@@ -518,7 +518,7 @@ app_country_list = [
 
     ("1171330611","ae"), # UAE    
 
-    ("1329774999","co"), # columbia    
+    # ("1329774999","co"), # columbia    
 
     ("1314010624","bh"), # Bahrain
 
@@ -2939,6 +2939,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
