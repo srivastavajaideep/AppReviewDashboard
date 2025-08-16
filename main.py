@@ -206,7 +206,7 @@ translator = Translator()
 
 dir = os.path.dirname(__file__)
 
-filename = os.path.join(dir, 'WUNEW.png')
+filename = os.path.join(dir, 'WUNEWEST.png')
 
 image = Image.open(filename)
 
@@ -2030,18 +2030,7 @@ if not st.sidebar.checkbox("Visual Charts", True):
 
             """
 
-            <div style="display: flex; justify-content: center;">
-
-                <div style="background-color: #eaf4fb; color: #262730; border-left: .5rem solid #1c83e1;
-
-                            padding: 1rem 1.5rem; border-radius: .25rem; font-size: 1.1rem; width: fit-content;">
-
-                    Click funnel chart stages to display Customer Reviews.
-
-                </div>
-
-            </div>
-
+          
             """,
 
             unsafe_allow_html=True,
@@ -2950,6 +2939,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
