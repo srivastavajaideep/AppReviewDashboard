@@ -22,3 +22,5 @@ kaleido==1.0.0
 streamlit-plotly-events==0.0.6
 fpdf==1.7.2
 qrcode==8.2
+pyLDAvis==3.4.1
+
