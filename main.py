@@ -132,7 +132,7 @@ import pandas as pd
 
 import warnings
 
-# import pyLDAvis
+import pyLDAvis
 
 # import pyLDAvis.sklearn
 
@@ -2939,6 +2939,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
