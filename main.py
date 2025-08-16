@@ -383,7 +383,8 @@ app_country_list = [
     ("1483742169","mv"),
     ("1459024696","sa"),
     ("1459226729","th"),
-    ("1173792939","qa")
+    ("1173792939","qa"),
+    ("1150872438","in")
 ]
 
 # --- MAIN STREAMLIT BLOCK ---
@@ -2723,6 +2724,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
