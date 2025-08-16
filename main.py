@@ -240,13 +240,13 @@ def load_android_data(app_id, country, app_name):
     df = df.drop(columns=[c for c in columns_to_drop if c in df.columns], errors="ignore")
     df['AppName'] = app_name
     df['Country'] = country.lower()
-    try:
-        df['translated_text'] = df['review'].apply(
-            lambda x: translator.translate(x, dest='en').text if isinstance(x, str) else x
-        )
-    except Exception as e:
-        print(f"Translation failed: {e}")
-        df['translated_text'] = df['review']
+    # try:
+    #     df['translated_text'] = df['review'].apply(
+    #         lambda x: translator.translate(x, dest='en').text if isinstance(x, str) else x
+    #     )
+    # except Exception as e:
+    #     print(f"Translation failed: {e}")
+    #     df['translated_text'] = df['review']
     df.rename(columns={
         'content': 'review',
         'userName': 'UserName',
@@ -552,7 +552,7 @@ except KeyError:
 
  
 
-country = st.sidebar.multiselect("Select the Country", df["Country"].unique(), default=["us","in","fr","au","no"])
+country = st.sidebar.multiselect("Select the Country", df["Country"].unique(), default=["us","in","fr","au","ca"])
 
 if not country:
 
@@ -2724,6 +2724,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
