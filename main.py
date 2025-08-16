@@ -425,7 +425,7 @@ with st.spinner("Fetching Android & iOS reviews..."):
     finaldf = get_all_reviews(app_details, app_country_list)
 
 
-python
+
 @st.cache_data(ttl=86400, show_spinner=False)
 def get_reviews():
     finaldfandroid = fetch_all_android(app_details)
@@ -2723,6 +2723,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
