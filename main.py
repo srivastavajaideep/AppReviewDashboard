@@ -1767,7 +1767,10 @@ if not st.sidebar.checkbox("Visual Charts", True):
 
     st.plotly_chart(fig1,use_container_width=True)
 
- 
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+
+
 
     # Trend Over Time
 
@@ -1798,6 +1801,12 @@ if not st.sidebar.checkbox("Visual Charts", True):
         ax.bar_label(label)
 
     st.pyplot(fig)
+
+ 
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
  
 
@@ -1843,7 +1852,349 @@ if not st.sidebar.checkbox("Visual Charts", True):
 
     st.pyplot(figNewer)
 
+    st.divider()
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
  
+
+   # ---- issue keywords and funnel labels ----
+
+    issue_keywords = {
+
+        'Crashes': 'crash',
+
+        'Hangs': 'hang',
+
+        'Bugs': 'bug',
+
+        'difficult': 'problem',
+
+        'update': 'update',
+
+        'fee': 'fee',
+
+        'otp': 'message'
+
+       
+
+       
+
+    }
+
+    funnel_labels = ['All Reviews', 'Filtered Negatives'] + list(issue_keywords.keys()) + ['Other Issues']
+
+ 
+
+    # ---- Filter for negative sentiment_label and rating 1,2,3 ----
+
+    filtered_negatives = filtered_df[
+
+        (filtered_df['sentiment_label'].str.lower() == 'negative') &
+
+        (filtered_df['rating'].isin([1,2,3]))
+
+    ]
+
+ 
+
+    # ---- Compute counts and index mapping ----
+
+    all_reviews = len(filtered_df)
+
+    counts = [all_reviews, len(filtered_negatives)]
+
+ 
+
+    stage_indices = {
+
+        'All Reviews': df.index.tolist(),
+
+        'Filtered Negatives': filtered_negatives.index.tolist(),
+
+    }
+
+ 
+
+    covered_indices = set()
+
+    for issue, keyword in issue_keywords.items():
+
+        mask = filtered_negatives['review'].fillna("").str.lower().str.contains(keyword.lower(), na=False)
+
+        indices = filtered_negatives[mask].index.tolist()
+
+        counts.append(len(indices))
+
+        stage_indices[issue] = indices
+
+        covered_indices.update(indices)
+
+ 
+
+    other_issues_indices = filtered_negatives.drop(index=list(covered_indices)).index.tolist()
+
+    counts.append(len(other_issues_indices))
+
+    stage_indices['Other Issues'] = other_issues_indices
+
+ 
+
+    # ---- Color theme for clarity ----
+
+    custom_colors = [
+
+        "#1f77b4", # blue
+
+        "#d62728", # red
+
+        "#ff7f0e", # orange
+
+        "#2ca02c", # green
+
+        "#9467bd", # purple
+
+        "#8c564b", # brown
+
+        "#bcbd22", # olive
+
+        "#7f7f7f" # gray
+
+    ]
+
+ 
+
+    # ---- Plotly funnel chart ----
+
+    fig = go.Figure(go.Funnel(
+
+        y=funnel_labels,
+
+        x=counts,
+
+        textinfo="value+percent initial",
+
+        marker=dict(color=custom_colors)
+
+ 
+
+    ))
+
+    fig.update_layout(
+
+        title=dict(
+
+            text="",
+
+            x=0.5,
+
+            xanchor="center"
+
+        ),
+
+        margin=dict(l=160, r=40, t=60, b=20)
+
+    )
+
+ 
+
+    st.subheader("Click funnel stage to see Customer Reviews")
+
+    selected = plotly_events(fig, click_event=True, hover_event=False)
+
+ 
+
+    if selected:
+
+        idx = selected[0]['pointIndex']
+
+        label = funnel_labels[idx]
+
+        st.markdown(f"**Reviews for Stage: {label}**")
+
+        indices = stage_indices.get(label, [])
+
+        if indices:
+
+          with st.spinner("⏳ Loading Customer Reviews..."):
+
+               st.dataframe(filtered_df.loc[indices].reset_index(drop=True))
+
+        else:
+
+            st.info('No reviews for this stage.')
+
+    else:
+
+        st.markdown(
+
+            """
+
+            <div style="display: flex; justify-content: center;">
+
+                <div style="background-color: #eaf4fb; color: #262730; border-left: .5rem solid #1c83e1;
+
+                            padding: 1rem 1.5rem; border-radius: .25rem; font-size: 1.1rem; width: fit-content;">
+
+                    Click funnel chart stages to display Customer Reviews.
+
+                </div>
+
+            </div>
+
+            """,
+
+            unsafe_allow_html=True,
+
+        )
+
+
+
+
+
+
+
+   
+
+ 
+
+   
+
+
+
+
+
+    # # Define Sankey nodes
+
+    # labels = [
+
+    #     'All Reviews',
+
+    #     'Negative Reviews',
+
+    #     'Positive Reviews',
+
+    #     'Crashes',
+
+    #     'Login Problems',
+
+    #     'Other Issues'
+
+    # ]
+
+ 
+
+    # # Calculate counts for each connection ("link")
+
+    # all_reviews = len(filtered_df)
+
+    # negatives = len(filtered_df[filtered_df['sentiment_label'] == 'Negative'])
+
+    # positives = len(filtered_df[filtered_df['sentiment_label'] == 'Positive'])
+
+    # crashes = len(filtered_df[(filtered_df['sentiment_label'] == 'Negative') & (filtered_df['review'].str.contains('crash', case=False))])
+
+    # login_issues = len(filtered_df[(filtered_df['sentiment_label'] == 'Negative') & (filtered_df['review'].str.contains('login', case=False))])
+
+    # other_issues = negatives - (crashes + login_issues)
+
+ 
+
+    # # Sankey node indices
+
+    # node_indices = {label: idx for idx, label in enumerate(labels)}
+
+ 
+
+    # # Define links (sources, targets, values)
+
+    # sources = [
+
+    #     node_indices['All Reviews'], # All -> Negative
+
+    #     node_indices['All Reviews'], # All -> Positive
+
+    #     node_indices['Negative Reviews'], # Negative -> Crashes
+
+    #     node_indices['Negative Reviews'], # Negative -> Login
+
+    #     node_indices['Negative Reviews'], # Negative -> Other
+
+    # ]
+
+    # targets = [
+
+    #     node_indices['Negative Reviews'],
+
+    #     node_indices['Positive Reviews'],
+
+    #     node_indices['Crashes'],
+
+    #     node_indices['Login Problems'],
+
+    #     node_indices['Other Issues']
+
+    # ]
+
+    # values = [
+
+    #     negatives,
+
+    #     positives,
+
+    #     crashes,
+
+    #     login_issues,
+
+    #     other_issues
+
+    # ]
+
+ 
+
+    # # Create Sankey figure
+
+    # fig = go.Figure(go.Sankey(
+
+    #     node=dict(
+
+    #         pad=15,
+
+    #         thickness=20,
+
+    #         line=dict(color="black", width=0.5),
+
+    #         label=labels
+
+    #     ),
+
+    #     link=dict(
+
+    #         source=sources,
+
+    #         target=targets,
+
+    #         value=values
+
+    #     )
+
+    # ))
+
+ 
+
+    # fig.update_layout(title_text="Review Issue Flow - Sankey Diagram", font_size=12)
+
+    # st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+
+
+
+
+
+
 
     # filtered_df['rating'] = pd.to_numeric(filtered_df['rating'], errors='coerce')
 
@@ -1982,7 +2333,6 @@ if not st.sidebar.checkbox("Visual Charts", True):
     # axo.set(xlabel='Year', ylabel='Ratings', title='Year on Year Ratings')
 
     # st.pyplot(figo)
-
 
 
 
@@ -2600,6 +2950,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
