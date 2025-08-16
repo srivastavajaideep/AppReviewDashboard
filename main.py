@@ -1603,13 +1603,13 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
 # # Interactive LDA Visualization
 
-st.subheader("LDA Topic Visualization")
+# st.subheader("LDA Topic Visualization")
 
-lda_vis = pyLDAvis.sklearn.prepare(lda, doc_term_matrix, vectorizer)
+# lda_vis = pyLDAvis.sklearn.prepare(lda, doc_term_matrix, vectorizer)
 
-pyLDAvis.save_html(lda_vis, 'lda_vis.html')
+# pyLDAvis.save_html(lda_vis, 'lda_vis.html')
 
-components.html(open("lda_vis.html", 'r', encoding='utf-8').read(), height=800)
+# components.html(open("lda_vis.html", 'r', encoding='utf-8').read(), height=800)
 
 
 
@@ -3003,6 +3003,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
  
+
 
 
 
