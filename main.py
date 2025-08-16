@@ -1369,42 +1369,9 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
  
 
-    # Streamlit download button
+  
 
-    with open("topic_modeling_summary.pdf", "rb") as f:
-
-        st.download_button(
-
-            label="📄 Download Topic Modeling Summary as PDF",
-
-            data=f,
-
-            file_name="topic_modeling_summary.pdf",
-
-            mime="application/pdf"
-
-        )
-
- 
-
-    # # Display in Streamlit
-
-    # st.markdown("### Top 5 Best Aspects")
-
-    # for summary in positive_summaries:
-
-    #     st.text(summary)
-
- 
-
-    # st.markdown("### Top 5 Issues")
-
-    # for summary in negative_summaries:
-
-    #     st.text(summary)
-
-
-
+   
 
 # # Interactive LDA Visualization
 
@@ -2742,6 +2709,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
