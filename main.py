@@ -154,7 +154,7 @@ from streamlit_autorefresh import st_autorefresh
 
  
 
-app_url = "streamlit.app"
+app_url = "https://wucustomersentiment.streamlit.app/"
 
  
 
@@ -2939,6 +2939,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
