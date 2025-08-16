@@ -132,7 +132,7 @@ import pandas as pd
 
 import warnings
 
-import pyLDAvis
+# import pyLDAvis
 
 # import pyLDAvis.sklearn
 
@@ -1412,25 +1412,25 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
 # Function to extract topics and keywords
 
-    def extract_topics(reviews, n_topics=5, n_keywords=5):
+    # def extract_topics(reviews, n_topics=5, n_keywords=5):
 
-        vectorizer = CountVectorizer(stop_words='english', max_df=0.95, min_df=2)
+    #     vectorizer = CountVectorizer(stop_words='english', max_df=0.95, min_df=2)
 
-        doc_term_matrix = vectorizer.fit_transform(reviews)
+    #     doc_term_matrix = vectorizer.fit_transform(reviews)
 
-        lda = LatentDirichletAllocation(n_components=n_topics, random_state=42)
+    #     lda = LatentDirichletAllocation(n_components=n_topics, random_state=42)
 
-        lda.fit(doc_term_matrix)
+    #     lda.fit(doc_term_matrix)
 
-        topics = []
+    #     topics = []
 
-        for idx, topic in enumerate(lda.components_):
+    #     for idx, topic in enumerate(lda.components_):
 
-            keywords = [vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-n_keywords:]]
+    #         keywords = [vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-n_keywords:]]
 
-            topics.append((f"Topic {idx+1}", keywords))
+    #         topics.append((f"Topic {idx+1}", keywords))
 
-        return topics, lda.transform(doc_term_matrix)
+    #     return topics, lda.transform(doc_term_matrix)
 
  
 
@@ -2939,6 +2939,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
