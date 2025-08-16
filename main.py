@@ -225,428 +225,214 @@ BEARER_TOKEN = ""
 sid = SentimentIntensityAnalyzer()
 
  
-
-#persist=True
-
-@st.cache_data(ttl=86400,show_spinner=False)
-
+# --- Android Review Fetch (No caching here!) ---
 def load_android_data(app_id, country, app_name):
-
     reviews = reviews_all(
-
         app_id,
-
         sleep_milliseconds=0,
-
         lang='en',
-
         country=country,
-
         sort=Sort.NEWEST,
-
     )
-
- 
-
     df = pd.DataFrame(np.array(reviews), columns=['review'])
-
     df = df.join(pd.DataFrame(df.pop('review').tolist()))
-
     columns_to_drop = ['reviewId', 'thumbsUpCount', 'reviewCreatedVersion', 'repliedAt', 'userImage']
-
-    df = df.drop(columns=columns_to_drop)
-
+    df = df.drop(columns=[c for c in columns_to_drop if c in df.columns], errors="ignore")
     df['AppName'] = app_name
-
     df['Country'] = country.lower()
-
-    #translator=Translator(service_urls=['translate.googleapis.com'])
-
     try:
-
-    # df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='English').text)
-
-     df['translated_text'] = df['review'].apply(lambda x: translator.translate(x, dest='Exnglish').text)
-
-   
-
-    except:
-
-     print("An exception occurred")
-
+        df['translated_text'] = df['review'].apply(
+            lambda x: translator.translate(x, dest='en').text if isinstance(x, str) else x
+        )
+    except Exception as e:
+        print(f"Translation failed: {e}")
+        df['translated_text'] = df['review']
     df.rename(columns={
-
         'content': 'review',
-
         'userName': 'UserName',
-
         'score': 'rating',
-
         'at': 'TimeStamp',
-
         'replyContent': 'WU_Response'
-
     }, inplace=True)
-
     return df
 
- 
-
-app_details = [
-
-    ('com.westernunion.android.mtapp', 'us', 'Android'),
-
-    ('com.westernunion.moneytransferr3app.eu','fr','Android'),  
-
-    ('com.westernunion.moneytransferr3app.au', 'au', 'Android'),
-
-    # ('com.westernunion.moneytransferr3app.eu','gb','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu','de','Android'),
-
-    ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android'),  
-
-    ('com.westernunion.moneytransferr3app.eu','it','Android'),
-
-    # ('com.westernunion.moneytransferr3app.eu3','se','Android'),
-
-    #   ('com.westernunion.moneytransferr3app.eu3','se','Android'),
-
-    ('com.westernunion.moneytransferr3app.nz', 'nz', 'Android'),
-
-    # ('com.westernunion.android.mtapp', 'co', 'Android'),
-
-    ('com.westernunion.moneytransferr3app.nl','nl','Android'),
-
-    ('com.westernunion.moneytransferr3app.acs3','br','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu2','be','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu3','no','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu','at','Android'),    
-
-    ('com.westernunion.moneytransferr3app.eu2','ch','Android'),
-
-    ('com.westernunion.moneytransferr3app.sg','sg','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu3','dk','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu','ie','Android'),
-
-    ('com.westernunion.moneytransferr3app.pt','pt','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu4','po','Android'),
-
-    ('com.westernunion.moneytransferr3app.eu3','po','Android'),
-
-    ('com.westernunion.moneytransferr3app.apac','my','Android'),
-
-    ('com.westernunion.moneytransferr3app.hk','hk','Android'),
-
-    ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android'),
-
-    ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android'),    
-
-    ('com.westernunion.moneytransferr3app.kw', 'kw', 'Android'),
-
-    ('com.westernunion.moneytransferr3app.qa', 'qa', 'Android'),
-
-    ('com.westernunion.moneytransferr3app.sa', 'sa', 'Android'),
-
-    ('com.westernunion.moneytransferr3app.in', 'in', 'Android'),
-
-    ('com.westernunion.moneytransferr3app.th', 'th', 'Android')  
-
- 
-
-]
-
- 
-
-frames = []
-
-for app_id, country, app_name in app_details:
-
-    try:
-
-       
-
-        with st.spinner("⏳ Loading Android Reviews..."):
-
- 
-
-            frames.append(load_android_data(app_id, country, app_name))
-
-    except KeyError:
-
-        frames.append(pd.DataFrame())
-
- 
-
-finaldfandroid = pd.concat(frames)
-
- 
-
-#########Working code
-
-# APP_ID = "424716908"
-
-# @st.cache_data(ttl=3600)
-
-# def fetch_reviews_rss(app_id, country_code, pages=10):
-
-#     reviews = []
-
-#     for p in range(1, pages + 1):
-
-#         url = f"https://itunes.apple.com/{country_code}/rss/customerreviews/page={p}/id={app_id}/sortBy=mostRecent/json"
-
-#         #st.write(url)
-
-#         resp = requests.get(url)
-
-#         if resp.status_code != 200:
-
-#             continue
-
-#         data = resp.json()
-
-#         entries = data.get("feed", {}).get("entry", [])
-
-#         for e in entries[1:]:
-
-#             reviews.append({
-
-               
-
-#                 "rating": int(e["im:rating"]["label"]),
-
-#                 # "title": e["title"]["label"],
-
-#                 "date": e["updated"]["label"],
-
-#                 "review": e["content"]["label"],
-
-#                 "translated_text":"",
-
-#                 "WU_Response":"",
-
-#                 "UserName": e["author"]["name"]["label"],
-
-#                 "AppName":'iOS',
-
-#                 "Country": country_code,
-
-#                 "appVersion": (e["im:version"]["label"])
-
-               
-
-#             })
-
-#     return pd.DataFrame(reviews)
-
-   
-
- 
-
-# finaldfios = fetch_reviews_rss(APP_ID, "us", pages=1)
-
-# # print(finaldfios.dtypes)
-
-# finaldfios['date'] = pd.to_datetime(finaldfios['date'], errors='coerce')
-
-# finaldfios['TimeStamp'] = finaldfios['date'].dt.date
-
-# finaldfios["TimeStamp"] = pd.to_datetime(finaldfios["TimeStamp"])
-
-################ Working code ends
-
- 
-
-app_country_list = [
-
-    ("424716908", "us"), # Western Union US
-
-    ("1045347175","fr"), #France
-
-    ("1122288720", "au"), #Australia
-
-    # ("1045347175","gb"),   #UK
-
-    ("1045347175", "de"), #  Germany
-
-    ("1110191056","ca"),  #canada
-
-    ("1045347175","it"),   #Italy  
-
-    # ("1152860407","se"),   #Sweden  
-
-    ("1268771757","es"), #Spain
-
-    ("1226778839","nz"), #New Zealand
-
-    ("1199782520","nl"),   #Netherland  
-
-    ("1148514737","br"),  #Brazil
-
-    ("1110240507","be"), #Belgium
-
-    ("1152860407","no"),   #Norway  
-
-    ("1045347175","at"),   #Austria
-
-    ("1110240507","ch"),   #Switzerland
-
-    ("1451754888","ch"),   #Singapore
-
-    ("1152860407","dk"),   #Denmark  
-
-    ("1045347175","ie"),   #ireland  
-
-    ("1229307854","pt"),   #Portugal  
-
-    ("1168530510","pl"),   #Poland
-
-    ("1152860407","fi"),   #finland
-
-    ("1165109779","hk"),   # hongkong    
-
- 
-
- 
-
-    ("1171330611","ae"), # UAE    
-
-    # ("1329774999","co"), # columbia    
-
-    ("1314010624","bh"), # Bahrain
-
-    ("1304223498","cl"), #chile
-
-    ("1459023219","jo"), #Jordan  
-
-    ("1173794098","kw"), #kuwait
-
-    ("1483742169","mv"), #Maldives      
-
-    ("1459024696","sa"), #saudi arabia    
-
-    ("1459226729","th"), #thailand
-
-    ("1173792939","qa"), #qatar      
-
-]
-
- 
-
-@st.cache_data(ttl=86400,show_spinner=False)
-
+def fetch_all_android(app_details):
+    frames = []
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(load_android_data, app_id, country, app_name)
+                   for app_id, country, app_name in app_details]
+        for future in futures:
+            try:
+                result = future.result()
+                frames.append(result)
+            except Exception as e:
+                print(f"Android fetch failed: {e}")
+                frames.append(pd.DataFrame())
+    if frames:
+        return pd.concat(frames, ignore_index=True)
+    return pd.DataFrame()
+
+# --- iOS Review Fetch (No caching here!) ---
 def fetch_ios_reviews(app_id, country_code, pages=5):
-
     reviews = []
-
     for p in range(1, pages + 1):
-
         url = f"https://itunes.apple.com/{country_code}/rss/customerreviews/page={p}/id={app_id}/sortBy=mostRecent/json"
-
         try:
-
             resp = requests.get(url)
-
             if resp.status_code != 200:
-
                 continue
-
-            entries = resp.json().get("feed", {}).get("entry", [])[1:] # skip the app metadata
-
+            entries = resp.json().get("feed", {}).get("entry", [])[1:]  # skip app metadata
             for entry in entries:
-
                 reviews.append({
-
                     "rating": entry.get("im:rating", {}).get("label"),
-
-                    # "title": entry.get("title", {}).get("label"),
-
                     "date": entry.get("updated", {}).get("label"),
-
                     "review": entry.get("content", {}).get("label"),
-
-                    "WU_Response": entry.get("im:developerResponse", {}).get("label", None),
-
+                    "WU_Response": entry.get("im:developerResponse", {}).get("label"),
                     "UserName": entry.get("author", {}).get("name", {}).get("label"),
-
                     "Platform": "iOS",
-
-                    "AppName":'iOS',
-
+                    "AppName": "iOS",
                     "Country": country_code,
-
                     "AppID": app_id
-
                 })
-
         except Exception as e:
-
             print(f"Error for {app_id}-{country_code}: {e}")
-
             continue
-
     return pd.DataFrame(reviews)
 
+def fetch_all_ios(app_country_list, pages=5):
+    frames = []
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(fetch_ios_reviews, app_id, cc, pages)
+                   for app_id, cc in app_country_list]
+        for future in futures:
+            try:
+                df = future.result()
+                if not df.empty:
+                    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+                    df["TimeStamp"] = df["date"].dt.strftime('%Y-%m-%d')
+                    frames.append(df)
+            except Exception as e:
+                print(f"iOS fetch failed: {e}")
+    if frames:
+        return pd.concat(frames, ignore_index=True)
+    return pd.DataFrame()
+
+# --- All App Details, as before ---
+app_details = [
+    ('com.westernunion.android.mtapp', 'us', 'Android'),
+    ('com.westernunion.moneytransferr3app.eu','fr','Android'),  
+    ('com.westernunion.moneytransferr3app.au', 'au', 'Android'),
+    ('com.westernunion.moneytransferr3app.eu','de','Android'),
+    ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android'),  
+    ('com.westernunion.moneytransferr3app.eu','it','Android'),
+    ('com.westernunion.moneytransferr3app.eu3','se','Android'),
+    ('com.westernunion.moneytransferr3app.nz', 'nz', 'Android'),
+    ('com.westernunion.android.mtapp', 'co', 'Android'),
+    ('com.westernunion.moneytransferr3app.nl','nl','Android'),
+    ('com.westernunion.moneytransferr3app.acs3','br','Android'),
+    ('com.westernunion.moneytransferr3app.eu2','be','Android'),
+    ('com.westernunion.moneytransferr3app.eu3','no','Android'),
+    ('com.westernunion.moneytransferr3app.eu','at','Android'),    
+    ('com.westernunion.moneytransferr3app.eu2','ch','Android'),
+    ('com.westernunion.moneytransferr3app.sg','sg','Android'),
+    ('com.westernunion.moneytransferr3app.eu3','dk','Android'),
+    ('com.westernunion.moneytransferr3app.eu','ie','Android'),
+    ('com.westernunion.moneytransferr3app.pt','pt','Android'),
+    ('com.westernunion.moneytransferr3app.eu4','po','Android'),
+    ('com.westernunion.moneytransferr3app.eu3','po','Android'),
+    ('com.westernunion.moneytransferr3app.apac','my','Android'),
+    ('com.westernunion.moneytransferr3app.hk','hk','Android'),
+    ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android'),
+    ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android'),    
+    ('com.westernunion.moneytransferr3app.kw', 'kw', 'Android'),
+    ('com.westernunion.moneytransferr3app.qa', 'qa', 'Android'),
+    ('com.westernunion.moneytransferr3app.sa', 'sa', 'Android'),
+    ('com.westernunion.moneytransferr3app.in', 'in', 'Android'),
+    ('com.westernunion.moneytransferr3app.th', 'th', 'Android')  
+]
+
+app_country_list = [
+    ("424716908", "us"),
+    ("1045347175","fr"),
+    ("1122288720", "au"),
+    ("1045347175", "de"),
+    ("1110191056","ca"),
+    ("1045347175","it"),
+    ("1152860407","se"),
+    ("1268771757","es"),
+    ("1226778839","nz"),
+    ("1199782520","nl"),
+    ("1148514737","br"),
+    ("1110240507","be"),
+    ("1152860407","no"),
+    ("1045347175","at"),
+    ("1110240507","ch"),
+    ("1451754888","ch"),
+    ("1152860407","dk"),
+    ("1045347175","ie"),
+    ("1229307854","pt"),
+    ("1168530510","pl"),
+    ("1152860407","fi"),
+    ("1165109779","hk"),
+    ("1171330611","ae"),
+    ("1329774999","co"),
+    ("1314010624","bh"),
+    ("1304223498","cl"),
+    ("1459023219","jo"),
+    ("1173794098","kw"),
+    ("1483742169","mv"),
+    ("1459024696","sa"),
+    ("1459226729","th"),
+    ("1173792939","qa")
+]
+
+# --- MAIN STREAMLIT BLOCK ---
+
+# st.title("🌍 Western Union Reviews Dashboard")
+
+@st.cache_data(ttl=86400, show_spinner=False)
+
+def get_all_reviews(app_details, app_country_list):
+
+    finaldfandroid = fetch_all_android(app_details)
+
+    finaldfios = fetch_all_ios(app_country_list, pages=5)
+
+    # merge logic as before
+
+    if not finaldfandroid.empty and not finaldfios.empty:
+
+        finaldf = pd.concat([finaldfandroid, finaldfios], ignore_index=True)
+
+    elif not finaldfandroid.empty:
+
+        finaldf = finaldfandroid
+
+    elif not finaldfios.empty:
+
+        finaldf = finaldfios
+
+    else:
+
+        finaldf = pd.DataFrame()
+
+    return finaldf
+
  
 
-# Aggregate reviews from all countries & apps
+with st.spinner("Fetching Android & iOS reviews..."):
 
-df_list = []
+    finaldf = get_all_reviews(app_details, app_country_list)
 
- 
 
-for app_id, country_code in app_country_list:
+python
+@st.cache_data(ttl=86400, show_spinner=False)
+def get_reviews():
+    finaldfandroid = fetch_all_android(app_details)
+    finaldfios = fetch_all_ios(app_country_list, pages=5)
+    # ... merging logic as before ...
+    return finaldf
 
-   with st.spinner("⏳ Loading iOS Reviews..."):
-
-    df = fetch_ios_reviews(app_id, country_code, pages=5)
-
-    if not df.empty:
-
-        # Convert date
-
-        df["date"] = pd.to_datetime(df["date"], errors='coerce')
-
-        df["TimeStamp"] = df["date"].dt.strftime('%Y-%m-%d')
-
-        df_list.append(df)
-
- 
-
-       
-
- 
-
-# Final merged DataFrame
-
-if df_list:
-
-    finaldfios = pd.concat(df_list, ignore_index=True)
-
-    # st.write(finaldfios)
-
-else:
-
-    st.write("No iOS reviews found.")
-
- 
-
-frames = [finaldfandroid,finaldfios]
-
- 
-
-finaldf = pd.concat(frames)
-
-# st.write(finaldf)
-
- 
 
 try:
 
@@ -2937,6 +2723,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
