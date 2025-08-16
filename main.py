@@ -1892,7 +1892,7 @@ if not st.sidebar.checkbox("Visual Charts", True):
 
         (filtered_df['sentiment_label'].str.lower() == 'negative') &
 
-        (filtered_df['rating'].isin([1,2,3]))
+        (filtered_df['rating'].isin([1,2]))
 
     ]
 
@@ -2939,6 +2939,7 @@ qr_img.save(buffered, format="PNG")
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
  
+
 
 
 
