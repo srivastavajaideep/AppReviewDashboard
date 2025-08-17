@@ -322,7 +322,7 @@ app_details = [
     ('com.westernunion.android.mtapp', 'us', 'Android'),
     ('com.westernunion.moneytransferr3app.eu','fr','Android'),  
     ('com.westernunion.moneytransferr3app.au', 'au', 'Android'),
-    ('com.westernunion.moneytransferr3app.eu','de','Android'),
+    # ('com.westernunion.moneytransferr3app.eu','de','Android'),
     ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android'),  
     ('com.westernunion.moneytransferr3app.eu','it','Android'),
     ('com.westernunion.moneytransferr3app.eu3','se','Android'),
@@ -332,7 +332,7 @@ app_details = [
     ('com.westernunion.moneytransferr3app.acs3','br','Android'),
     ('com.westernunion.moneytransferr3app.eu2','be','Android'),
     ('com.westernunion.moneytransferr3app.eu3','no','Android'),
-    ('com.westernunion.moneytransferr3app.eu','at','Android'),    
+    # ('com.westernunion.moneytransferr3app.eu','at','Android'),    
     ('com.westernunion.moneytransferr3app.eu2','ch','Android'),
     ('com.westernunion.moneytransferr3app.sg','sg','Android'),
     ('com.westernunion.moneytransferr3app.eu3','dk','Android'),
@@ -342,7 +342,7 @@ app_details = [
     ('com.westernunion.moneytransferr3app.eu3','po','Android'),
     ('com.westernunion.moneytransferr3app.apac','my','Android'),
     ('com.westernunion.moneytransferr3app.hk','hk','Android'),
-    ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android'),
+    # ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android'),
     ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android'),    
     ('com.westernunion.moneytransferr3app.kw', 'kw', 'Android'),
     ('com.westernunion.moneytransferr3app.qa', 'qa', 'Android'),
@@ -355,7 +355,7 @@ app_country_list = [
     ("424716908", "us"),
     ("1045347175","fr"),
     ("1122288720", "au"),
-    ("1045347175", "de"),
+    # ("1045347175", "de"),
     ("1110191056","ca"),
     ("1045347175","it"),
     ("1152860407","se"),
@@ -365,7 +365,7 @@ app_country_list = [
     ("1148514737","br"),
     ("1110240507","be"),
     ("1152860407","no"),
-    ("1045347175","at"),
+    # ("1045347175","at"),
     ("1110240507","ch"),
     ("1451754888","ch"),
     ("1152860407","dk"),
@@ -374,7 +374,7 @@ app_country_list = [
     ("1168530510","pl"),
     ("1152860407","fi"),
     ("1165109779","hk"),
-    ("1171330611","ae"),
+    # ("1171330611","ae"),
     ("1329774999","co"),
     ("1314010624","bh"),
     ("1304223498","cl"),
@@ -1632,21 +1632,29 @@ if not st.sidebar.checkbox("Visual Charts", True):
 
    # ---- issue keywords and funnel labels ----
 
-    issue_keywords = {
+     issue_keywords = {
 
-        'Crashes': 'crash',
+        'Crashes': 'freezing',
+
+        'Login': 'Authentication',
 
         'Hangs': 'hang',
 
         'Bugs': 'bug',
 
-        'difficult': 'problem',
+        'Performance': 'Loading',
+
+        'customer': 'helpdesk',
 
         'update': 'update',
 
-        'fee': 'fee',
+        'notification': 'error',
 
-        'otp': 'message'
+        'otp': 'message',
+
+        'ui': 'navigation',
+
+        'ads': 'permissions',
 
        
 
@@ -2709,6 +2717,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
