@@ -1637,9 +1637,9 @@ if not st.sidebar.checkbox("Visual Charts", True):
   
        'Crashes': 'freezing',
   
-       'Login': 'Authentication',
+       'time': 'time',
   
-       'Hangs': 'hang',
+       # 'Hangs': 'hang',
   
        'Bugs': 'bug',
   
@@ -1655,7 +1655,7 @@ if not st.sidebar.checkbox("Visual Charts", True):
   
        'ui': 'navigation',
   
-       'ads': 'permissions',
+       'app': 'app',
  
         
  
@@ -2731,6 +2731,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
