@@ -2179,8 +2179,6 @@ if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkba
     st.plotly_chart(fig, use_container_width=True)
 
 
-
-
 # st.sidebar.markdown("### Hierarchical view - TreeMap")
 
 if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the checkbar
@@ -2204,6 +2202,30 @@ if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the ch
  
 
     st.plotly_chart(fig3, use_container_width=True)
+
+# # st.sidebar.markdown("### Hierarchical view - TreeMap")
+
+# if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the checkbar
+
+ 
+
+#     filtered_df=filtered_df.fillna('end_of_hierarchy')
+
+#     fig3 = px.treemap(filtered_df, path = ["Country","AppName","rating","review"],hover_data = ["rating"],
+
+#                      color = "review")
+
+   
+
+#     fig3.update_traces(
+
+#     hovertemplate='<b>Review:</b> %{label}<br><extra></extra>'
+
+#     )
+
+ 
+
+#     st.plotly_chart(fig3, use_container_width=True)
 
  
 
@@ -2742,6 +2764,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
