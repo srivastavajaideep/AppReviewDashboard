@@ -898,7 +898,7 @@ if translate:
    
 
  
-st.sidebar.markdown("**Uncheck the checkbox below to see visualizations**")
+st.sidebar.markdown("**Uncheck to see visualizations**")
 if not st.sidebar.checkbox("Keyword Analysis", True):
 
     # # Keyword and N-gram Analysis
@@ -2731,6 +2731,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
