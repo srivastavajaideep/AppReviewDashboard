@@ -1244,21 +1244,32 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
     # Function to display topic summaries using markdown
 
+    # def display_topic_summary(topics, sentences, section_title):
+
+    #     st.markdown(f"### {section_title}")
+
+    #     for i, (topic_name, keywords) in enumerate(topics):
+
+    #         with st.expander(f"{topic_name}"):
+
+    #             st.markdown(f"**Keywords:** {', '.join(keywords)}")
+
+    #             st.markdown("**Representative Sentences:**")
+
+    #             for sent in sentences[i]:
+
+    #                 st.markdown(f"- {sent}")
+
     def display_topic_summary(topics, sentences, section_title):
-
-        st.markdown(f"### {section_title}")
-
-        for i, (topic_name, keywords) in enumerate(topics):
-
-            with st.expander(f"{topic_name}"):
-
-                st.markdown(f"**Keywords:** {', '.join(keywords)}")
-
-                st.markdown("**Representative Sentences:**")
-
-                for sent in sentences[i]:
-
-                    st.markdown(f"- {sent}")
+    st.markdown(f"### {section_title}")
+    for i, (topic_name, keywords) in enumerate(topics):
+        # Join keywords into a string to use as the expander header
+        keywords_str = ', '.join(keywords)
+        with st.expander(keywords_str):
+            st.markdown(f"**Keywords:** {keywords_str}")
+            st.markdown("**Representative Sentences:**")
+            for sent in sentences[i]:
+                st.markdown(f"- {sent}")
 
  
 
@@ -2731,6 +2742,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
