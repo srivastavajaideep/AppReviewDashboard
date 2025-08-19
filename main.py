@@ -2162,10 +2162,10 @@ if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkba
     color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),
     title=""
     )
-   fig.update_traces(hovertemplate="")
-   fig.update_layout(width=800, height=800)
-   fig.update_layout(coloraxis_showscale=False)  # <-- This line removes the colorbar
-   st.plotly_chart(fig, use_container_width=True)
+    fig.update_traces(hovertemplate="")
+    fig.update_layout(width=800, height=800)
+    fig.update_layout(coloraxis_showscale=False)  # <-- This line removes the colorbar
+    st.plotly_chart(fig, use_container_width=True)
 
 
 
@@ -2731,6 +2731,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
