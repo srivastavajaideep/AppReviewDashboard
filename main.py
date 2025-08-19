@@ -646,7 +646,7 @@ else:
 
  #'Sentiment',
 
- filtered_df = filtered_df.reindex(['TimeStamp', 'review','rating','UserName','AppName','Country','appVersion'], axis=1)
+ #filtered_df = filtered_df.reindex(['TimeStamp', 'review','rating','UserName','AppName','Country','appVersion'], axis=1)
 
 #  ,'translated_text'
 
@@ -670,6 +670,7 @@ else:
 
  filtered_df['TimeStamp']=pd.to_datetime(filtered_df["TimeStamp"]).dt.date
 
+ filtered_df = filtered_df.reindex(['TimeStamp', 'review','rating','sentiment_score','sentiment_label','Country','AppName','appVersion','UserName'], axis=1)
  
 
 search_query = st.text_input("Search Reviews :")
@@ -2717,6 +2718,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
