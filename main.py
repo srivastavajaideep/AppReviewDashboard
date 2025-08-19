@@ -2118,41 +2118,54 @@ if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkba
 
     st.write("### Sunburst Chart")
 
+    # fig = px.sunburst(
+
+    #     filtered_df,
+
+    #     path=[ 'Country','AppName','rating','review','UserName'],  # Define the hierarchy of data
+
+    #     values='rating',  # Use ratings as values
+
+    #     color='rating',    # Color the segments by ratings
+
+    #     color_continuous_scale='RdBu',
+
+    #     color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),
+
+    #     #color_discrete_sequence=px.colors.qualitative.Pastel ,  # Color scale for ratings          
+
+    #     title=""
+
+    # )
+
+ 
+
+    # fig.update_traces(
+
+    # hovertemplate=""
+
+    # )
+
+ 
+
+    # fig.update_layout(width=800,height=800)
+
+    # # Display the chart in Streamlit
+
+    # st.plotly_chart(fig, use_container_width=True)
     fig = px.sunburst(
-
-        filtered_df,
-
-        path=[ 'Country','AppName','rating','review','UserName'],  # Define the hierarchy of data
-
-        values='rating',  # Use ratings as values
-
-        color='rating',    # Color the segments by ratings
-
-        color_continuous_scale='RdBu',
-
-        color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),
-
-        #color_discrete_sequence=px.colors.qualitative.Pastel ,  # Color scale for ratings          
-
-        title=""
-
+    filtered_df,
+    path=['Country', 'AppName', 'rating', 'review', 'UserName'],
+    values='rating',
+    color='rating',
+    color_continuous_scale='RdBu',
+    color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),
+    title=""
     )
-
- 
-
-    fig.update_traces(
-
-    hovertemplate=""
-
-    )
-
- 
-
-    fig.update_layout(width=800,height=800)
-
-    # Display the chart in Streamlit
-
-    st.plotly_chart(fig, use_container_width=True)
+   fig.update_traces(hovertemplate="")
+   fig.update_layout(width=800, height=800)
+   fig.update_layout(coloraxis_showscale=False)  # <-- This line removes the colorbar
+   st.plotly_chart(fig, use_container_width=True)
 
 
 
@@ -2718,6 +2731,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
