@@ -196,7 +196,7 @@ stop_words = set(stopwords.words('english'))
 
 # st.cache_data.clear()
 
-print(st.__version__)
+# print(st.__version__)
 
 translator = Translator()
 
@@ -2177,24 +2177,19 @@ if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkba
 # filtered_df['review'] = filtered_df['review'].apply(fix_unicode_escapes)
 
 
-# if not st.sidebar.checkbox("TreeMap", True, key='100'):
-#     filtered_df = filtered_df.fillna('end_of_hierarchy')
-
-#     # Fix bad unicode escape characters in 'review' column
-#     def fix_unicode_escapes(text):
-#         if isinstance(text, str):
-#             return text.replace('\\', '\\\\')
-#         return text
-
-#     filtered_df['review'] = filtered_df['review'].apply(fix_unicode_escapes)
-
-#     fig3 = px.treemap(filtered_df, path=["Country", "AppName", "rating", "review"], hover_data=["rating"],
-#                       color="review")
-
-#     fig3.update_traces(
-#         hovertemplate='<b>Review:</b> %{label}<br><extra></extra>'
-#     )
-#     st.plotly_chart(fig3, use_container_width=True)
+if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the checkbar
+ if date_diff <= 31:
+     filtered_df=filtered_df.fillna('end_of_hierarchy')
+     fig3 = px.treemap(filtered_df, path = ["Country","AppName","rating","review"],hover_data = ["rating"],
+                      color = "review")
+   
+     fig3.update_traces(
+     hovertemplate='<b>Review:</b> %{label}<br><extra></extra>'
+     )
+ 
+     st.plotly_chart(fig3, use_container_width=True)
+ else:
+             st.info("TreeMap chart is disabled for date ranges longer than one month.") 
 
 
 # # st.sidebar.markdown("### Hierarchical view - TreeMap")
@@ -2758,6 +2753,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
