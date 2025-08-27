@@ -552,7 +552,7 @@ except KeyError:
 
  
 
-country = st.sidebar.multiselect("Select the Country", df["Country"].unique(), default=["us","in","fr","au","ca"])
+country = st.sidebar.multiselect("Select the Country", df["Country"].unique())
 
 if not country:
 
@@ -2753,6 +2753,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
