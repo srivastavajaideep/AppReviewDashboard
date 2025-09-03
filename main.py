@@ -1859,34 +1859,34 @@ if st.sidebar.checkbox("Visual Charts", False):
    # ---- issue keywords and funnel labels ----
 
     issue_keywords = {
-  
-       'Crashes': 'freezing',
-  
-       'time': 'time',
-  
-       # 'Hangs': 'hang',
-  
-       'Bugs': 'bug',
-  
-       'Performance': 'Loading',
-  
-       'customer': 'helpdesk',
-  
-       'update': 'update',
-  
-       'notification': 'error',
-  
-       'otp': 'message',
-  
-       'ui': 'navigation',
-  
-       'app': 'app',
- 
-        
- 
-        
- 
-     }
+
+        'Crashes': 'Freezes',
+
+        'time': 'Interval',
+
+        'Hang': 'hang',
+
+        'Bugs': 'bug',
+
+        'Performance': 'performance',
+
+        'customer': 'helpdesk',
+
+        'update': 'update',
+
+        'notification': 'Alert',
+
+        'otp': 'otp',
+
+        'ui': 'interface',
+
+        'app': 'application',
+
+       
+
+       
+
+    }
 
     funnel_labels = ['All Reviews', 'Filtered Negatives'] + list(issue_keywords.keys()) + ['Other Issues']
 
@@ -2967,6 +2967,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
