@@ -2361,7 +2361,7 @@ date_diff = (date2 - date1).days
 
 if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkbar
 
-    if date_diff <= 31:
+    if date_diff <= 61:
             st.write("### Sunburst Chart")
             fig = px.sunburst(
                 filtered_df,
@@ -2377,7 +2377,7 @@ if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkba
             fig.update_layout(coloraxis_showscale=False)
             st.plotly_chart(fig, use_container_width=True)
     else:
-            st.info("Sunburst chart is disabled for date ranges longer than one month.")
+            st.info("Sunburst chart is disabled for date ranges longer than two month.")
 
  
 # # st.sidebar.markdown("### Hierarchical view - TreeMap")
@@ -2392,7 +2392,7 @@ if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkba
 
 
 if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the checkbar
- if date_diff <= 31:
+ if date_diff <= 61:
      filtered_df=filtered_df.fillna('end_of_hierarchy')
      fig3 = px.treemap(filtered_df, path = ["Country","AppName","rating","review"],hover_data = ["rating"],
                       color = "review")
@@ -2403,7 +2403,7 @@ if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the ch
  
      st.plotly_chart(fig3, use_container_width=True)
  else:
-             st.info("TreeMap chart is disabled for date ranges longer than one month.") 
+             st.info("TreeMap chart is disabled for date ranges longer than two months.") 
 
 
 # # st.sidebar.markdown("### Hierarchical view - TreeMap")
@@ -2967,6 +2967,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
