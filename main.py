@@ -148,7 +148,205 @@ from nltk.corpus import stopwords
 
 from streamlit_autorefresh import st_autorefresh
 
+st.markdown(
+
+    """
+
+    <style>
+
+    /* App background */
+
+    .stApp {
+
+        background-color: #fd0;
+
+        color: black;
+
+    }
+
  
+
+    /* Headers */
+
+    h1, h2, h3, h4, h5, h6 {
+
+        color: black;
+
+        font-weight: bold;
+
+    }
+
+ 
+
+    /* Buttons */
+
+    div.stButton > button {
+
+        background-color: black;
+
+        color: #FFFF00;
+
+        border: none;
+
+        padding: 0.5em 1em;
+
+        font-weight: bold;
+
+        border-radius: 5px;
+
+    }
+
+ 
+
+    /* Sidebar background and text */
+
+    section[data-testid="stSidebar"] {
+
+        background-color: black;
+
+    }
+
+ 
+
+    section[data-testid="stSidebar"] * {
+
+        color: #FFFF00 !important;
+
+    }
+
+ 
+
+    /* DataFrame styling */
+
+    .stDataFrame {
+
+        background-color: white;
+
+        border: 2px solid black;
+
+        border-radius: 5px;
+
+        padding: 10px;
+
+    }
+
+ 
+
+    .stDataFrame table {
+
+        color: black;
+
+        font-weight: 500;
+
+    }
+
+ 
+
+    .stDataFrame thead {
+
+        background-color: black;
+
+        color: #FFFF00;
+
+    }
+
+    </style>
+
+    """,
+
+    unsafe_allow_html=True
+
+)
+
+ 
+
+st.markdown(
+
+    """
+
+    <style>
+
+    /* Style for download button */
+
+    .stDownloadButton button {
+
+        background-color: black;
+
+        color: #FFFF00;
+
+        border: none;
+
+        padding: 0.5em 1em;
+
+        font-weight: bold;
+
+        border-radius: 5px;
+
+        cursor: pointer;
+
+    }
+
+ 
+
+    .stDownloadButton button:hover {
+
+        background-color: #333333;
+
+        color: #FFFF00;
+
+    }
+
+    </style>
+
+    """,
+
+    unsafe_allow_html=True
+
+)
+
+ 
+
+st.markdown(
+
+    """
+
+    <style>
+
+    /* Disable hover color change for expanders */
+
+    .streamlit-expanderHeader:hover {
+
+        color: inherit !important;
+
+    }
+
+ 
+
+    /* Optional: Disable hover color change for all markdown text */
+
+    .markdown-text-container:hover {
+
+        color: inherit !important;
+
+    }
+
+ 
+
+    /* Optional: Disable hover effect for all text */
+
+    *:hover {
+
+        color: inherit !important;
+
+    }
+
+    </style>
+
+    """,
+
+    unsafe_allow_html=True
+
+) 
 
 
 
@@ -1511,47 +1709,63 @@ def plot_bar(subplot,filtered_df):
 
 #move to plotting
 
-if not st.sidebar.checkbox("Visual Charts", True):
+if st.sidebar.checkbox("Visual Charts", False):
+
+ 
+
+    # st.markdown("<br><br>", unsafe_allow_html=True)
+
+    st.markdown(
+
+        "<div style='text-align: center; font-size: 18px;'><b>Consolidated Sentiment across Countries</b></div>",
+
+        unsafe_allow_html=True
+
+    )
+
+    fig = px.pie(
+
+    filtered_df,
+
+    names='sentiment_label',
+
+    # title='Sentiment Distribution',
+
+    color='sentiment_label',
+
+    color_discrete_map={
+
+        'Positive': 'green',
+
+        'Negative': 'red',
+
+        'Neutral': 'blue'
+
+    },
+
+    hole=0.2
+
+    )
+
+ 
+
+    # Show percentage and label inside the chart
+
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+
+   
+
+ 
+
+    # Display chart in Streamlit page
+
+    st.plotly_chart(fig, use_container_width=True)
 
  
 
    
 
-    fig1 = px.pie(
-
-        filtered_df,
-
-        names='sentiment_label',
-
-        # title='Sentiment Distribution',
-
-        width=600,   # Set desired width
-
-        height=400,   # Set desired height
-
-        color_discrete_map={
-
-            'Positive': '#0CE73B',  
-
-            'Negative': '#d62728',
-
-            'Neutral': '#1f77b4'
-
- 
-
-        },
-
-        hole=0.3
-
-        )
-
- 
-
-    fig1.update_traces(textposition='inside', textinfo='percent+label')
-
-    st.plotly_chart(fig1,use_container_width=True)
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br><b>Consolidated Ratings across Countries<b><br>", unsafe_allow_html=True)
 
 
 
@@ -2753,6 +2967,7 @@ buffered = io.BytesIO()
 qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
+
 
 
 
