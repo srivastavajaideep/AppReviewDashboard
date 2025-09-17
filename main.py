@@ -188,7 +188,7 @@ st.markdown(
 
     html, body, [class*="css"] {
 
-        font-family: 'PP Right Grotesk', sans-serif;
+        font-family:  sans-serif;
 
     }
 
@@ -3078,6 +3078,7 @@ st.markdown(f"""
     </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
