@@ -661,15 +661,7 @@ st.markdown("""
 
 st.markdown("""
 
-    <div style='text-align: center; margin-top: 25px;'>
-
-        # <h1 style='color: black; font-weight: bold;  font-size: 45px;'>
-
-            Customer Sentiment Analyzer
-
-        </h1>
-
-    </div>
+ 
 
 """, unsafe_allow_html=True)
 
@@ -3078,6 +3070,7 @@ st.markdown(f"""
     # </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
