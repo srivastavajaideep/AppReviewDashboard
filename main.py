@@ -71,6 +71,7 @@ from sklearn.decomposition import LatentDirichletAllocation
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 import nltk
+nltk.download('vader_lexicon')
 
 import plotly.express as px
 
@@ -3077,6 +3078,7 @@ st.markdown(f"""
     </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
