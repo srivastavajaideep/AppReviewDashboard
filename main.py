@@ -207,7 +207,7 @@ st.markdown(
 
     }
 
- 
+  
 
     /* Buttons */
 
@@ -317,7 +317,17 @@ st.markdown(
 
     }
 
- 
+    st.markdown(
+    """
+    <style>
+    div.stDownloadButton > button {
+        display: block;
+        margin: 0 auto;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
 
     .stWidgetLabel{
 
@@ -3104,6 +3114,7 @@ st.markdown(f"""
 
 
 """, unsafe_allow_html=True)
+
 
 
 
