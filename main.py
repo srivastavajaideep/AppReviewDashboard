@@ -1638,15 +1638,13 @@ if not filtered_df.empty:
 
  
 
-# # Download button just below the data grid
+# Download button just below the data grid
 
-# csv = filtered_df.to_csv(index=False).encode('utf-8')
+csv = filtered_df.to_csv(index=False).encode('utf-8')
 
-# st.download_button('Download Data', data=csv, file_name="Data.csv", mime="text/csv")
+st.download_button('Download Data', data=csv, file_name="Data.csv", mime="text/csv")
 
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    st.download_button('Download Data', data=csv, file_name="Data.csv", mime="text/csv")
+
 
 
 
@@ -3106,6 +3104,7 @@ st.markdown(f"""
 
 
 """, unsafe_allow_html=True)
+
 
 
 
