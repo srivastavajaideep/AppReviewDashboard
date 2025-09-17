@@ -72,7 +72,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 import nltk
 nltk.download('vader_lexicon')
-
+nltk.download('stopwords')
 import plotly.express as px
 
 from google_play_scraper import reviews, Sort
@@ -663,7 +663,7 @@ st.markdown("""
 
     <div style='text-align: center; margin-top: 25px;'>
 
-        <h1 style='color: black; font-weight: bold; font-family: "PP Right Grotesk", sans-serif; font-size: 45px;'>
+        <h1 style='color: black; font-weight: bold; font-family:  sans-serif; font-size: 45px;'>
 
             Customer Sentiment Analyzer
 
@@ -3078,6 +3078,7 @@ st.markdown(f"""
     </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
