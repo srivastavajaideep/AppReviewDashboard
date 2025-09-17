@@ -137,7 +137,7 @@ from nltk.corpus import stopwords
 
 from streamlit_autorefresh import st_autorefresh
 
-st.write(st.__version__)
+# st.write(st.__version__)
 
  
 
@@ -704,17 +704,9 @@ st.markdown("""
  
 
 st.markdown("""
-
-    <div style='text-align: center; padding-top: 30px;'>
-
-        <h1 style='color: black; font-weight: bold; font-family: "PP Right Grotesk", sans-serif; font-size: 45px;'>
-
-            Customer Sentiment Analyzer
-
-        </h1>
-
-    </div>
-
+<h1 style='color: black; font-weight: bold; font-family: "PP Right Grotesk", sans-serif; font-size: 45px;'>
+    Customer Sentiment Analyzer
+</h1>
 """, unsafe_allow_html=True)
 
  
@@ -3122,6 +3114,7 @@ st.markdown(f"""
     # </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
