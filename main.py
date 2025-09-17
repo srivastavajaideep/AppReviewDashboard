@@ -165,8 +165,11 @@ st.markdown("""
 
 """, unsafe_allow_html=True)
 
+ 
 
+ 
 
+ 
 
 st.markdown(
 
@@ -178,7 +181,7 @@ st.markdown(
 
     .stApp {
 
-        background-color: #fd0;
+        background-color: #F5F5F5;
 
         color: black;
 
@@ -188,7 +191,7 @@ st.markdown(
 
     html, body, [class*="css"] {
 
-        font-family:  sans-serif;
+        font-family: 'PP Right Grotesk', sans-serif;
 
     }
 
@@ -210,9 +213,9 @@ st.markdown(
 
     div.stButton > button {
 
-        background-color: black;
+        background-color: #ffdd00;
 
-        color: #ffe600;
+        color: black;
 
         border: none;
 
@@ -230,7 +233,7 @@ st.markdown(
 
     section[data-testid="stSidebar"] {
 
-        background-color: black;
+        background-color: #ffdd00;
 
         # padding: 2px;
 
@@ -240,7 +243,7 @@ st.markdown(
 
     section[data-testid="stSidebar"] * {
 
-        color:  white !important;
+        color:  black !important;
 
     }
 
@@ -270,6 +273,32 @@ st.markdown(
 
     }
 
+    div[data-baseweb="input"] input{
+
+    background-color:rgb(255, 255, 255);
+
+    }
+
+ 
+
+    .stDateInput:nth-of-type(1) div[data-baseweb="input"] {
+
+        background-color:rgb(254, 254, 254);  
+
+        border:  2px solid #ffdd00; 
+
+    }
+
+ 
+
+    .stTextInput div[data-baseweb="input"] {
+
+        background-color: rgb(255, 255, 255); ;   /* light blue */
+
+        border: 2px solid #ffdd00;
+
+            }
+
  
 
     .stDataFrame thead {
@@ -288,6 +317,14 @@ st.markdown(
 
     }
 
+ 
+
+    .stWidgetLabel{
+
+    background-color: #ffdd00;
+
+    }
+
     </style>
 
     """,
@@ -296,79 +333,19 @@ st.markdown(
 
 )
 
+ 
 
+ 
 
+ 
 
-st.markdown("""
-
-    <style>
-
-    .date-range-text {
-
-        font-size: 18px;
-
-        color: #4B4B4B;
-
-        text-align: center;
-
-        margin-top: 10px;
-
-        margin-bottom: 20px;
-
-    }
-
-    </style>
-
-""", unsafe_allow_html=True)
-
-
-
-
+ 
 
 def show_timed_warning(message="⚠️ No records found within the specified date range", duration=4):
 
     # Create three columns to center the message
 
-   
-
-    col1, col2, col3 = st.columns([1, 2, 1])
-
-       
-
-    with col2:
-
-            warning_placeholder = st.empty()
-
-            warning_placeholder.markdown(
-
-                f"""
-
-                <div style="margin-top: 5px;text-align: center; padding: 10px; background-color: #f8d7da;
-
-                            border: 1px solid #f5c6cb; border-radius: 4px;">
-
-                    <strong style="color: black; font-size: 15px;">{message}</strong>
-
-                </div>
-
-                """,
-
-                unsafe_allow_html=True
-
-            )
-
-            time.sleep(duration)
-
-            warning_placeholder.empty()
-
-
-
-
-def show_timed_warning_Sunburst(message="⚠️ Sunburst chart is disabled for date ranges longer than two months", duration=4):
-
-    # Create three columns to center the message
-
-   
+  
 
     col1, col2, col3 = st.columns([1, 2, 1])
 
@@ -402,11 +379,15 @@ def show_timed_warning_Sunburst(message="⚠️ Sunburst chart is disabled for d
 
  
 
-def show_timed_warning_TreeMap(message="⚠️ TreeMap chart is disabled for date ranges longer than two months", duration=4):
+ 
+
+ 
+
+def show_timed_warning_Sunburst(message="⚠️ Sunburst chart is disabled for date ranges longer than two months", duration=4):
 
     # Create three columns to center the message
 
-   
+  
 
     col1, col2, col3 = st.columns([1, 2, 1])
 
@@ -436,11 +417,55 @@ def show_timed_warning_TreeMap(message="⚠️ TreeMap chart is disabled for dat
 
             time.sleep(duration)
 
-            warning_placeholder.empty()            
+            warning_placeholder.empty()
 
+ 
 
+ 
 
+def show_timed_warning_TreeMap(message="⚠️ TreeMap chart is disabled for date ranges longer than two months", duration=4):
 
+    # Create three columns to center the message
+
+  
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+
+       
+
+    with col2:
+
+            warning_placeholder = st.empty()
+
+            warning_placeholder.markdown(
+
+                f"""
+
+                <div style="margin-top: 5px;text-align: center; padding: 10px; background-color: #f8d7da;
+
+                            border: 1px solid #f5c6cb; border-radius: 4px;">
+
+                    <strong style="color: black; font-size: 15px;">{message}</strong>
+
+                </div>
+
+                """,
+
+                unsafe_allow_html=True
+
+            )
+
+            time.sleep(duration)
+
+            warning_placeholder.empty()           
+
+ 
+
+ 
+
+ 
+
+ 
 
 # st.sidebar.image("images/wufull.png", use_column_width=True)
 
@@ -450,7 +475,7 @@ def show_timed_warning_TreeMap(message="⚠️ TreeMap chart is disabled for dat
 
 dir = os.path.dirname(__file__)
 
-filename = os.path.join(dir, 'WUNEWEST.png')
+filename = os.path.join(dir, 'Images/wufull.png')
 
 with open(filename, "rb") as image_file:
 
@@ -482,7 +507,7 @@ st.sidebar.markdown(f"""
 
     <div class="no-fullscreen-sidebar" style="text-align: center;">
 
-        <img src="data:image/png;base64,{encoded_image}" style="width: 100%;margin-top: 20px;margin-bottom: 20px;"/>
+        <img src="data:image/png;base64,{encoded_image}" style="width: 100%;margin-top: 10px;margin-bottom: 20px;"/>
 
     </div>
 
@@ -500,9 +525,9 @@ st.markdown(
 
     .stDownloadButton button {
 
-        background-color: black;
+        background-color: #ffdd00;
 
-        color: #ffe600;
+        color: black;
 
         border: none;
 
@@ -526,6 +551,14 @@ st.markdown(
 
     }
 
+    .st -dz{
+
+    border: 2px solid "#ffdd00";
+
+ 
+
+    }
+
     </style>
 
     """,
@@ -533,6 +566,8 @@ st.markdown(
     unsafe_allow_html=True
 
 )
+
+ 
 
  
 
@@ -580,6 +615,8 @@ st.markdown(
 
  
 
+ 
+
 st.markdown("""
 
     <style>
@@ -602,8 +639,11 @@ st.markdown("""
 
 """, unsafe_allow_html=True)
 
+ 
 
+ 
 
+ 
 
 st.markdown("""
 
@@ -628,6 +668,8 @@ st.markdown("""
     </style>
 
 """, unsafe_allow_html=True)
+
+ 
 
  
 
@@ -659,15 +701,25 @@ st.markdown("""
 
  
 
+ 
+
 st.markdown("""
 
- 
+    <div style='text-align: center; padding-top: 30px;'>
+
+        <h1 style='color: black; font-weight: bold; font-family: "PP Right Grotesk", sans-serif; font-size: 45px;'>
+
+            Customer Sentiment Analyzer
+
+        </h1>
+
+    </div>
 
 """, unsafe_allow_html=True)
 
  
 
-app_url = ""
+app_url = "https://wucustomersentiment.streamlit.app/"
 
  
 
@@ -3070,6 +3122,7 @@ st.markdown(f"""
     # </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
