@@ -475,7 +475,7 @@ def show_timed_warning_TreeMap(message="⚠️ TreeMap chart is disabled for dat
 
 dir = os.path.dirname(__file__)
 
-filename = os.path.join(dir, 'wufull.png')
+filename = os.path.join(dir, 'WUNEWEST.png')
 
 with open(filename, "rb") as image_file:
 
@@ -3104,6 +3104,7 @@ st.markdown(f"""
 
 
 """, unsafe_allow_html=True)
+
 
 
 
