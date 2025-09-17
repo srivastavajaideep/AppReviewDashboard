@@ -1,14 +1,4 @@
-# import urllib3
-
-# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 import streamlit as st
-import nltk
-nltk.download('punkt')        # standard sentence and word tokenizers
-nltk.download('punkt_tab')    # ensures related resources are also downloaded
-nltk.download('vader_lexicon')
-nltk.download('stopwords')
-
 
 import plotly.graph_objects as go
 
@@ -24,17 +14,31 @@ import asyncio
 
 import pandas as pd
 
-# import aiohttp
-
 import qrcode
 
 from concurrent.futures import ThreadPoolExecutor
 
-st.set_page_config(page_title="WU Customer Sentiment Analyzer!!!", page_icon=":sparkles:",layout="wide")
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
-# st.title(" :sparkles: WU App Review DashBoard")
+from streamlit.column_config import TextColumn
 
-st.markdown('<style>div.block-container{padding-top:1rem;text-align: center}</style>',unsafe_allow_html=True)
+# st.set_page_config(page_title="WU Customer Sentiment Analyzer!!!", page_icon=":sparkles:",layout="wide")
+
+ 
+
+st.set_page_config(
+
+    page_title="!!!",
+
+    page_icon="Images/NEW.png",  # File must be in the root directory
+
+    layout="wide"
+
+)
+
+# st.title(" :sparkles: Sentiment Anaylzer")
+
+st.markdown('<style>div.block-container{padding-top:0rem;text-align: center}</style>',unsafe_allow_html=True)
 
 import plotly.express as px
 
@@ -46,10 +50,6 @@ from datetime import date, timedelta
 
 from pprint import pprint
 
-import json
-
-#import asyncio
-
 import time
 
 from fpdf import FPDF
@@ -57,8 +57,6 @@ from fpdf import FPDF
 from sklearn.cluster import KMeans
 
 import warnings
-
-# from bertopic import BERTopic
 
 import requests
 
@@ -72,10 +70,7 @@ from sklearn.decomposition import LatentDirichletAllocation
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-from sentence_transformers import SentenceTransformer
-
-
-from deep_translator import GoogleTranslator
+import nltk
 
 import plotly.express as px
 
@@ -85,7 +80,7 @@ import os
 
 from google_play_scraper import Sort, reviews_all
 
-# from app_store_scraper import AppStore
+from app_store_scraper import AppStore
 
 import seaborn as sns
 
@@ -109,14 +104,11 @@ from languages import *
 
 warnings.filterwarnings('ignore')
 
-
-import ssl
+nltk.download('punkt')
 
 from sklearn.feature_extraction.text import CountVectorizer
 
 from sklearn.decomposition import LatentDirichletAllocation
-
-import certifi
 
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
@@ -132,21 +124,48 @@ import pandas as pd
 
 import warnings
 
-# import pyLDAvis
-
-# import pyLDAvis.sklearn
-
 import streamlit.components.v1 as components
 
 from textblob import TextBlob
 
 import matplotlib.pyplot as plt
 
-from transformers import pipeline
+# from transformers import pipeline
 
 from nltk.corpus import stopwords
 
 from streamlit_autorefresh import st_autorefresh
+
+st.write(st.__version__)
+
+ 
+
+st.markdown("""
+
+    <style>
+
+        /* Hide Streamlit header */
+
+        header {visibility: hidden;}
+
+ 
+
+        /* Hide Streamlit footer */
+
+        footer {visibility: hidden;}
+
+ 
+
+        /* Hide Main Menu */
+
+        #MainMenu {visibility: hidden;}
+
+    </style>
+
+""", unsafe_allow_html=True)
+
+
+
 
 st.markdown(
 
@@ -166,6 +185,14 @@ st.markdown(
 
  
 
+    html, body, [class*="css"] {
+
+        font-family: 'PP Right Grotesk', sans-serif;
+
+    }
+
+   
+
     /* Headers */
 
     h1, h2, h3, h4, h5, h6 {
@@ -184,15 +211,15 @@ st.markdown(
 
         background-color: black;
 
-        color: #FFFF00;
+        color: #ffe600;
 
         border: none;
 
         padding: 0.5em 1em;
 
-        font-weight: bold;
+        # font-weight: bold;
 
-        border-radius: 5px;
+        border-radius: 1px;
 
     }
 
@@ -204,13 +231,15 @@ st.markdown(
 
         background-color: black;
 
+        # padding: 2px;
+
     }
 
  
 
     section[data-testid="stSidebar"] * {
 
-        color: #FFFF00 !important;
+        color:  white !important;
 
     }
 
@@ -222,11 +251,11 @@ st.markdown(
 
         background-color: white;
 
-        border: 2px solid black;
+        border: 1px solid black;
 
         border-radius: 5px;
 
-        padding: 10px;
+        padding: 8px;
 
     }
 
@@ -250,6 +279,14 @@ st.markdown(
 
     }
 
+ 
+
+    .stVerticalBlock{
+
+      display: block;
+
+    }
+
     </style>
 
     """,
@@ -257,6 +294,198 @@ st.markdown(
     unsafe_allow_html=True
 
 )
+
+
+
+
+st.markdown("""
+
+    <style>
+
+    .date-range-text {
+
+        font-size: 18px;
+
+        color: #4B4B4B;
+
+        text-align: center;
+
+        margin-top: 10px;
+
+        margin-bottom: 20px;
+
+    }
+
+    </style>
+
+""", unsafe_allow_html=True)
+
+
+
+
+
+def show_timed_warning(message="⚠️ No records found within the specified date range", duration=4):
+
+    # Create three columns to center the message
+
+   
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+
+       
+
+    with col2:
+
+            warning_placeholder = st.empty()
+
+            warning_placeholder.markdown(
+
+                f"""
+
+                <div style="margin-top: 5px;text-align: center; padding: 10px; background-color: #f8d7da;
+
+                            border: 1px solid #f5c6cb; border-radius: 4px;">
+
+                    <strong style="color: black; font-size: 15px;">{message}</strong>
+
+                </div>
+
+                """,
+
+                unsafe_allow_html=True
+
+            )
+
+            time.sleep(duration)
+
+            warning_placeholder.empty()
+
+
+
+
+def show_timed_warning_Sunburst(message="⚠️ Sunburst chart is disabled for date ranges longer than two months", duration=4):
+
+    # Create three columns to center the message
+
+   
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+
+       
+
+    with col2:
+
+            warning_placeholder = st.empty()
+
+            warning_placeholder.markdown(
+
+                f"""
+
+                <div style="margin-top: 5px;text-align: center; padding: 10px; background-color: #f8d7da;
+
+                            border: 1px solid #f5c6cb; border-radius: 4px;">
+
+                    <strong style="color: black; font-size: 15px;">{message}</strong>
+
+                </div>
+
+                """,
+
+                unsafe_allow_html=True
+
+            )
+
+            time.sleep(duration)
+
+            warning_placeholder.empty()
+
+ 
+
+def show_timed_warning_TreeMap(message="⚠️ TreeMap chart is disabled for date ranges longer than two months", duration=4):
+
+    # Create three columns to center the message
+
+   
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+
+       
+
+    with col2:
+
+            warning_placeholder = st.empty()
+
+            warning_placeholder.markdown(
+
+                f"""
+
+                <div style="margin-top: 5px;text-align: center; padding: 10px; background-color: #f8d7da;
+
+                            border: 1px solid #f5c6cb; border-radius: 4px;">
+
+                    <strong style="color: black; font-size: 15px;">{message}</strong>
+
+                </div>
+
+                """,
+
+                unsafe_allow_html=True
+
+            )
+
+            time.sleep(duration)
+
+            warning_placeholder.empty()            
+
+
+
+
+
+# st.sidebar.image("images/wufull.png", use_column_width=True)
+
+ 
+
+# Load and encode image
+
+dir = os.path.dirname(__file__)
+
+filename = os.path.join(dir, 'Images/wufull.png')
+
+with open(filename, "rb") as image_file:
+
+    encoded_image = base64.b64encode(image_file.read()).decode()
+
+ 
+
+# Inject custom HTML into sidebar
+
+st.sidebar.markdown(f"""
+
+    <style>
+
+        .no-fullscreen-sidebar img {{
+
+            pointer-events: none;
+
+            user-select: none;
+
+        }}
+
+        [title="View fullscreen"] {{
+
+            display: none !important;
+
+        }}
+
+    </style>
+
+    <div class="no-fullscreen-sidebar" style="text-align: center;">
+
+        <img src="data:image/png;base64,{encoded_image}" style="width: 100%;margin-top: 20px;margin-bottom: 20px;"/>
+
+    </div>
+
+""", unsafe_allow_html=True)
 
  
 
@@ -272,7 +501,7 @@ st.markdown(
 
         background-color: black;
 
-        color: #FFFF00;
+        color: #ffe600;
 
         border: none;
 
@@ -346,13 +575,106 @@ st.markdown(
 
     unsafe_allow_html=True
 
-) 
-
-
+)
 
  
 
-app_url = "https://wucustomersentiment.streamlit.app/"
+st.markdown("""
+
+    <style>
+
+        # .reportview-container {
+
+        #     margin-top: -2em;
+
+        # }
+
+        #MainMenu {visibility: hidden;}
+
+        .stDeployButton {display:none;}
+
+        footer {visibility: hidden;}
+
+        #stDecoration {display:none;}
+
+    </style>
+
+""", unsafe_allow_html=True)
+
+
+
+
+st.markdown("""
+
+    <style>
+
+        [data-testid="stVerticalBlock"] {
+
+            # flex: none !important;
+
+            # # width: 596px;
+
+            # position: relative;
+
+            display: inline;
+
+            # flex-direction: column;
+
+            gap: 1rem;
+
+        }
+
+    </style>
+
+""", unsafe_allow_html=True)
+
+ 
+
+st.markdown("""
+
+    <style>
+
+        [data-testid="stSidebarUserContent"] {
+
+            # flex: none !important;
+
+            # # width: 596px;
+
+            position: relative;
+
+            # display: inline;
+
+            # flex-direction: column;
+
+            padding : 2rem;
+
+            gap: 1rem;
+
+        }
+
+    </style>
+
+""", unsafe_allow_html=True)
+
+ 
+
+st.markdown("""
+
+    <div style='text-align: center; margin-top: 25px;'>
+
+        <h1 style='color: black; font-weight: bold; font-family: "PP Right Grotesk", sans-serif; font-size: 45px;'>
+
+            Customer Sentiment Analyzer
+
+        </h1>
+
+    </div>
+
+""", unsafe_allow_html=True)
+
+ 
+
+app_url = ""
 
  
 
@@ -386,7 +708,7 @@ img.save("app_qr_code.png")
 
  
 
-count = st_autorefresh(interval=3600000, key="fizzbuzzcounter")
+# count = st_autorefresh(interval=3600000, key="fizzbuzzcounter")
 
 sia = SentimentIntensityAnalyzer()
 
@@ -400,21 +722,40 @@ translator = Translator()
 
  
 
-# wu_mask = np.array(Image.open('wul.png'))
+# # wu_mask = np.array(Image.open('wul.png'))
 
-dir = os.path.dirname(__file__)
+# dir = os.path.dirname(__file__)
 
-filename = os.path.join(dir, 'WUNEWEST.png')
+# filename = os.path.join(dir, 'Images/wufull.png')
 
-image = Image.open(filename)
+# image = Image.open(filename)
 
-left_co, cent_co,last_co = st.columns(3)
+# left_co, cent_co = st.columns(2)
 
-with cent_co:
+# with cent_co:
 
-    st.image(image, caption='',width=150)
+#     # st.image(image, caption='',width=150)
+
+#     st.markdown("<h6 style='color: black; font-weight: bold; font-family: PP Right Grotesk; font-size: 35px;'>WU Customer Voice Analyzer<h6/>", unsafe_allow_html=True)
 
  
+
+# dir = os.path.dirname(__file__)
+
+# filename = os.path.join(dir, 'Images/wufull.png')
+
+# image = Image.open(filename)
+
+ 
+
+# Optional logo/image
+
+# st.image(image, width=150)
+
+
+
+
+
 
 BEARER_TOKEN = ""
 
@@ -423,167 +764,330 @@ BEARER_TOKEN = ""
 sid = SentimentIntensityAnalyzer()
 
  
+
 # --- Android Review Fetch (No caching here!) ---
+
 def load_android_data(app_id, country, app_name):
+
     reviews = reviews_all(
+
         app_id,
+
         sleep_milliseconds=0,
+
         lang='en',
+
         country=country,
+
         sort=Sort.NEWEST,
+
     )
+
     df = pd.DataFrame(np.array(reviews), columns=['review'])
+
     df = df.join(pd.DataFrame(df.pop('review').tolist()))
+
     columns_to_drop = ['reviewId', 'thumbsUpCount', 'reviewCreatedVersion', 'repliedAt', 'userImage']
+
     df = df.drop(columns=[c for c in columns_to_drop if c in df.columns], errors="ignore")
+
     df['AppName'] = app_name
+
     df['Country'] = country.lower()
+
     # try:
+
     #     df['translated_text'] = df['review'].apply(
+
     #         lambda x: translator.translate(x, dest='en').text if isinstance(x, str) else x
+
     #     )
+
     # except Exception as e:
+
     #     print(f"Translation failed: {e}")
+
     #     df['translated_text'] = df['review']
+
     df.rename(columns={
+
         'content': 'review',
+
         'userName': 'UserName',
+
         'score': 'rating',
+
         'at': 'TimeStamp',
+
         'replyContent': 'WU_Response'
+
     }, inplace=True)
+
     return df
 
+ 
+
 def fetch_all_android(app_details):
+
     frames = []
+
     with ThreadPoolExecutor(max_workers=10) as executor:
+
         futures = [executor.submit(load_android_data, app_id, country, app_name)
+
                    for app_id, country, app_name in app_details]
+
         for future in futures:
+
             try:
+
                 result = future.result()
+
                 frames.append(result)
+
             except Exception as e:
+
                 print(f"Android fetch failed: {e}")
+
                 frames.append(pd.DataFrame())
+
     if frames:
+
         return pd.concat(frames, ignore_index=True)
+
     return pd.DataFrame()
+
+ 
 
 # --- iOS Review Fetch (No caching here!) ---
+
 def fetch_ios_reviews(app_id, country_code, pages=5):
+
     reviews = []
+
     for p in range(1, pages + 1):
+
         url = f"https://itunes.apple.com/{country_code}/rss/customerreviews/page={p}/id={app_id}/sortBy=mostRecent/json"
+
         try:
+
             resp = requests.get(url)
+
             if resp.status_code != 200:
+
                 continue
+
             entries = resp.json().get("feed", {}).get("entry", [])[1:]  # skip app metadata
+
             for entry in entries:
+
                 reviews.append({
+
                     "rating": entry.get("im:rating", {}).get("label"),
+
                     "date": entry.get("updated", {}).get("label"),
+
                     "review": entry.get("content", {}).get("label"),
+
                     "WU_Response": entry.get("im:developerResponse", {}).get("label"),
+
                     "UserName": entry.get("author", {}).get("name", {}).get("label"),
+
                     "Platform": "iOS",
+
                     "AppName": "iOS",
+
                     "Country": country_code,
+
                     "AppID": app_id
+
                 })
+
         except Exception as e:
+
             print(f"Error for {app_id}-{country_code}: {e}")
+
             continue
+
     return pd.DataFrame(reviews)
 
+ 
+
 def fetch_all_ios(app_country_list, pages=5):
+
     frames = []
+
     with ThreadPoolExecutor(max_workers=10) as executor:
+
         futures = [executor.submit(fetch_ios_reviews, app_id, cc, pages)
+
                    for app_id, cc in app_country_list]
+
         for future in futures:
+
             try:
+
                 df = future.result()
+
                 if not df.empty:
+
                     df["date"] = pd.to_datetime(df["date"], errors="coerce")
+
                     df["TimeStamp"] = df["date"].dt.strftime('%Y-%m-%d')
+
                     frames.append(df)
+
             except Exception as e:
+
                 print(f"iOS fetch failed: {e}")
+
     if frames:
+
         return pd.concat(frames, ignore_index=True)
+
     return pd.DataFrame()
 
+ 
+
 # --- All App Details, as before ---
+
 app_details = [
+
     ('com.westernunion.android.mtapp', 'us', 'Android'),
+
     ('com.westernunion.moneytransferr3app.eu','fr','Android'),  
+
     ('com.westernunion.moneytransferr3app.au', 'au', 'Android'),
+
     # ('com.westernunion.moneytransferr3app.eu','de','Android'),
+
     ('com.westernunion.moneytransferr3app.ca', 'ca', 'Android'),  
-    ('com.westernunion.moneytransferr3app.eu','it','Android'),
-    ('com.westernunion.moneytransferr3app.eu3','se','Android'),
+
+    # ('com.westernunion.moneytransferr3app.eu','it','Android'),
+
+    # ('com.westernunion.moneytransferr3app.eu3','se','Android'),
+
     ('com.westernunion.moneytransferr3app.nz', 'nz', 'Android'),
-    ('com.westernunion.android.mtapp', 'co', 'Android'),
+
+    # ('com.westernunion.android.mtapp', 'co', 'Android'),
+
     ('com.westernunion.moneytransferr3app.nl','nl','Android'),
+
     ('com.westernunion.moneytransferr3app.acs3','br','Android'),
+
     ('com.westernunion.moneytransferr3app.eu2','be','Android'),
+
     ('com.westernunion.moneytransferr3app.eu3','no','Android'),
+
     # ('com.westernunion.moneytransferr3app.eu','at','Android'),    
+
     ('com.westernunion.moneytransferr3app.eu2','ch','Android'),
+
     ('com.westernunion.moneytransferr3app.sg','sg','Android'),
-    ('com.westernunion.moneytransferr3app.eu3','dk','Android'),
-    ('com.westernunion.moneytransferr3app.eu','ie','Android'),
+
+    # ('com.westernunion.moneytransferr3app.eu3','dk','Android'),
+
+    # ('com.westernunion.moneytransferr3app.eu','ie','Android'),
+
     ('com.westernunion.moneytransferr3app.pt','pt','Android'),
+
     ('com.westernunion.moneytransferr3app.eu4','po','Android'),
+
     ('com.westernunion.moneytransferr3app.eu3','po','Android'),
+
     ('com.westernunion.moneytransferr3app.apac','my','Android'),
+
     ('com.westernunion.moneytransferr3app.hk','hk','Android'),
+
     # ('com.westernunion.moneytransferr3app.ae', 'ae', 'Android'),
+
     ('com.westernunion.moneytransferr3app.bh', 'bh', 'Android'),    
+
     ('com.westernunion.moneytransferr3app.kw', 'kw', 'Android'),
+
     ('com.westernunion.moneytransferr3app.qa', 'qa', 'Android'),
+
     ('com.westernunion.moneytransferr3app.sa', 'sa', 'Android'),
+
     ('com.westernunion.moneytransferr3app.in', 'in', 'Android'),
+
     ('com.westernunion.moneytransferr3app.th', 'th', 'Android')  
+
 ]
 
+ 
+
 app_country_list = [
+
     ("424716908", "us"),
+
     ("1045347175","fr"),
+
     ("1122288720", "au"),
+
     # ("1045347175", "de"),
+
     ("1110191056","ca"),
-    ("1045347175","it"),
-    ("1152860407","se"),
+
+    # ("1045347175","it"),
+
+    # ("1152860407","se"),
+
     ("1268771757","es"),
+
     ("1226778839","nz"),
+
     ("1199782520","nl"),
+
     ("1148514737","br"),
+
     ("1110240507","be"),
+
     ("1152860407","no"),
-    # ("1045347175","at"),
+
+    ("1045347175","at"),
+
     ("1110240507","ch"),
+
     ("1451754888","ch"),
-    ("1152860407","dk"),
-    ("1045347175","ie"),
+
+    # ("1152860407","dk"),
+
+    # ("1045347175","ie"),
+
     ("1229307854","pt"),
+
     ("1168530510","pl"),
+
     ("1152860407","fi"),
+
     ("1165109779","hk"),
+
     # ("1171330611","ae"),
-    ("1329774999","co"),
+
+    # ("1329774999","co"),
+
     ("1314010624","bh"),
+
     ("1304223498","cl"),
+
     ("1459023219","jo"),
+
     ("1173794098","kw"),
+
     ("1483742169","mv"),
+
     ("1459024696","sa"),
+
     ("1459226729","th"),
+
     ("1173792939","qa"),
+
     ("1150872438","in")
+
 ]
+
+ 
 
 # --- MAIN STREAMLIT BLOCK ---
 
@@ -596,8 +1100,6 @@ def get_all_reviews(app_details, app_country_list):
     finaldfandroid = fetch_all_android(app_details)
 
     finaldfios = fetch_all_ios(app_country_list, pages=5)
-
-    # merge logic as before
 
     if not finaldfandroid.empty and not finaldfios.empty:
 
@@ -623,106 +1125,43 @@ with st.spinner("Fetching Android & iOS reviews..."):
 
     finaldf = get_all_reviews(app_details, app_country_list)
 
-
-
-@st.cache_data(ttl=86400, show_spinner=False)
-def get_reviews():
-    finaldfandroid = fetch_all_android(app_details)
-    finaldfios = fetch_all_ios(app_country_list, pages=5)
-    # ... merging logic as before ...
-    return finaldf
-
-
-try:
-
- finaldf['WU_Response'] = finaldf.apply(lambda x: json.loads(x['WU_Response'])['body'], axis = 1)
-
- print(finaldf['WU_Response'])
-
-except:
-
- print('Some exception occured')  
-
  
-
-# st.write(finaldf.loc[finaldf['WU_Response'].notnull()] )
-
-#st.write(finaldf.head())
-
-#st.write("Columns in finaldf:", finaldf.columns)
 
 finaldf.columns = finaldf.columns.str.strip("'")
 
-# ,'translated_text'
-
-finaldf.sort_values(['TimeStamp', 'review','rating'])
-
 finaldf.columns = [c.replace(' ', '_') for c in finaldf.columns]
 
-col1, col2 = st.columns((2))
+ 
+
+# Convert TimeStamp to datetime for filtering
 
 finaldf["TimeStamp"] = pd.to_datetime(finaldf["TimeStamp"])
 
- 
-
-# finaldf['Date'] = finaldf['TimeStamp'].dt.date
+# finaldf["TimeStampFormatted"] = finaldf["TimeStamp"].dt.strftime("%d/%m/%Y")
 
  
 
-# Getting the min and max date
-
-# startDate = pd.to_datetime(finaldf["TimeStamp"]).min()
-
-# endDate = pd.to_datetime(finaldf["TimeStamp"]).max()
-
- 
-
-# with col1:
-
-#     date1 = pd.to_datetime(st.date_input("Start Date", startDate))
-
- 
-
-# with col2:
-
-#     date2 = pd.to_datetime(st.date_input("End Date", endDate))
-
- 
-
-# default_start = datetime.date(2025, 8, 1)
-
-today=datetime.date.today()
+today = datetime.date.today()
 
 default_start = today.replace(day=1)
 
-default_end = datetime.date.today()
+default_end = today
 
  
+
+col1, col2 = st.columns((2))
 
 with col1:
 
-    date1 = st.date_input("Start Date", value=default_start)
-
- 
+    date1 = st.date_input("**Start Date**", value=default_start)
 
 with col2:
 
-    date2 = st.date_input("End Date", value=default_end)
-
-
-
-
-def codechange(code):
-
-    try:
-
-        return pycountry.countries.get(alpha_2=code.upper()).alpha_3
-
-    except:
-
-        return None
+    date2 = st.date_input("**End Date**", value=default_end)
 
  
+
+# Convert selected dates to datetime
 
 date1 = pd.to_datetime(date1)
 
@@ -730,9 +1169,9 @@ date2 = pd.to_datetime(date2)
 
  
 
-# # Now the comparison will work:
+# Filter the dataframe based on selected date range
 
-# df = finaldf[(finaldf["TimeStamp"] >= date1) & (finaldf["TimeStamp"] <= date2)].copy()
+filtered_df = finaldf[(finaldf["TimeStamp"] >= date1) & (finaldf["TimeStamp"] <= date2)]
 
  
 
@@ -746,23 +1185,115 @@ except KeyError:
 
  
 
-# st.sidebar.header("Choose your filter: ")
+country_map = {
+
+    "in": "India",
+
+    "au": "Australia",
+
+    "us": "United States",
+
+    "ca": "Canada",
+
+    "nz": "New Zealand",
+
+    "uk": "United Kingdom",
+
+    "sg": "Singapore",
+
+    "de": "Germany",
+
+    "fr": "France",
+
+    "th": "Thailand",
+
+    "hk": "HongKong",
+
+    "be": "Belgium",
+
+    "bh": "Bahrain",
+
+    "br": "Brazil",
+
+    "ch": "Switzerland",
+
+    "cl": "Chile",
+
+    "es": "Spain",
+
+    "kw": "Kuwait",
+
+    "my": "Malaysia",
+
+    "nl": "Netherlands",
+
+    "no": "Norway",
+
+    "qa": "Qatar",
+
+    "sa": "Saudi Arabia",
+
+    "fi": "Finland"
 
  
 
-country = st.sidebar.multiselect("Select the Country", df["Country"].unique())
+}
 
-if not country:
+ 
+
+# Create list of full country names for dropdown
+
+country_names = [country_map.get(code, code) for code in df["Country"].unique()]
+
+ 
+
+# Sidebar country selection
+
+selected_country_names = st.sidebar.multiselect(
+
+    "**Country Selection**",
+
+    options=sorted(country_names),
+
+    placeholder="Select one or more countries"
+
+)
+
+ 
+
+# Convert selected country names back to codes
+
+selected_country_codes = [code for code, name in country_map.items() if name in selected_country_names]
+
+ 
+
+# Filter by country
+
+if not selected_country_codes:
 
     df1 = df.copy()
 
 else:
 
-    df1 = df[df["Country"].isin(country)]
+    df1 = df[df["Country"].isin(selected_country_codes)]
 
  
 
-region = st.sidebar.multiselect("Select the App Type", df["AppName"].unique())
+# Sidebar app type selection
+
+region = st.sidebar.multiselect(
+
+    "**Select the App Type**",
+
+    options=sorted(df["AppName"].unique()),
+
+    placeholder="Select one or more app types"
+
+)
+
+ 
+
+# Filter by app type
 
 if not region:
 
@@ -774,13 +1305,16 @@ else:
 
  
 
-if not country and not region :
+# Final filtered DataFrame
 
-    filtered_df = df
+if not selected_country_codes and not region:
+
+    filtered_df = df.copy()
 
 else:
 
-    filtered_df=df2
+    filtered_df = df2
+
 
 
 
@@ -789,7 +1323,7 @@ if 'rating' in filtered_df.columns:
 
     filtered_df['rating'] = pd.to_numeric(filtered_df['rating'], errors='coerce') # convert rating to numeric (int/float)
 
-    rating = st.sidebar.slider("Rating Range", 1, 5, (1, 5))
+    rating = st.sidebar.slider("**Filter by Ratings Range**", 1, 5, (1, 5))
 
     if rating:
 
@@ -797,60 +1331,61 @@ if 'rating' in filtered_df.columns:
 
  
 
-# Function to apply row-wise styling
+# # Function to apply row-wise styling
 
-def highlight_rating(row):
+# def highlight_rating(row):
 
-    try:
+#     try:
 
-        rating = int(row['rating']) # Convert to int
+#         rating = int(row['rating']) # Convert to int
 
-    except:
+#     except:
 
-        return [''] * len(row) # No styling if conversion fails
-
- 
-
-    if rating >= 4:
-
-        return ['background-color: lightgreen'] * len(row)
-
-    elif rating == 3:
-
-        return ['background-color: yellow'] * len(row)
-
-    else:
-
-        return ['background-color: salmon'] * len(row)
+#         return [''] * len(row) # No styling if conversion fails
 
  
 
-df=df.reset_index(drop=True)
+#     if rating >= 4:
+
+#         return ['background-color: lightgreen'] * len(row)
+
+#     elif rating == 3:
+
+#         return ['background-color: yellow'] * len(row)
+
+#     else:
+
+#         return ['background-color: salmon'] * len(row)
+
+ 
+
+# df=df.reset_index(drop=True)
 
 # styled_df = df.style.apply(highlight_rating, axis=1)
 
+# st.write(styled_df)
+
  
 
-# st.write(styled_df)
+def show_centered_warning(message="⚠️ No records found within the specified date range"):
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+
+    with col2:
+
+        st.warning(message)
+
 
 
 
 
 if filtered_df.empty:
 
- st.warning("No records found within the specified date range")
+  #st.warning("No records found within the specified date range")
+
+   show_centered_warning()
 
 else:
-
- #'Sentiment',
-
- #filtered_df = filtered_df.reindex(['TimeStamp', 'review','rating','UserName','AppName','Country','appVersion'], axis=1)
-
-#  ,'translated_text'
-
-#  print(df)
-
- #
 
  filtered_df = filtered_df.reset_index(drop=True)
 
@@ -866,12 +1401,21 @@ else:
 
  filtered_df['sentiment_label'] = filtered_df['sentiment_score'].apply(lambda x: 'Positive' if x > 0.2 else ('Negative' if x < -0.2 else 'Neutral'))
 
- filtered_df['TimeStamp']=pd.to_datetime(filtered_df["TimeStamp"]).dt.date
+ filtered_df['sentiment_score'] = filtered_df['sentiment_score'].apply(lambda x: int(x * 100) / 100.0)
 
- filtered_df = filtered_df.reindex(['TimeStamp', 'review','rating','sentiment_score','sentiment_label','Country','AppName','appVersion','UserName'], axis=1)
  
 
-search_query = st.text_input("Search Reviews :")
+ #filtered_df['TimeStamp']=pd.to_datetime(filtered_df["TimeStamp"]).dt.date
+
+ filtered_df = filtered_df.reindex(['TimeStamp', 'review','rating','sentiment_score','sentiment_label','Country','AppName','appVersion','UserName'], axis=1)
+
+search_query = st.text_input("**Search Reviews :**")
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+ 
+
+# st.write("")
 
  
 
@@ -879,13 +1423,183 @@ search_query = st.text_input("Search Reviews :")
 
 if search_query:
 
-    filtered_df = filtered_df[filtered_df['review'].str.contains(search_query, case=False, na=False)]
+    with st.spinner("🔍 Fetching reviews..."):
+
+        # filtered_df = filtered_df[filtered_df['review'].str.contains(search_query, case=False, na=False)]
+
+       
+
+        placeholder = st.empty()
+
+        progress_bar = st.progress(0)
 
  
 
-# Now display the filtered_df in the original data grid (only one table shown)
+        for i in range(100):
 
-st.dataframe(filtered_df, height=300, use_container_width=True)
+            time.sleep(0.01)  # Simulate loading
+
+            progress_bar.progress(i + 1)
+
+            placeholder.text(f"Fetching reviews... {i+1}%")
+
+ 
+
+        # Actual filtering
+
+        filtered_df = filtered_df[filtered_df['review'].str.contains(search_query, case=False, na=False)]
+
+ 
+
+        placeholder.empty()
+
+        progress_bar.empty()
+
+ 
+
+def format_column_label(s):
+
+    # Split by underscores and capitalize each part
+
+    return '_'.join(word.capitalize() for word in s.split('_'))
+
+ 
+
+def format_column_label(col):
+
+    custom_labels = {
+
+        "TimeStamp": "Date",    
+
+        "AppName": "App Type",
+
+        "UserName": "User Name",
+
+        "appVersion":"Version",
+
+        "sentiment_score":"Sentiment Score",
+
+        "sentiment_label":"Sentiment Label"
+
+    }
+
+    if col in custom_labels:
+
+        return custom_labels[col]
+
+    return '_'.join(word.capitalize() for word in col.split('_'))
+
+ 
+
+def to_title_case_with_underscores(s):
+
+    return '_'.join(word.capitalize() for word in s.split('_'))
+
+ 
+
+column_config = {
+
+    col: st.column_config.TextColumn(label=to_title_case_with_underscores(col))
+
+    for col in filtered_df.columns
+
+}
+
+ 
+
+column_config = {
+
+    col: st.column_config.TextColumn(label=format_column_label(col))
+
+    for col in filtered_df.columns
+
+}
+
+ 
+
+# column_config = {
+
+#     "Review": TextColumn("Review", width="large"),
+
+#     # Add other columns as needed
+
+# }
+
+ 
+
+filtered_df["Country"] = filtered_df["Country"].map(country_map).fillna(filtered_df["Country"])
+
+
+
+
+# column_config = {col: st.column_config.TextColumn(label=col.capitalize()) for col in filtered_df.columns}
+
+# filtered_df.columns = [col.capitalize() for col in filtered_df.columns]
+
+if not filtered_df.empty:
+
+#  st.dataframe(filtered_df, height=300, use_container_width=True)
+
+ 
+
+    progress = st.progress(0)
+
+    status = st.empty()
+
+ 
+
+    for i in range(100):
+
+        time.sleep(0.005)  # Simulate loading
+
+        progress.progress(i + 1)
+
+        status.text(f"Loading Data... {i + 1}%")
+
+ 
+
+    progress.empty()
+
+    status.empty()
+
+ 
+
+    # Display the filtered DataFrame
+
+    filtered_df["TimeStamp"] = pd.to_datetime(filtered_df["TimeStamp"], unit='ms')
+
+    # Create a formatted column for display
+
+    filtered_df["TimeStamp"] = filtered_df["TimeStamp"].dt.strftime('%Y/%m/%d')
+
+ 
+
+    st.dataframe(filtered_df,column_config=column_config, height=275, use_container_width=True)
+
+    st.success(f"✅ Displaying {len(filtered_df)} reviews.")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+ 
+
+   
+
+ 
+
+    # st.markdown(f"""
+
+    # <div style='color: green; font-size: 16px; font-weight: 500;'>
+
+    #     ✅ Displaying {len(filtered_df)} reviews.
+
+    # </div>
+
+    # """, unsafe_allow_html=True)
+
+
+
+
+ 
 
  
 
@@ -898,493 +1612,157 @@ st.download_button('Download Data', data=csv, file_name="Data.csv", mime="text/c
 
 
 
-#  st.dataframe(filtered_df,height=300,use_container_width=True)
 
-# #  st.write(filtered_df)
-
-#  csv = filtered_df.to_csv(index = False).encode('utf-8')
-
-#  st.download_button('Download Data', data = csv, file_name = "Data.csv",mime = "text/csv")  
-
- 
-
- 
-
- 
-
-source_text = st.text_area("Enter text to translate:", height=100)
-
-default_language = 'English'  
-
-default_index = languages.index(default_language) if default_language in languages else 0
-
- 
-
-# Set default selected language using index
-
-target_language = st.selectbox("Select target language:", languages, index=default_index)
-
- 
-
-translate = st.button('Translate')
-
-if translate:
-
-    translator = Translator()
-
-    out = translator.translate(source_text, dest=target_language)
-
-    st.write(out.text)
-
-
-
-
-
-# query = st.text_input("Search Query", value="Western Union lang:en")
-
- 
-
-# if st.button("Fetch Tweets"):
-
- 
-
-#         st.info("Fetching tweets...")
-
- 
-
-#         search_url = "https://api.twitter.com/2/tweets/search/recent"
-
-#         headers = {"Authorization": f"Bearer {BEARER_TOKEN}"}
-
- 
-
-#         query_params = {
-
-#             "query": query,
-
-#             "max_results": 1,
-
-#             "tweet.fields": "created_at,author_id,text",
-
-#             "start_time": f"{date1}T00:00:00Z",
-
-#             "end_time": f"{date2}T23:59:59Z",
-
-#         }
-
- 
-
-#         response = requests.get(search_url, headers=headers, params=query_params)
-
- 
-
-#         if response.status_code == 200:
-
-#             tweets = response.json().get("data", [])
-
- 
-
-#             if not tweets:
-
-#                 st.warning("No tweets found for this period.")
-
-#             else:
-
-#                 filtered_df = pd.DataFrame(tweets)
-
-#                 filtered_df["created_at"] = pd.to_datetime(filtered_df["created_at"])
-
- 
-
-#                 # --- Sentiment Analysis ---
-
-#                 def analyze_sentiment(text):
-
-#                     score = sid.polarity_scores(text)["compound"]
-
-#                     if score >= 0.05:
-
-#                         return "Positive"
-
-#                     elif score <= -0.05:
-
-#                         return "Negative"
-
-#                     else:
-
-#                         return "Neutral"
-
- 
-
-#                 df["sentiment"] = df["text"].apply(analyze_sentiment)
-
- 
-
-#                 # --- Show Raw Data ---
-
-#                 st.success(f"Fetched {len(df)} tweets")
-
-#                 st.dataframe(df[["created_at", "text", "sentiment"]])
-
- 
-
-#                 # --- Daily Tweet Count Plot ---
-
-#                 daily_counts = df["created_at"].dt.date.value_counts().sort_index()
-
-#                 fig, ax = plt.subplots()
-
-#                 daily_counts.plot(kind="bar", ax=ax)
-
-#                 ax.set_title("Tweet Volume by Day")
-
-#                 ax.set_xlabel("Date")
-
-#                 ax.set_ylabel("Number of Tweets")
-
-#                 st.pyplot(fig)
-
- 
-
-#                 # --- Sentiment Breakdown ---
-
-#                 st.subheader("📊 Sentiment Distribution")
-
-#                 sentiment_counts = df["sentiment"].value_counts()
-
-#                 st.bar_chart(sentiment_counts)
-
- 
-
-#         else:
-
-#             st.error(f"Twitter API error: {response.status_code}")
-
-#             st.json(response.json())
-
-
-
-
-# if 'country' in df.columns:
-
-#     country = st.sidebar.multiselect("Country", df['country'].unique())
-
-#     if country:
-
-#         df = df[df['country'].isin(country)]
-
- 
-
-# if 'apptype' in df.columns:
-
-#     apptype = st.sidebar.multiselect("App Type", df['apptype'].unique())
-
-#     if apptype:
-
-#         df = df[df['apptype'].isin(apptype)]
-
- 
 
    
 
- 
-
-# st.subheader("Review Data Overview")
-
-# st.dataframe(filtered_df[['UserName', 'AppName', 'Country', 'review', 'rating']], use_container_width=True, height=250)
-
-   
-
- 
-st.sidebar.markdown("**Uncheck to see visualizations**")
-if not st.sidebar.checkbox("Keyword Analysis", True):
-
-    # # Keyword and N-gram Analysis
-
-    # st.subheader(" Keyword and N-gram Analysis")
-
-    # all_text = " ".join(filtered_df['review'].astype(str).tolist()).lower()
-
-    # tokens = [word for word in nltk.word_tokenize(all_text) if word.isalpha() and word not in stop_words]
-
-    # unigram_freq = Counter(tokens)
-
-    # bigram_freq = Counter(ngrams(tokens, 2))
-
-    # trigram_freq = Counter(ngrams(tokens, 3))
+st.sidebar.markdown("**Select from the below options**")
 
  
 
-    # top_unigrams = pd.DataFrame(unigram_freq.most_common(10), columns=['Unigram', 'Count'])
+if  st.sidebar.checkbox("Language Translation", False):
 
-    # top_bigrams = pd.DataFrame(bigram_freq.most_common(10), columns=['Bigram', 'Count'])
+    source_text = st.text_area("**Enter Text to translate:**", height=100)
 
-    # top_trigrams = pd.DataFrame(trigram_freq.most_common(10), columns=['Trigram', 'Count'])
+    default_language = 'English'  
 
- 
-
-    # col1, col2, col3 = st.columns(3)
-
-    # with col1:
-
-    #     st.write("### Top Unigrams")
-
-    #     st.dataframe(top_unigrams)
-
-    # with col2:
-
-    #     st.write("### Top Bigrams")
-
-    #     st.dataframe(top_bigrams.astype(str))
-
-    # with col3:
-
-    #     st.write("### Top Trigrams")
-
-    #     st.dataframe(top_trigrams.astype(str))
+    default_index = languages.index(default_language) if default_language in languages else 0
 
  
 
-    st.subheader("Keyword and N-gram Analysis")
+    # Set default selected language using index
 
-    filtered_df['sentiment_score'] = filtered_df['review'].apply(lambda x: sia.polarity_scores(str(x))['compound'])
+    target_language = st.selectbox("**Select target language:**", languages, index=default_index)
 
-    filtered_df['sentiment_label'] = filtered_df['sentiment_score'].apply(lambda x: 'Positive' if x > 0.2 else ('Negative' if x < -0.2 else 'Neutral'))
-
-     
-
-    selected_sentiment = st.selectbox("Filter by Sentiment for N-gram Analysis", filtered_df['sentiment_label'].unique().tolist() + ['All'])
-
-    selected_apptype = st.selectbox("Filter by App Type for N-gram Analysis", filtered_df['AppName'].dropna().unique().tolist() + ['All'])
-
-    ngram_count = st.slider("Number of Top N-grams to Display", 5, 30, 10)
+    st.markdown("<br>", unsafe_allow_html=True)
 
  
 
-    filtered_df = filtered_df.copy()
+    translate = st.button('Translate')
 
-    if selected_sentiment != 'All':
+    if translate:
 
-        filtered_df = filtered_df[filtered_df['sentiment_label'] == selected_sentiment]
+        translator = Translator()
 
-    if selected_apptype != 'All':
+        out = translator.translate(source_text, dest=target_language)
 
-        filtered_df = filtered_df[filtered_df['AppName'] == selected_apptype]
-
- 
-
-    all_text = " ".join(filtered_df['review'].astype(str).tolist()).lower()
-
-    tokens = [word for word in nltk.word_tokenize(all_text) if word.isalpha() and word not in stop_words]
-
-    unigram_freq = Counter(tokens)
-
-    bigram_freq = Counter(ngrams(tokens, 2))
-
-    trigram_freq = Counter(ngrams(tokens, 3))
-
- 
-
-    top_unigrams = pd.DataFrame(unigram_freq.most_common(ngram_count), columns=['Unigram', 'Count'])
-
-    top_bigrams = pd.DataFrame(bigram_freq.most_common(ngram_count), columns=['Bigram', 'Count'])
-
-    top_trigrams = pd.DataFrame(trigram_freq.most_common(ngram_count), columns=['Trigram', 'Count'])
-
- 
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-
-        st.write("### Top Unigrams")
-
-        st.dataframe(top_unigrams)
-
-        fig_uni = px.bar(top_unigrams, x='Unigram', y='Count', title='Top Unigrams')
-
-        st.plotly_chart(fig_uni, use_container_width=True)
-
-    with col2:
-
-        st.write("### Top Bigrams")
-
-        st.dataframe(top_bigrams.astype(str))
-
-        top_bigrams['Bigram'] = top_bigrams['Bigram'].apply(lambda x: ' '.join(x))
-
-        fig_bi = px.bar(top_bigrams, x='Bigram', y='Count', title='Top Bigrams')
-
-        st.plotly_chart(fig_bi, use_container_width=True)
-
-    with col3:
-
-        st.write("### Top Trigrams")
-
-        st.dataframe(top_trigrams.astype(str))
-
-        top_trigrams['Trigram'] = top_trigrams['Trigram'].apply(lambda x: ' '.join(x))
-
-        fig_tri = px.bar(top_trigrams, x='Trigram', y='Count', title='Top Trigrams')
-
-        st.plotly_chart(fig_tri, use_container_width=True)
+        st.write(out.text)
 
 
 
 
-# if not st.sidebar.checkbox("Topic Modeling", True):
 
-# # Topic Modeling (LDA)
+if  st.sidebar.checkbox("Keyword Analysis", False):
 
-#     st.subheader("Topic Modeling")
+    if not filtered_df.empty:    
 
-#     # vectorizer = CountVectorizer(stop_words='english', max_df=0.95, min_df=2)
+        st.subheader("Keyword and N-gram Analysis")
 
-#     # doc_term_matrix = vectorizer.fit_transform(filtered_df['review'].astype(str))
+        filtered_df['sentiment_score'] = filtered_df['review'].apply(lambda x: sia.polarity_scores(str(x))['compound'])
 
-#     # lda = LatentDirichletAllocation(n_components=5, random_state=42)
+       
 
-#     # lda.fit(doc_term_matrix)
+        filtered_df['sentiment_label'] = filtered_df['sentiment_score'].apply(lambda x: 'Positive' if x > 0.2 else ('Negative' if x < -0.2 else 'Neutral'))
 
-#     # words = vectorizer.get_feature_names_out()
+       
 
-#     # for i, topic in enumerate(lda.components_):
+        selected_sentiment = st.selectbox("Filter by Sentiment for N-gram Analysis", filtered_df['sentiment_label'].unique().tolist() + ['All'])
 
-#     #     topic_words = [words[i] for i in topic.argsort()[-10:]]
+        selected_apptype = st.selectbox("Filter by App Type for N-gram Analysis", filtered_df['AppName'].dropna().unique().tolist() + ['All'])
 
-#     #     st.write(f"**Topic {i+1}:** {', '.join(topic_words)}")
-
-   
-
-#     # Separate positive and negative reviews
-
-#     positive_reviews = filtered_df[filtered_df['sentiment_label'] == 'Positive']['review']
-
-#     negative_reviews = filtered_df[filtered_df['sentiment_label'] == 'Negative']['review']
+        ngram_count = st.slider("Number of Top N-grams to Display", 5, 30, 10)
 
  
 
-#     # Function to extract topics and keywords
+        filtered_df = filtered_df.copy()
 
-#     def extract_topics(reviews, n_topics=5, n_keywords=5):
+        if selected_sentiment != 'All':
 
-#         vectorizer = CountVectorizer(stop_words='english', max_df=0.95, min_df=2)
+            filtered_df = filtered_df[filtered_df['sentiment_label'] == selected_sentiment]
 
-#         doc_term_matrix = vectorizer.fit_transform(reviews)
+        if selected_apptype != 'All':
 
-#         lda = LatentDirichletAllocation(n_components=n_topics, random_state=42)
-
-#         lda.fit(doc_term_matrix)
-
-#         topics = []
-
-#         for idx, topic in enumerate(lda.components_):
-
-#             keywords = [vectorizer.get_feature_names_out()[i] for i in topic.argsort()[-n_keywords:]]
-
-#             topics.append((f"Topic {idx+1}", keywords))
-
-#         return topics, lda.transform(doc_term_matrix)
+            filtered_df = filtered_df[filtered_df['AppName'] == selected_apptype]
 
  
 
-#         # Extract topics and keywords
+        all_text = " ".join(filtered_df['review'].astype(str).tolist()).lower()
 
-#     positive_topics, positive_topic_distributions = extract_topics(positive_reviews)
+        tokens = [word for word in nltk.word_tokenize(all_text) if word.isalpha() and word not in stop_words]
 
-#     negative_topics, negative_topic_distributions = extract_topics(negative_reviews)
+        unigram_freq = Counter(tokens)
 
- 
+        bigram_freq = Counter(ngrams(tokens, 2))
 
-#     # Function to get representative sentences
-
-#     def get_representative_sentences(reviews, topic_distributions, n_sentences=2):
-
-#         sentences = []
-
-#         for topic_idx in range(topic_distributions.shape[1]):
-
-#             topic_scores = topic_distributions[:, topic_idx]
-
-#             top_indices = topic_scores.argsort()[-n_sentences:]
-
-#             topic_sentences = reviews.iloc[top_indices].tolist()
-
-#             sentences.append(topic_sentences)
-
-#         return sentences
+        trigram_freq = Counter(ngrams(tokens, 3))
 
  
 
-#     # Get representative sentences
+        top_unigrams = pd.DataFrame(unigram_freq.most_common(ngram_count), columns=['Unigram', 'Count'])
 
-#     positive_sentences = get_representative_sentences(positive_reviews, positive_topic_distributions)
+        top_bigrams = pd.DataFrame(bigram_freq.most_common(ngram_count), columns=['Bigram', 'Count'])
 
-#     negative_sentences = get_representative_sentences(negative_reviews, negative_topic_distributions)
-
- 
-
-#     # Format the output
-
-#     def format_topic_summary(topics, sentences):
-
-#         summaries = []
-
-#         for i, (topic_name, keywords) in enumerate(topics):
-
-#             summary = f"{topic_name}: Keywords - {', '.join(keywords)}\nRepresentative Sentences:\n"
-
-#             for sent in sentences[i]:
-
-#                 summary += f"- {sent}\n"
-
-#             summaries.append(summary)
-
-#         return summaries
+        top_trigrams = pd.DataFrame(trigram_freq.most_common(ngram_count), columns=['Trigram', 'Count'])
 
  
 
-#     # Generate summaries
+        col1, col2, col3 = st.columns(3)
 
-#     positive_summaries = format_topic_summary(positive_topics, positive_sentences)
+        with col1:
 
-#     negative_summaries = format_topic_summary(negative_topics, negative_sentences)
+            st.write("### Top Unigrams")
+
+            st.dataframe(top_unigrams)
+
+            fig_uni = px.bar(top_unigrams, x='Unigram', y='Count', title='Top Unigrams')
+
+            st.plotly_chart(fig_uni, use_container_width=True)
+
+        with col2:
+
+            st.write("### Top Bigrams")
+
+            st.dataframe(top_bigrams.astype(str))
+
+            top_bigrams['Bigram'] = top_bigrams['Bigram'].apply(lambda x: ' '.join(x))
+
+            fig_bi = px.bar(top_bigrams, x='Bigram', y='Count', title='Top Bigrams')
+
+            st.plotly_chart(fig_bi, use_container_width=True)
+
+        with col3:
+
+            st.write("### Top Trigrams")
+
+            st.dataframe(top_trigrams.astype(str))
+
+            top_trigrams['Trigram'] = top_trigrams['Trigram'].apply(lambda x: ' '.join(x))
+
+            fig_tri = px.bar(top_trigrams, x='Trigram', y='Count', title='Top Trigrams')
+
+            st.plotly_chart(fig_tri, use_container_width=True)
+
+    else:
+
+        # st.warning("⚠️ No records found within the specified date range")
+
+        show_timed_warning()
 
  
 
-#     # Save summaries to text files
-
-#     with open("top_5_best_aspects.txt", "w", encoding="utf-8") as f:
-
-#         for summary in positive_summaries:
-
-#             f.write(summary + "\n\n")
+st.markdown("<br><br>", unsafe_allow_html=True)
 
  
 
-#     with open("top_5_issues.txt", "w", encoding="utf-8") as f:
-
-#         for summary in negative_summaries:
-
-#             f.write(summary + "\n\n")
-
- 
-
-if not st.sidebar.checkbox("Topic Modeling", True):
+if  st.sidebar.checkbox("Topic Modeling", False):
 
     # Topic Modeling (LDA)
 
-    st.subheader("Topic Modeling")
-
  
 
-    # Separate positive and negative reviews
-
-    # positive_reviews = filtered_df[filtered_df['sentiment_label'] == 'Positive']['review']
-
-    # negative_reviews = filtered_df[filtered_df['sentiment_label'] == 'Negative']['review']
-
    
+
+ 
 
     positive_reviews = filtered_df[filtered_df['rating'] >= 4]['review']
 
@@ -1400,7 +1778,7 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
     def extract_topics(reviews, n_topics=5, n_keywords=5):
 
-        vectorizer = CountVectorizer(stop_words='english', max_df=0.95, min_df=2)
+        vectorizer = CountVectorizer(stop_words='english', max_df=1.0, min_df=1)
 
         doc_term_matrix = vectorizer.fit_transform(reviews)
 
@@ -1440,34 +1818,37 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
  
 
-    # Function to display topic summaries using markdown
-
-    # def display_topic_summary(topics, sentences, section_title):
-
-    #     st.markdown(f"### {section_title}")
-
-    #     for i, (topic_name, keywords) in enumerate(topics):
-
-    #         with st.expander(f"{topic_name}"):
-
-    #             st.markdown(f"**Keywords:** {', '.join(keywords)}")
-
-    #             st.markdown("**Representative Sentences:**")
-
-    #             for sent in sentences[i]:
-
-    #                 st.markdown(f"- {sent}")
-
     def display_topic_summary(topics, sentences, section_title):
-      st.markdown(f"### {section_title}")
-      for i, (topic_name, keywords) in enumerate(topics):
-          # Join keywords into a string to use as the expander header
-          keywords_str = ', '.join(keywords)
-          with st.expander(keywords_str):
-              # st.markdown(f"**Keywords:** {keywords_str}")
-              st.markdown("**Representative Sentences:**")
-              for sent in sentences[i]:
-                  st.markdown(f"- {sent}")
+
+        st.markdown(f"### {section_title}")
+
+        for i, (topic_name, keywords) in enumerate(topics):
+
+            # Join keywords into a string to use as the expander header
+
+            keywords_str = ', '.join(keywords)
+
+            with st.expander(keywords_str):
+
+                #st.markdown(f"**Keywords:** {keywords_str}")
+
+                st.markdown("**Representative Sentences:**")
+
+                for sent in sentences[i]:
+
+                    st.markdown(f"- {sent}")
+
+                   
+
+   
+
+    # Initialize topic variables
+
+    positive_topics, positive_sentences = [], []
+
+    negative_topics, negative_sentences = [], []
+
+    neutral_topics, neutral_sentences = [], []
 
  
 
@@ -1481,6 +1862,8 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
         display_topic_summary(positive_topics, positive_sentences, "Top 5 Best Aspects (Rating >= 4)")
 
+        st.divider()
+
  
 
     if len(negative_reviews) > 0:
@@ -1490,6 +1873,10 @@ if not st.sidebar.checkbox("Topic Modeling", True):
         negative_sentences = get_representative_sentences(negative_reviews, negative_topic_distributions)
 
         display_topic_summary(negative_topics, negative_sentences, "Top 5 Issues (Rating <= 2)")
+
+        st.divider()
+
+   
 
  
 
@@ -1501,7 +1888,9 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
         display_topic_summary(neutral_topics, neutral_sentences, "Top 5 Neutral Topics (Rating = 3)")
 
- 
+        st.divider()
+
+   
 
    
 
@@ -1553,6 +1942,8 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
     add_topic_section_to_pdf(pdf, "Top 5 Issues", negative_topics, negative_sentences)
 
+    add_topic_section_to_pdf(pdf, "Top 5 Neutral Aspects", neutral_topics, neutral_sentences)
+
  
 
     # Save the PDF
@@ -1561,125 +1952,41 @@ if not st.sidebar.checkbox("Topic Modeling", True):
 
  
 
-    # Streamlit download button
+    #Download button
 
-    with open("topic_modeling_summary.pdf", "rb") as f:
+    if positive_topics or negative_topics or neutral_topics:
 
-        st.download_button(
+        st.subheader("Topic Modeling")
 
-            label="📄 Download Topic Modeling Summary as PDF",
+    # Save the PDF
 
-            data=f,
-
-            file_name="topic_modeling_summary.pdf",
-
-            mime="application/pdf"
-
-        )
+        pdf.output("topic_modeling_summary.pdf")
 
  
 
-  
+        # Download button
 
-   
+        with open("topic_modeling_summary.pdf", "rb") as f:
 
-# # Interactive LDA Visualization
+            st.download_button(
 
-# st.subheader("LDA Topic Visualization")
+                label="📄 Download Topic Modeling Summary as PDF",
 
-# lda_vis = pyLDAvis.sklearn.prepare(lda, doc_term_matrix, vectorizer)
+                data=f,
 
-# pyLDAvis.save_html(lda_vis, 'lda_vis.html')
+                file_name="topic_modeling_summary.pdf",
 
-# components.html(open("lda_vis.html", 'r', encoding='utf-8').read(), height=800)
+                mime="application/pdf"
 
+            )
 
+    else:
 
+        # st.info("📄 No topic modeling data available for download.")
 
-# Clustering
-
-# st.subheader("Review Clustering (Sentence-BERT + KMeans)")
-
-# model = SentenceTransformer('all-MiniLM-L6-v2')
-
-# embeddings = model.encode(df['review'].astype(str).tolist())
-
-# kmeans = KMeans(n_clusters=5, random_state=42)
-
-# labels = kmeans.fit_predict(embeddings)
-
-# df['cluster'] = labels
-
-# fig2 = px.histogram(df, x='cluster', title='Review Clusters')
-
-# st.plotly_chart(fig2, use_container_width=True)
+          show_timed_warning()
 
  
-
-# Summarization
-
-# st.subheader("Review Summarization")
-
-# sample_reviews = " ".join(df['review'].astype(str).tolist()[:1000])
-
-# summary = summarizer(sample_reviews[:1024])[0]['summary_text']
-
-# st.write("**Summary:**")
-
-# st.success(summary)
-
- 
-
-# BERTopic Visualization
-
-# st.subheader("BERTopic Topic Visualization")
-
-# bertopic_model = BERTopic()
-
-# topics, probs = bertopic_model.fit_transform(df['review'].astype(str).tolist())
-
-# fig_bert = bertopic_model.visualize_topics()
-
-# components.html(fig_bert.to_html(), height=800)
-
- 
-
-# Anomaly Detection (basic)
-
-# st.subheader("Anomaly Detection: Volume Spike")
-
-# if 'date' in filtered_df.columns:
-
-#     count_df = filtered_df.groupby(filtered_df['date'].dt.date).size()
-
-#     fig3 = px.line(count_df, title='Review Volume Over Time')
-
-#     st.plotly_chart(fig3, use_container_width=True)
-
- 
-
-# Heatmap: Rating vs Sentiment
-
-# if not st.sidebar.checkbox("Rating vs Sentiment", True):
-
-#     if 'rating' in filtered_df.columns:
-
-#         st.subheader("Rating vs Sentiment Correlation")
-
-#         filtered_df['sentiment_score'] = filtered_df['review'].apply(lambda x: sia.polarity_scores(str(x))['compound'])
-
-#         filtered_df['sentiment_label'] = filtered_df['sentiment_score'].apply(lambda x: 'Positive' if x > 0.2 else ('Negative' if x < -0.2 else 'Neutral'))
-
-#         heatmap_data = pd.crosstab(filtered_df['rating'], filtered_df['sentiment_label'])
-
-#         fig4, ax4 = plt.subplots()
-
-#         sns.heatmap(heatmap_data, annot=True, fmt="d", cmap="YlGnBu", ax=ax4)
-
-#         st.pyplot(fig4)
-
-
-
 
 def plot_bar(subplot,filtered_df):
 
@@ -1711,7 +2018,11 @@ def plot_bar(subplot,filtered_df):
 
 if st.sidebar.checkbox("Visual Charts", False):
 
- 
+  if not filtered_df.empty:  
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
 
     # st.markdown("<br><br>", unsafe_allow_html=True)
 
@@ -1722,6 +2033,19 @@ if st.sidebar.checkbox("Visual Charts", False):
         unsafe_allow_html=True
 
     )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+ 
+
+ 
+
+   
+
+
+
 
     fig = px.pie(
 
@@ -1739,7 +2063,7 @@ if st.sidebar.checkbox("Visual Charts", False):
 
         'Negative': 'red',
 
-        'Neutral': 'blue'
+        'Neutral': 'yellow'
 
     },
 
@@ -1747,42 +2071,19 @@ if st.sidebar.checkbox("Visual Charts", False):
 
     )
 
- 
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
 
     # Show percentage and label inside the chart
 
-    fig.update_traces(textposition='inside', textinfo='percent+label')
-
-   
-
- 
-
-    # Display chart in Streamlit page
+    fig.update_traces(textposition='inside', textinfo='percent+label')  
 
     st.plotly_chart(fig, use_container_width=True)
 
- 
-
-   
-
     st.markdown("<br><b>Consolidated Ratings across Countries<b><br>", unsafe_allow_html=True)
 
-
-
-
-    # Trend Over Time
-
-    # if 'TimeStamp' in filtered_df.columns:
-
-    #     filtered_df['TimeStamp'] = pd.to_datetime(filtered_df['TimeStamp'], errors='coerce')
-
-    #     st.subheader("Sentiment Trend Over Time")
-
-    #     trend_df = filtered_df.groupby([filtered_df['TimeStamp'].dt.to_period('W').dt.start_time, 'sentiment_label']).size().unstack().fillna(0)
-
-    #     st.line_chart(trend_df)
-
-   
+ 
 
     fig = plt.figure(figsize=(15, 5))
 
@@ -1804,39 +2105,21 @@ if st.sidebar.checkbox("Visual Charts", False):
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # st.markdown("<br><br>", unsafe_allow_html=True)
 
  
 
  
-
-    # figNewer = plt.figure(figsize=(15, 5))
-
-    # axar=sns.barplot(x='Country',y='rating',hue='Country',data=filtered_df,palette='Pastel1')
-
- 
-
-    # axar.set(xlabel='Country', ylabel='Ratings', title='Country vs Ratings')
-
-    # for labelN in ax.containers:
-
-    #     axar.bar_label(label)
-
-    # st.pyplot(figNewer)  
-
-    # Aggregate mean rating by country
 
     mean_ratings = filtered_df.groupby('Country')['rating'].mean().reset_index()
-
- 
 
     figNewer = plt.figure(figsize=(15, 5))
 
     axar = sns.barplot(x='Country', y='rating', data=mean_ratings, palette='Pastel1')
 
- 
+    st.markdown("<br><b>Average Rating By Country<b><br>", unsafe_allow_html=True)
 
-    axar.set(xlabel='Country', ylabel='Average Rating', title='Average Rating by Country')
+    axar.set(xlabel='Country', ylabel='Average Rating', title='')
 
  
 
@@ -1850,9 +2133,11 @@ if st.sidebar.checkbox("Visual Charts", False):
 
     st.pyplot(figNewer)
 
-    st.divider()
+    # st.divider()
 
     st.markdown("<br><br>", unsafe_allow_html=True)
+
+   
 
  
 
@@ -1864,7 +2149,7 @@ if st.sidebar.checkbox("Visual Charts", False):
 
         'time': 'Interval',
 
-        'Hang': 'hang',
+        'Hang': 'hangs',
 
         'Bugs': 'bug',
 
@@ -1874,9 +2159,9 @@ if st.sidebar.checkbox("Visual Charts", False):
 
         'update': 'update',
 
-        'notification': 'Alert',
+        'notification': 'alert',
 
-        'otp': 'otp',
+        'otp': 'message',
 
         'ui': 'interface',
 
@@ -1946,7 +2231,7 @@ if st.sidebar.checkbox("Visual Charts", False):
 
  
 
-    # ---- Color theme for clarity ----
+    # ---- Color theme ----
 
     custom_colors = [
 
@@ -1986,6 +2271,8 @@ if st.sidebar.checkbox("Visual Charts", False):
 
     ))
 
+    # fig.update_traces(hovertemplate='')
+
     fig.update_layout(
 
         title=dict(
@@ -2004,7 +2291,9 @@ if st.sidebar.checkbox("Visual Charts", False):
 
  
 
-    st.subheader("Click funnel stage to see Customer Reviews")
+    # st.subheader("Click Keywords below to see detailed Customer Reviews")
+
+    st.markdown("<br><b>Click Keywords below to see detailed Customer Reviews<b><br>", unsafe_allow_html=True)
 
     selected = plotly_events(fig, click_event=True, hover_event=False)
 
@@ -2036,399 +2325,207 @@ if st.sidebar.checkbox("Visual Charts", False):
 
             """
 
-          
+            <div style="justify-content: center;">
+
+                 <div style="background-color: #eaf4fb; color: #262730; border-left: .5rem solid #1c83e1;
+
+                #             padding: 1rem 1.5rem; border-radius: .25rem; font-size: 1.1rem; width: fit-content;">
+
+             
+
+            </div>
+
             """,
 
             unsafe_allow_html=True,
 
         )
 
+  else:
+
+    #  st.warning("⚠️ No records found within the specified date range")
+
+    show_timed_warning()
 
 
 
 
+# if st.sidebar.checkbox("Interactive Sunburst", False):
 
+#     if not filtered_df.empty:    
 
-   
+#         filtered_df['rating'] = pd.to_numeric(filtered_df['rating'], errors='coerce')
 
- 
+#         date_diff = (date2 - date1).days  
 
-   
+#         if date_diff <= 61:
 
+#                 st.write("### Interactive Sunburst")
 
+#                 fig = px.sunburst(
 
+#                     filtered_df,
 
+#                     path=['Country', 'AppName', 'rating', 'review', 'UserName'],
 
-    # # Define Sankey nodes
+#                     values='rating',
 
-    # labels = [
+#                     color='rating',
 
-    #     'All Reviews',
+#                     color_continuous_scale='RdBu',
 
-    #     'Negative Reviews',
+#                     color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),
 
-    #     'Positive Reviews',
+#                     title=""
 
-    #     'Crashes',
+#                 )
 
-    #     'Login Problems',
+#                 fig.update_traces(hovertemplate="")
 
-    #     'Other Issues'
+#                 fig.update_layout(width=800, height=800)
 
-    # ]
+#                 fig.update_layout(coloraxis_showscale=False)
 
- 
+#                 st.plotly_chart(fig, use_container_width=True)
 
-    # # Calculate counts for each connection ("link")
+#         else:
 
-    # all_reviews = len(filtered_df)
+#                 # st.warning("⚠️ **Sunburst chart is disabled for date ranges longer than two months.**")
 
-    # negatives = len(filtered_df[filtered_df['sentiment_label'] == 'Negative'])
+#                 show_timed_warning_Sunburst()
 
-    # positives = len(filtered_df[filtered_df['sentiment_label'] == 'Positive'])
+#     else:
 
-    # crashes = len(filtered_df[(filtered_df['sentiment_label'] == 'Negative') & (filtered_df['review'].str.contains('crash', case=False))])
+#         #  st.warning("⚠️ No records found within the specified date range")
 
-    # login_issues = len(filtered_df[(filtered_df['sentiment_label'] == 'Negative') & (filtered_df['review'].str.contains('login', case=False))])
-
-    # other_issues = negatives - (crashes + login_issues)
-
- 
-
-    # # Sankey node indices
-
-    # node_indices = {label: idx for idx, label in enumerate(labels)}
-
- 
-
-    # # Define links (sources, targets, values)
-
-    # sources = [
-
-    #     node_indices['All Reviews'], # All -> Negative
-
-    #     node_indices['All Reviews'], # All -> Positive
-
-    #     node_indices['Negative Reviews'], # Negative -> Crashes
-
-    #     node_indices['Negative Reviews'], # Negative -> Login
-
-    #     node_indices['Negative Reviews'], # Negative -> Other
-
-    # ]
-
-    # targets = [
-
-    #     node_indices['Negative Reviews'],
-
-    #     node_indices['Positive Reviews'],
-
-    #     node_indices['Crashes'],
-
-    #     node_indices['Login Problems'],
-
-    #     node_indices['Other Issues']
-
-    # ]
-
-    # values = [
-
-    #     negatives,
-
-    #     positives,
-
-    #     crashes,
-
-    #     login_issues,
-
-    #     other_issues
-
-    # ]
+#         show_timed_warning()
 
  
 
-    # # Create Sankey figure
+if st.sidebar.checkbox("Interactive Sunburst", False):
 
-    # fig = go.Figure(go.Sankey(
+    if not filtered_df.empty:
 
-    #     node=dict(
+        filtered_df['rating'] = pd.to_numeric(filtered_df['rating'], errors='coerce')
 
-    #         pad=15,
-
-    #         thickness=20,
-
-    #         line=dict(color="black", width=0.5),
-
-    #         label=labels
-
-    #     ),
-
-    #     link=dict(
-
-    #         source=sources,
-
-    #         target=targets,
-
-    #         value=values
-
-    #     )
-
-    # ))
+        date_diff = (date2 - date1).days
 
  
 
-    # fig.update_layout(title_text="Review Issue Flow - Sankey Diagram", font_size=12)
+        if date_diff <= 61:
 
-    # st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-
-
-
-
-
-
-
-    # filtered_df['rating'] = pd.to_numeric(filtered_df['rating'], errors='coerce')
-
-    # filtered_df['year'] = filtered_df['TimeStamp'].dt.year
-
-    # months = ["January", "February", "March", "April", "May", "June",
-
-    #         "July", "August", "September", "October", "November", "December"]
-
-    # filtered_df['month'] = filtered_df['TimeStamp'].dt.month.apply(lambda m: months[m-1])
-
-    # filtered_df['month'] = pd.Categorical(filtered_df['month'], categories=months, ordered=True)
+            st.write("### Interactive Sunburst")
 
  
 
-    # # Group by Country, AppName, year, month and compute average rating
+            fig = px.sunburst(
 
-    # monthly_avg = (filtered_df.groupby(['Country', 'AppName', 'year', 'month'])
+                filtered_df,
 
-    #             .agg(average_rating=('rating', 'mean'))
+                path=['Country', 'AppName', 'rating', 'review', 'UserName'],
 
-    #             .reset_index())
+                values='rating',
 
- 
+                color='rating',
 
-    # # Create a combined year-month string for the x-axis (sorted chronologically)
+                color_continuous_scale='RdBu',
 
-    # monthly_avg['year_month'] = monthly_avg['year'].astype(str) + '-' + monthly_avg['month'].astype(str)
+                color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),
 
- 
+                # title="App Ratings and Reviews by Country"
 
-    # # Create a line plot with Plotly Express
-
-    # fig = px.line(
-
-    #     monthly_avg,
-
-    #     x='year_month',
-
-    #     y='average_rating',
-
-    #     color='Country',
-
-    #     line_dash='AppName',
-
-    #     title='Month-on-Month Average App Ratings by Country and App',
-
-    #     labels={'year_month': 'Year-Month', 'average_rating': 'Average Rating'}
-
-    # )
+            )
 
  
 
-    # fig.update_layout(xaxis=dict(tickangle=45))
+            fig.update_traces(
 
-    # st.plotly_chart(fig, use_container_width=True)
+                hovertemplate=""
 
-       
-
-   
-
-    # filtered_df["TimeStamp"] = pd.to_datetime(filtered_df["TimeStamp"])
-
-    # # Sort the DF from oldest to most recent recordings
-
-    # filtered_df.sort_values(by="TimeStamp", inplace=True)
-
-    # # Use the column of dates as the DF's index
-
-    # filtered_df.set_index(["TimeStamp"], inplace=True)
+            )
 
  
 
-    # months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            fig.update_layout(
 
-    # # Create a column that has the year of each date recording
+                width=900,
 
-    # filtered_df["year"] = filtered_df.index.year
+                height=900,
 
-    # # Create a column that has the month (1-12) of each date recording
+                margin=dict(t=50, l=0, r=0, b=0),
 
-    # filtered_df["month"] = filtered_df.index.month
+                coloraxis_showscale=False,
 
-    # # Map the month integers to their proper names
+                font=dict(family="Arial", size=12),
 
-    # filtered_df["month"] = filtered_df["month"].apply(
+                paper_bgcolor="white",
 
-    #     lambda data: months[data-1]
+                plot_bgcolor="white"
 
-    # )
-
- 
-
-    # filtered_df["month"] = pd.Categorical(filtered_df["month"], categories=months)
+            )
 
  
 
-    # df_pivot = pd.pivot_table(
+            st.plotly_chart(fig, use_container_width=True)
 
-    #     filtered_df,
+        else:
 
-    #     values="rating",
+            show_timed_warning_Sunburst()
 
-    #     index="year",
+    else:
 
-    #     columns="month",
-
-    #     aggfunc=np.mean
-
-    # )
-
- 
-
-    # # Plot a bar chart using the DF
-
-    # axo = df_pivot.plot(kind="bar")
-
-    # # Get a Matplotlib figure from the axes object for formatting purposes
-
-    # figo = axo.get_figure()
-
-    # # Change the plot dimensions (width, height)
-
-    # figo.set_size_inches(15, 10)
-
-    # # Change the axes labels
-
-    # axo.set_xlabel("Years")
-
-    # axo.set_ylabel("Average App Ratings")
-
-   
-
-    # # axo=sns.barplot(x='Country',y='rating',hue='Country',data=filtered_df,palette='Pastel1')
-
-    # axo.set(xlabel='Year', ylabel='Ratings', title='Year on Year Ratings')
-
-    # st.pyplot(figo)
+        show_timed_warning()
 
 
-# if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the checkbar
 
- 
 
-#     filtered_df=filtered_df.fillna('end_of_hierarchy')
 
-#     fig3 = px.treemap(filtered_df, path = ["Country","AppName","rating","review"],hover_data = ["rating"],
 
-#                      color = "review")
+# st.sidebar.markdown("### Hierarchical view - TreeMap")
 
-   
+if st.sidebar.checkbox("Interactive TreeMap", False , key='100'):
 
-#     fig3.update_traces(
+ if not filtered_df.empty:  
 
-#     hovertemplate='<b>Review:</b> %{label}<br><extra></extra>'
-
-#     )
-
- 
-
-#     st.plotly_chart(fig3, use_container_width=True)
-
-   
-
- 
-
-filtered_df['rating'] = pd.to_numeric(filtered_df['rating'], errors='coerce')
-date_diff = (date2 - date1).days
-
-if not st.sidebar.checkbox("Sunburst Chart", True): #by defualt hide the checkbar
+    date_diff = (date2 - date1).days  
 
     if date_diff <= 61:
-            st.write("### Sunburst Chart")
-            fig = px.sunburst(
-                filtered_df,
-                path=['Country', 'AppName', 'rating', 'review', 'UserName'],
-                values='rating',
-                color='rating',
-                color_continuous_scale='RdBu',
-                color_continuous_midpoint=np.average(filtered_df['rating'], weights=filtered_df['rating']),
-                title=""
-            )
-            fig.update_traces(hovertemplate="")
-            fig.update_layout(width=800, height=800)
-            fig.update_layout(coloraxis_showscale=False)
-            st.plotly_chart(fig, use_container_width=True)
+
+        st.write("### Interactive TreeMap")
+
+        filtered_df=filtered_df.fillna('end_of_hierarchy')
+
+        fig3 = px.treemap(filtered_df, path = ["Country","AppName","rating","review"],hover_data = ["rating"],
+
+                        color = "review")
+
+   
+
+        fig3.update_traces(
+
+        hovertemplate=''
+
+        # <b>Review:</b> %{label}<br><extra></extra>
+
+        )
+
+ 
+
+        st.plotly_chart(fig3, use_container_width=True)
+
     else:
-            st.info("Sunburst chart is disabled for date ranges longer than two month.")
 
- 
-# # st.sidebar.markdown("### Hierarchical view - TreeMap")
+            # st.warning("⚠️ **TreeMap chart is disabled for date ranges longer than two months.**")
 
-# def fix_unicode_escapes(text):
-#     if isinstance(text, str):
-#         # Replace single backslash with double backslash, which is safe in JSON encoding
-#         return text.replace('\\', '\\\\')
-#     return text
+            show_timed_warning_TreeMap()
 
-# filtered_df['review'] = filtered_df['review'].apply(fix_unicode_escapes)
-
-
-if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the checkbar
- if date_diff <= 61:
-     filtered_df=filtered_df.fillna('end_of_hierarchy')
-     fig3 = px.treemap(filtered_df, path = ["Country","AppName","rating","review"],hover_data = ["rating"],
-                      color = "review")
-   
-     fig3.update_traces(
-     hovertemplate='<b>Review:</b> %{label}<br><extra></extra>'
-     )
- 
-     st.plotly_chart(fig3, use_container_width=True)
  else:
-             st.info("TreeMap chart is disabled for date ranges longer than two months.") 
 
+        #  st.warning("⚠️ No records found within the specified date range")
 
-# # st.sidebar.markdown("### Hierarchical view - TreeMap")
+        show_timed_warning()
 
-# if not st.sidebar.checkbox("TreeMap", True , key='100'): #by defualt hide the checkbar
-
- 
-
-#     filtered_df=filtered_df.fillna('end_of_hierarchy')
-
-#     fig3 = px.treemap(filtered_df, path = ["Country","AppName","rating","review"],hover_data = ["rating"],
-
-#                      color = "review")
-
-   
-
-#     fig3.update_traces(
-
-#     hovertemplate='<b>Review:</b> %{label}<br><extra></extra>'
-
-#     )
-
- 
-
-#     st.plotly_chart(fig3, use_container_width=True)
+     
 
  
 
@@ -2438,11 +2535,8 @@ def remove_emojis(text):
 
     return text.encode('ascii', 'ignore').decode('ascii')
 
- 
 
-words=filtered_df['review'].dropna().apply(nltk.word_tokenize)
 
- 
 
 # st.sidebar.header("Customer Reviews Word Cloud")
 
@@ -2450,9 +2544,9 @@ words=filtered_df['review'].dropna().apply(nltk.word_tokenize)
 
  
 
-if not st.sidebar.checkbox("Word Cloud", True, key='3'):
+if st.sidebar.checkbox("Word Cloud", False, key='3'):
 
-   
+ if not filtered_df.empty:      
 
    # WordCloud
 
@@ -2480,6 +2574,8 @@ if not st.sidebar.checkbox("Word Cloud", True, key='3'):
 
  
 
+    words=filtered_df['review'].dropna().apply(nltk.word_tokenize)
+
     # Use Western Union colors: yellow and black
 
     western_union_colors = ["#ffe600", "#000000"]  # Yellow and Black
@@ -2490,13 +2586,13 @@ if not st.sidebar.checkbox("Word Cloud", True, key='3'):
 
     # Or load a Western Union logo silhouette (if you have an image file)
 
-    mask = np.array(Image.open("wuupdated.png"))
+    mask = np.array(Image.open("Images/wuupdated.png"))
 
  
 
     st.subheader("Word Cloud")
 
- 
+   
 
     filtered_df['sentiment_score'] = filtered_df['review'].apply(lambda x: sia.polarity_scores(str(x))['compound'])
 
@@ -2504,7 +2600,19 @@ if not st.sidebar.checkbox("Word Cloud", True, key='3'):
 
  
 
-    sentiment_option = st.selectbox("Select Sentiment for Word Cloud", filtered_df['sentiment_label'].unique())
+    # sentiment_option = st.selectbox("Select Sentiment for Word Cloud", filtered_df['sentiment_label'].unique())
+
+    st.markdown("<h4 style='text-align: center; font-weight: bold;'>Select Sentiment for Word Cloud</h4>", unsafe_allow_html=True)
+
+ 
+
+ 
+
+    sentiment_option = st.selectbox("", filtered_df['sentiment_label'].unique())
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+ 
 
     text = " ".join(filtered_df[filtered_df['sentiment_label'] == sentiment_option]['review'].astype(str))
 
@@ -2558,100 +2666,13 @@ if not st.sidebar.checkbox("Word Cloud", True, key='3'):
 
     st.pyplot(fig)
 
+ else:
 
+    #   st.warning("⚠️ No records found within the specified date range")
 
-
-
-
-
-
-
-
-
-
-
-
-    # st.subheader(f"Word cloud for {word_sentiment} sentiment")
-
-    # df = filtered_df[filtered_df['Sentiment'] == word_sentiment]
-
-    # words = ' '.join(df['review'].dropna())
-
-    # processed_words = ' '.join(word for word in words.split() if 'http' not in word and not word.startswith('@') and word != 'RT')
-
-    # processed_words = remove_emojis(processed_words)
-
-   
-
-    # stopwords = set(STOPWORDS)
-
-    # wordcloud = WordCloud(
-
-    #     stopwords=stopwords,
-
-    #     background_color='white',
-
-    #     max_words=100,
-
-    #     width=600,
-
-    #     height=450
-
-    # ).generate(processed_words)
+    show_timed_warning()
 
  
-
-    # fig, ax = plt.subplots()
-
-    # ax.imshow(wordcloud, interpolation="bilinear")
-
-    # ax.axis("off")
-
-   
-
-    # st.pyplot(fig)
-
-
-
-
-    # st.title("App Review World Map by Platform and Date")
-
- 
-
-    # # --- Platform Filter
-
-    # platform = st.selectbox("Select Platform", options=filtered_df["AppName"].unique(), index=0)
-
-    # # st.write(platform)
-
-    # # --- Date Range Filter
-
-    # # min_date, max_date = filtered_df["TimeStamp"].min(), filtered_df["TimeStamp"].max()
-
-    # # start_date, end_date = st.date_input("Select date range", [min_date, max_date])
-
- 
-
-    # # --- Filtered Data
-
-    # filtered_df = filtered_df[
-
-    #     (filtered_df["AppName"] == platform)
-
-    #     # (filtered_df["TimeStamp"] >= pd.to_datetime(date1)) &
-
-    #     # (filtered_df["TimeStamp"] <= pd.to_datetime(date2))
-
-    # ]
-
- 
-
-    # filtered_df['rating'] = pd.to_numeric(filtered_df['rating'], errors='coerce')
-
-
-
-
-# --- Caching country code conversions
 
 @st.cache_data
 
@@ -2687,23 +2708,45 @@ def name_to_iso3(name):
 
 @st.cache_data(show_spinner=False)
 
+# def compute_grouped_data(df):
+
+#     df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
+
+#     df["CountryName"] = df["Country"].apply(iso2_to_name)
+
+#     df["ISO3"] = df["CountryName"].apply(name_to_iso3)
+
+#     grouped = (
+
+#         df.groupby(["CountryName", "ISO3"])
+
+#         .agg(avg_rating=("rating", "mean"), review_count=("rating", "count"))
+
+#         .reset_index()
+
+#     )
+
+#     return grouped
+
+ 
+
 def compute_grouped_data(df):
 
     df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
 
-    df["CountryName"] = df["Country"].apply(iso2_to_name)
-
-    df["ISO3"] = df["CountryName"].apply(name_to_iso3)
+   
 
     grouped = (
 
-        df.groupby(["CountryName", "ISO3"])
+        df.groupby("Country")
 
         .agg(avg_rating=("rating", "mean"), review_count=("rating", "count"))
 
         .reset_index()
 
     )
+
+   
 
     return grouped
 
@@ -2751,15 +2794,13 @@ def generate_figures(grouped):
 
  
 
-        # Country fill
-
         fig.add_trace(go.Choropleth(
 
-            locations=[row["ISO3"]],
+            locations=[row["Country"]],
 
             z=[row["avg_rating"]],
 
-            locationmode="ISO-3",
+            locationmode="country names",
 
             colorscale=[[0, fill_color], [1, fill_color]],
 
@@ -2775,11 +2816,9 @@ def generate_figures(grouped):
 
  
 
-        # Annotation box in bottom center
-
         annotation_text = (
 
-            f"<b>{row['CountryName']}</b><br>"
+            f"<b>{row['Country']}</b><br>"
 
             f"⭐ Rating: {row['avg_rating']:.2f}<br>"
 
@@ -2787,51 +2826,31 @@ def generate_figures(grouped):
 
         )
 
-       
-
  
 
         fig.update_layout(
 
-            annotations=[
+            annotations=[dict(
 
-                dict(
+                x=0.5, y=0.01, xref='paper', yref='paper',
 
-                    x=0.5,
+                showarrow=False, align='center',
 
-                    y=0.01,
+                text=annotation_text,
 
-                    xref='paper',
+                font=dict(size=font_size, color="black"),
 
-                    yref='paper',
+                bgcolor="white", bordercolor="gray",
 
-                    showarrow=False,
+                borderwidth=3, opacity=0.98
 
-                    align='center',
-
-                    text=annotation_text,
-
-                    font=dict(size=font_size, color="black"),
-
-                    bgcolor="white",
-
-                    bordercolor="gray",
-
-                    borderwidth=3,
-
-                    opacity=0.98  
-
-                )
-
-            ],
+            )],
 
             title={
 
-                "text": f"🌐 Ratings for {row['CountryName']}",
+                "text": f"🌐 Ratings for {row['Country']}",
 
-                "x": 0.5,
-
-                "xanchor": "center",
+                "x": 0.5, "xanchor": "center",
 
                 "font": dict(size=18, family="Arial Black", color="black")
 
@@ -2845,53 +2864,29 @@ def generate_figures(grouped):
 
             geo=dict(
 
-                showcoastlines=True,
+                showcoastlines=True, coastlinecolor="LightGray",
 
-                coastlinecolor="LightGray",
+                showland=True, landcolor="whitesmoke",
 
-                showland=True,
+                showocean=True, oceancolor="aliceblue",
 
-                landcolor="whitesmoke",
+                showlakes=True, lakecolor="lightblue",
 
-                showocean=True,
+                showrivers=True, rivercolor="lightblue",
 
-                oceancolor="aliceblue",
-
-                showlakes=True,
-
-                lakecolor="lightblue",
-
-                showrivers=True,
-
-                rivercolor="lightblue",
-
-                showcountries=True,
-
-                countrycolor="gray",
+                showcountries=True, countrycolor="gray",
 
                 projection_type="equirectangular",
 
-                bgcolor='white',
+                bgcolor='white', resolution=50,
 
-                resolution=50,                
+                showsubunits=True, subunitcolor="lightgray",
 
-                showsubunits=True,
-
-                subunitcolor="lightgray",
-
-                showframe=True,
-
-                framecolor="black",
-
-               
+                showframe=True, framecolor="black",
 
                 center=dict(lat=20, lon=0),
 
-                projection_scale=1  # Zoom level
-
- 
-
- 
+                projection_scale=1
 
             )
 
@@ -2908,53 +2903,102 @@ def generate_figures(grouped):
 
 
 
-# --- Main logic ---
-if not st.sidebar.checkbox("World Map", True, key='23'):
+
+# --- Main logic
+
+if st.sidebar.checkbox("World Map", False, key='23'):
+
+       # Display the selected date range with smaller font size above the map
+
+   
+
     st.markdown(
+
         """
+
         <style>
+
         .date-range-text {
+
             font-size: 14px;
+
             font-weight: bold;
+
             text-align: center;
+
             margin-bottom: 10px;
+
             z-index: 9999;
+
         }
+
         </style>
+
         """,
+
         unsafe_allow_html=True,
+
     )
+
+ 
+
     # Create and display the date range HTML with the styled class
-    date_html = f"<p class='date-range-text'>Ratings from <strong>{date1.strftime('%Y-%m-%d')}</strong> to <strong>{date2.strftime('%Y-%m-%d')}</strong></p>"
-    st.markdown(date_html, unsafe_allow_html=True)
 
-    with st.spinner("⏳ Loading Country-wise ratings on world map..."):
-        grouped = compute_grouped_data(filtered_df)
+    if not filtered_df.empty:
 
-    if grouped.empty:
-        st.warning("No records found within the specified date range")
-    else:
-        figures = generate_figures(grouped)
-        N = len(figures)
+        # st.write(filtered_df)
 
-        # Refresh the app every 5 seconds
-        st_autorefresh(interval=5000, key="map_auto_refresh")
+        date_html = f"<p class='date-range-text'>Ratings from <strong>{date1.strftime('%Y-%m-%d')}</strong> to <strong>{date2.strftime('%Y-%m-%d')}</strong></p>"
 
-        # Use session_state to cycle through figures
-        if "world_map_idx" not in st.session_state or N == 0:
-            st.session_state.world_map_idx = 0
+        st.divider()
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+ 
+
+        st.markdown(date_html, unsafe_allow_html=True)        
+
+ 
+
+        with st.spinner("⏳ Loading Country-wise ratings on world map..."):
+
+            grouped = compute_grouped_data(filtered_df)
+
+ 
+
+        if grouped.empty:
+
+            # st.warning("No records found within the specified date range")
+
+            show_timed_warning()
+
         else:
-            st.session_state.world_map_idx = (st.session_state.world_map_idx + 1) % N
 
-        current_idx = st.session_state["world_map_idx"]
+            st.markdown("<br><br>", unsafe_allow_html=True)
 
-        map_placeholder = st.empty()
-        map_placeholder.plotly_chart(figures[current_idx], use_container_width=True, key="map_world")
+ 
 
-        st.caption(f"Country {current_idx + 1} of {N}")
+       
 
+ 
 
+            map_placeholder = st.empty()
 
+            figures = generate_figures(grouped)
+
+            while True:
+
+                for fig in figures:
+
+                    map_placeholder.plotly_chart(fig, use_container_width=True)
+
+                    time.sleep(2)
+
+    else:
+
+         show_timed_warning()
+
+ 
 
 qr_img = Image.open('app_qr_code.png')
 
@@ -2968,52 +3012,68 @@ qr_img.save(buffered, format="PNG")
 
 img_str = base64.b64encode(buffered.getvalue()).decode()
 
+ 
 
+st.markdown(f"""
 
+    <style>
 
+ 
 
+    .fixed-bottom-right {{
 
+        position: fixed;
 
+        right: 0;
 
+        bottom: 0;
 
+        margin: 20px;
 
+        z-index: 1000;
 
+        text-align: right;
 
+    }}
 
+    .bottom-link {{
 
+        font-size: 14px;
 
+        color: #003366;
 
+        font-weight: bold;
 
+        text-decoration: none;
 
+        background: #fff;
 
+        padding: 6px 12px;
 
+        border-radius: 5px;
 
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 
+    }}
 
+ 
 
+    </style>
 
+ 
 
+   
 
+    <div class="fixed-bottom-right">
 
+        <a href="mailto:?subject=Feedback | Issue | Suggestion" class="bottom-link">
 
+          Feedback
 
+        </a>
 
+ 
 
+    </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+""", unsafe_allow_html=True)
