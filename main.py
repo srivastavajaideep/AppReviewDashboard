@@ -2631,7 +2631,7 @@ if st.sidebar.checkbox("Word Cloud", False, key='3'):
 
     # Or load a Western Union logo silhouette (if you have an image file)
 
-    mask = np.array(Image.open("Images/wuupdated.png"))
+    mask = np.array(Image.open("wufull.png"))
 
  
 
@@ -3122,6 +3122,7 @@ st.markdown(f"""
     # </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
