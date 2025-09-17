@@ -505,11 +505,7 @@ st.sidebar.markdown(f"""
 
     </style>
 
-    <div class="no-fullscreen-sidebar" style="text-align: center;">
 
-        <img src="data:image/png;base64,{encoded_image}" style="width: 100%;margin-top: 10px;margin-bottom: 20px;"/>
-
-    </div>
 
 """, unsafe_allow_html=True)
 
@@ -3104,6 +3100,7 @@ st.markdown(f"""
 
 
 """, unsafe_allow_html=True)
+
 
 
 
