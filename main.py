@@ -3101,19 +3101,10 @@ st.markdown(f"""
 
    
 
-    # <div class="fixed-bottom-right">
 
-    #     <a href="mailto:test@gmail.com?subject=Feedback | Issue | Suggestion" class="bottom-link">
-
-    #       Feedback
-
-    #     </a>
-
- 
-
-    # </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
