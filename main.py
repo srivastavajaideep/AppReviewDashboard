@@ -18,7 +18,7 @@ import qrcode
 
 from concurrent.futures import ThreadPoolExecutor
 
-from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
+# from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
 from streamlit.column_config import TextColumn
 
@@ -3077,4 +3077,5 @@ st.markdown(f"""
     </div>
 
 """, unsafe_allow_html=True)
+
 
