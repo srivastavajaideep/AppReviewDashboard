@@ -1608,7 +1608,7 @@ if not filtered_df.empty:
  
 
     st.text("")  # Adds one empty line of vertical space
-  
+    st.divider()
     st.dataframe(filtered_df, column_config=column_config, height=275, use_container_width=True)
     st.success(f"✅ Displaying {len(filtered_df)} reviews.")
     st.markdown("<br>", unsafe_allow_html=True)
@@ -3101,6 +3101,7 @@ st.markdown(f"""
 
 
 """, unsafe_allow_html=True)
+
 
 
 
