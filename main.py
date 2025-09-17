@@ -30,7 +30,7 @@ st.set_page_config(
 
     page_title="Customer Sentiment Analyzer",
 
-    page_icon="Images/WUNEW.png",  # File must be in the root directory
+    page_icon="WUNEW.png",  # File must be in the root directory
 
     layout="wide"
 
@@ -3122,6 +3122,7 @@ st.markdown(f"""
     # </div>
 
 """, unsafe_allow_html=True)
+
 
 
 
